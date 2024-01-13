@@ -99,14 +99,14 @@ public class Utils {
         drawLine(g, x1, y1, x2, y2, thickness, zoomOut, true, true);
     }
     
-    public static void drawLine(Graphics g, int x1, int y1, int x2, int y2, int thickness, int zoomOut, boolean rounding, boolean markPoints) {
+    public static void drawLine(Graphics g, int x1, int y1, int x2, int y2, int thickness, int zoomOut, boolean rounding, boolean markSkeleton) {
         if (thickness > 2) {
             int t2 = thickness/2;
             int dx = x2 - x1;
             int dy = y2 - y1;
             int l = (int) Math.sqrt(dx*dx+dy*dy);
             
-            if (l == 0) {
+            if (l == 0 || zoomOut < EditorCanvas.ZOOMOUT_MACROVIEW_THRESHOLD) {
                 g.drawLine(x1, y1, x2, y2);
                 return;
             }
@@ -129,11 +129,10 @@ public class Utils {
                 g.fillArc(x1-r, y1-r, d, d, 0, 360);
                 g.fillArc(x2-r, y2-r, d, d, 0, 360);
             }
-            if (markPoints) {
+            if (markSkeleton) {
                 int prevCol = g.getColor();
                 g.setColor(0xff0000);
-                g.fillArc(x1-1, y1-1, 2, 2, 0, 360);
-                g.fillArc(x2-1, y2-1, 2, 2, 0, 360);
+                g.drawLine(x1, y1, x2, y2);
                 g.setColor(prevCol);
             }
         } else {

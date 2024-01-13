@@ -16,6 +16,7 @@ import mobileapplication3.elements.Element;
  */
 public class EditorCanvas extends UIComponent {
     
+    public static int ZOOMOUT_MACROVIEW_THRESHOLD = 200;
     StructureBuilder structurePlacer;
     Car car = new Car();
     int bgColor = 0x000000;
@@ -38,7 +39,7 @@ public class EditorCanvas extends UIComponent {
     
     public void paint(Graphics g) {
         g.setColor(bgColor);
-        g.fillRect(x0, y0, w, h);
+        drawBG(g);
         drawElements(g);
         drawStartPoint(g);
         drawCursor(g);
@@ -49,11 +50,27 @@ public class EditorCanvas extends UIComponent {
         }
     }
     
+    private void drawBG(Graphics g) {
+        g.fillRect(x0, y0, w, h);
+        if (zoomOut < ZOOMOUT_MACROVIEW_THRESHOLD) {
+            g.setColor(0x000077);
+            int step = 1000/zoomOut;
+            int gridOffsetY = x0 + (h/2) % step;
+            int gridOffsetX = y0 + (w/2) % step;
+            for (int y = gridOffsetY; y < h; y+=step) {
+                g.drawLine(0, y, w, y);
+            }
+            for (int x = gridOffsetX; x < w; x+=step) {
+                g.drawLine(x, 0, x, h);
+            }
+        }
+    }
+    
     private void drawCursor(Graphics g) {
         int x = xToPX(cursorX);
         int y = yToPX(cursorY);
         int r = 2;
-        g.setColor(0xaaffaa);
+        g.setColor(0x22aa22);
         g.drawArc(x - r, y - r, r*2, r*2, 0, 360);
         g.drawString(cursorX + " " + cursorY, x, y + r, Graphics.TOP | Graphics.LEFT);
     }
@@ -64,7 +81,7 @@ public class EditorCanvas extends UIComponent {
         }
         for (int i = 0; i < structurePlacer.buffer.size(); i++) {
             if (((Element) structurePlacer.buffer.elementAt(i)) == structurePlacer.placingNow) {
-                g.setColor(0xaaffaa);
+                g.setColor(0xaaffff);
             } else {
                 g.setColor(0xffffff);
             }
