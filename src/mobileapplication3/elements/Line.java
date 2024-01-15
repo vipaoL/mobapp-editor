@@ -16,10 +16,6 @@ public class Line extends Element {
     
     short x1, y1, x2, y2;
     
-    public Line() {
-        id = Element.LINE;
-    }
-    
     public void placePoint(int i, short x, short y) throws IllegalArgumentException {
         switch (i) {
             case 0:
@@ -46,12 +42,7 @@ public class Line extends Element {
     public void paint(Graphics g, int zoomOut, int offsetX, int offsetY) {
         Utils.drawLine(g, xToPX(x1, zoomOut, offsetX), yToPX(y1, zoomOut, offsetY), xToPX(x2, zoomOut, offsetX), yToPX(y2, zoomOut, offsetY), 24, zoomOut);
     }
-
-    public short[] getArgs() {
-        short[] args = {x1, y1, x2, y2};
-        return args;
-    }
-
+    
     public Element setArgs(short[] args) {
         x1 = args[0];
         y1 = args[1];
@@ -60,12 +51,25 @@ public class Line extends Element {
         return this;
     }
 
-    public String getInfoStr() {
-        return x1 + " " + y1 + " " + x2 + " " + y2;
+    public short[] getArgs() {
+        short[] args = {x1, y1, x2, y2};
+        return args;
+    }
+    
+    public short getID() {
+        return Element.LINE;
+    }
+    
+    public int getStepsToPlace() {
+        return 2;
     }
 
     public String getName() {
         return "Line";
+    }
+    
+    public String getInfoStr() {
+        return x1 + " " + y1 + " " + x2 + " " + y2;
     }
     
     public short[] getEndPoint() {

@@ -26,10 +26,6 @@ public abstract class Element {
     public static final int[] ARGS_NUMBER = {0, /*1*/2, /*2*/4, /*3*/7, /*4*/9, /*5*/10, /*6*/5, /*7*/8, /*7         */8};
     int[] stepsToPlace = {0, /*1*/1, /*2*/2, /*3*/2, /*4*/2, /*5*/2, /*6*/3, /*7*/2, /*8*/2};
     
-    public int stepsNumber = 0;
-        
-    short id;
-    
     protected Element() {}
 
     public Element createTypedInstance(short id, short[] args) throws IllegalArgumentException {
@@ -55,7 +51,7 @@ public abstract class Element {
             case Element.BROKEN_LINE:
                 return new BrokenLine();
             case Element.BROKEN_CIRCLE:
-                return null;
+                return new BrokenCircle();
             case Element.SINE:
                 return new Sine();
             case Element.ACCELERATOR:
@@ -65,53 +61,14 @@ public abstract class Element {
                 return null;
         }
     }
-
-    public short getID() {
-        return id;
-    }
-
-    public abstract String getName();
     
-    public abstract short[] getArgs();
-    
-    public abstract short[] getEndPoint() throws Exception;
-    
-    public abstract Element setArgs(short[] args);
-    
-    public abstract void placePoint(int i, short x, short y);
-    
-    public int getArgsCount() {
-        return getArgs().length;
-    }
-    
-    public int getDataLengthInShorts() {
-        // id + args
-        return 1 + getArgsCount();
-    }
-
-    public short[] asShortArray() {
+    public void printDebug() {
         short[] args = getArgs();
-        short[] arr = new short[args.length + 1];
-        arr[0] = id;
-        System.arraycopy(getArgs(), 0, arr, 1, getArgsCount());
-        return arr;
-    }
-    
-    public void printInfo() {
-        short[] args = getArgs();
-        System.out.print("id="+id);
+        System.out.print("id="+getID());
         for (int i = 0; i < args.length; i++) {
             System.out.print(" " + args[i]);
         }
         System.out.println("");
-    }
-    
-    public String getInfoStr() {
-        return "";
-    }
-
-    public int getStepsToPlace() {
-        return stepsToPlace[id];
     }
     
     public static Element readFromData(short[] data) {
@@ -129,8 +86,6 @@ public abstract class Element {
         
         return createTypedInstance(id).setArgs(args);
     }
-    
-    public abstract void paint(Graphics g, int zoomOut, int offsetX, int offsetY);
 
     public int xToPX(int c, int zoomOut, int offsetX) {
         return c * 1000 / zoomOut + offsetX;
@@ -149,5 +104,41 @@ public abstract class Element {
             return (short) Math.sqrt((double) (dx*dx + dy*dy));
         }
     }
+    
+    public String getInfoStr() {
+        return "";
+    }
+    
+    public int getArgsCount() {
+        return getArgs().length;
+    }
+    
+    public int getDataLengthInShorts() {
+        return 1 + getArgsCount(); // id + args
+    }
 
+    public short[] getAsShortArray() {
+        short[] args = getArgs();
+        short[] arr = new short[args.length + 1];
+        arr[0] = getID();
+        System.arraycopy(getArgs(), 0, arr, 1, getArgsCount());
+        return arr;
+    }
+    
+    public abstract void placePoint(int i, short x, short y);
+    
+    public abstract void paint(Graphics g, int zoomOut, int offsetX, int offsetY);
+    
+    public abstract Element setArgs(short[] args);
+    
+    public abstract short[] getArgs();
+    
+    public abstract short getID();
+    
+    public abstract int getStepsToPlace();
+
+    public abstract String getName();
+    
+    public abstract short[] getEndPoint() throws Exception;
+    
 }

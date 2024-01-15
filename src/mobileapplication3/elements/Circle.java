@@ -22,10 +22,6 @@ public class Circle extends Element {
     
     PointsCache pointsCache;
     
-    public Circle() {
-        id = Element.CIRCLE;
-    }
-    
     public void placePoint(int i, short pointX, short pointY) throws IllegalArgumentException {
         switch (i) {
             case 0:
@@ -46,18 +42,6 @@ public class Circle extends Element {
                 throw new IllegalArgumentException();
         }
         pointsCache = null;
-    }
-    
-    public Element setArgs(short[] args) {
-        x = args[0];
-        y = args[1];
-        r = args[2];
-        arcAngle = args[3];
-        startAngle = args[4];
-        kx = args[5];
-        ky = args[6];
-        pointsCache = null;
-        return this;
     }
     
     public Element setCenter(short x, short y) {
@@ -87,8 +71,6 @@ public class Circle extends Element {
         return this;
     }
     
-    
-    
     public void paint(Graphics g, int zoomOut, int offsetX, int offsetY) {
         if (pointsCache == null) {
             genPoints();
@@ -100,6 +82,43 @@ public class Circle extends Element {
             Utils.drawLine(g, xToPX(startPoint[0], zoomOut, offsetX), yToPX(startPoint[1], zoomOut, offsetY), xToPX(endPoint[0], zoomOut, offsetX), yToPX(endPoint[1], zoomOut, offsetY), 24, zoomOut);
             startPoint = endPoint;
         }
+    }
+    
+    public Element setArgs(short[] args) {
+        x = args[0];
+        y = args[1];
+        r = args[2];
+        arcAngle = args[3];
+        startAngle = args[4];
+        kx = args[5];
+        ky = args[6];
+        pointsCache = null;
+        return this;
+    }
+    
+    public short[] getArgs() {
+        short[] args = {x, y, r, arcAngle, startAngle, kx, ky};
+        return args;
+    }
+    
+    public short getID() {
+        return Element.LINE;
+    }
+    
+    public int getStepsToPlace() {
+        return 2;
+    }
+
+    public String getName() {
+        return "Circle";
+    }
+
+    public String getInfoStr() {
+        return "r=" + r;
+    }
+    
+    public short[] getEndPoint() {
+        return new short[]{(short) (x + r), y};
     }
     
     private void genPoints() { //k: 10 = 1.0
@@ -121,23 +140,6 @@ public class Circle extends Element {
             pointsCache.writePointToCache(Mathh.cos(arcAngle+startAngle)*kx*r/1000/100,
                     y+Mathh.sin(arcAngle+startAngle)*ky*r/1000/100);
         }
-    }
-    
-    public short[] getArgs() {
-        short[] args = {x, y, r, arcAngle, startAngle, kx, ky};
-        return args;
-    }
-
-    public String getName() {
-        return "Circle";
-    }
-
-    public String getInfoStr() {
-        return "r=" + r;
-    }
-    
-    public short[] getEndPoint() {
-        return new short[]{(short) (x + r), y};
     }
 
     private class PointsCache {

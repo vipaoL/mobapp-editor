@@ -15,10 +15,6 @@ public class EndPoint extends Element {
     
     short x, y;
     
-    public EndPoint() {
-        id = Element.END_POINT;
-    }
-    
     public void placePoint(int i, short pointX, short pointY) throws IllegalArgumentException {
         switch (i) {
             case 0:
@@ -38,19 +34,31 @@ public class EndPoint extends Element {
         g.setColor(prevColor);
     }
 
-    public short[] getArgs() {
-        short[] args = {x, y};
-        return args;
-    }
-
     public Element setArgs(short[] args) {
         x = args[0];
         y = args[1];
         return this;
     }
+    
+    public short[] getArgs() {
+        short[] args = {x, y};
+        return args;
+    }
 
+    public short getID() {
+        return Element.END_POINT;
+    }
+
+    public int getStepsToPlace() {
+        return 1;
+    }
+    
     public String getName() {
         return "End point";
+    }
+    
+    public short[] getEndPoint() throws Exception {
+        throw new Exception("Never ask end point its end point");
     }
     
     public static boolean compare(short[] oldEndPoint, short[] newEndPoint) {
@@ -64,10 +72,6 @@ public class EndPoint extends Element {
             }
         }
         return false;
-    }
-
-    public short[] getEndPoint() throws Exception {
-        throw new Exception("Never ask end point its end point");
     }
     
 }

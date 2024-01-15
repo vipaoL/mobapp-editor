@@ -19,10 +19,6 @@ public class Sine extends Element {
     short anchorX, anchorY;
     short[][] pointsCache = null;
     
-    public Sine() {
-        id = Element.SINE;
-    }
-    
     public void placePoint(int i, short pointX, short pointY) throws IllegalArgumentException {
         switch (i) {
             case 0:
@@ -110,13 +106,21 @@ public class Sine extends Element {
     public short[] getArgs() {
         return new short[]{x0, y0, l, halfperiods, offset, amp};
     }
+    
+    public short getID() {
+        return Element.SINE;
+    }
 
-    public String getInfoStr() {
-        return "periods/2=" + halfperiods + " amp=" + amp + " off=" + offset;
+    public int getStepsToPlace() {
+        return 3;
     }
 
     public String getName() {
         return "Sine";
+    }
+    
+    public String getInfoStr() {
+        return "periods/2=" + halfperiods + " amp=" + amp + " off=" + offset;
     }
 
     public short[] getEndPoint() throws Exception {

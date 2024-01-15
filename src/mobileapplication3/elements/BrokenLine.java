@@ -17,10 +17,6 @@ public class BrokenLine extends Line {
     
     short thickness = 20, platformLength, spacing = 10, l, ang;
     
-    public BrokenLine() {
-        this.id = Element.BROKEN_LINE;
-    }
-    
     public void placePoint(int i, short x, short y) throws IllegalArgumentException {
         switch (i) {
             case 0:
@@ -65,32 +61,6 @@ public class BrokenLine extends Line {
         }
     }
     
-    public String getInfoStr() {
-        String info = "plL=" + platformLength + " ang=" + ang;
-        return info;
-    }
-
-    public String getName() {
-        return "Broken Line";
-    }
-
-    public short[] getArgs() {
-        return new short[]{x1, y1, x2, y2, thickness, platformLength, spacing, l, ang};
-    }
-
-    public Element setArgs(short[] args) {
-        x1 = args[0];
-        y1 = args[1];
-        x2 = args[2];
-        y2 = args[3];
-        thickness = args[4];
-        platformLength = args[5];
-        spacing = args[6];
-        l = args[7];
-        ang = args[8];
-        return this;
-    }
-
     public void paint(Graphics g, int zoomOut, int offsetX, int offsetY) {
         int dx = x2 - x1;
         int dy = y2 - y1;
@@ -113,5 +83,39 @@ public class BrokenLine extends Line {
                     false,
                     true);
         }
+    }
+    
+    public Element setArgs(short[] args) {
+        x1 = args[0];
+        y1 = args[1];
+        x2 = args[2];
+        y2 = args[3];
+        thickness = args[4];
+        platformLength = args[5];
+        spacing = args[6];
+        l = args[7];
+        ang = args[8];
+        return this;
+    }
+    
+    public short[] getArgs() {
+        return new short[]{x1, y1, x2, y2, thickness, platformLength, spacing, l, ang};
+    }
+
+    public short getID() {
+        return Element.BROKEN_LINE;
+    }
+
+    public int getStepsToPlace() {
+        return 2;
+    }
+
+    public String getName() {
+        return "Broken Line";
+    }
+    
+    public String getInfoStr() {
+        String info = "plL=" + platformLength + " ang=" + ang;
+        return info;
     }
 }
