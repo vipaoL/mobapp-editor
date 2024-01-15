@@ -5,22 +5,15 @@
  */
 package mobileapplication3.elements;
 
-import javax.microedition.lcdui.Graphics;
 import mobileapplication3.Mathh;
-import mobileapplication3.editor.Utils;
 
 /**
  *
  * @author vipaol
  */
-public class Circle extends Element {
+public class Circle extends AbstractCurve {
     
-    private final int SEGMENTS_IN_CIRCLE = 36;       // how many lines will draw up a circle
-    private final int CIRCLE_SEGMENT_LEN = 360 / SEGMENTS_IN_CIRCLE;
-    
-    short x, y, r, arcAngle, startAngle, kx, ky;
-    
-    PointsCache pointsCache;
+    short x, y, r, arcAngle = 360, startAngle, kx = 100, ky = 100;
     
     public void placePoint(int i, short pointX, short pointY) throws IllegalArgumentException {
         switch (i) {
@@ -31,8 +24,6 @@ public class Circle extends Element {
                 short dx = (short) (pointX - x);
                 short dy = (short) (pointY - y);
                 setRadius(calcDistance(dx, dy));
-                setArc((short) 360, (short) 0);
-                setScale((short) 100, (short) 100);
                 break;
             case 2:
                 throw new IllegalArgumentException("setting start angle is not supported yet");
@@ -41,10 +32,12 @@ public class Circle extends Element {
             default:
                 throw new IllegalArgumentException();
         }
-        pointsCache = null;
     }
     
     public Element setCenter(short x, short y) {
+        if (this.x == x && this.y == y) {
+            return this;
+        }
         this.x = x;
         this.y = y;
         pointsCache = null;
@@ -52,36 +45,51 @@ public class Circle extends Element {
     }
     
     public Element setRadius(short r) {
+        if (this.r == r) {
+            return this;
+        }
         this.r = r;
         pointsCache = null;
         return this;
     }
     
     public Element setArc(short arcAngle, short startAngle) {
+        setArcAngle(arcAngle);
+        setStartAngle(startAngle);
+        return this;
+    }
+    
+    public Element setArcAngle(short arcAngle) {
+        if (this.arcAngle == arcAngle) {
+            return this;
+        }
         this.arcAngle = arcAngle;
+        pointsCache = null;
+        return this;
+    }
+    
+    public Element setStartAngle(short startAngle) {
+        while (startAngle < 0) {
+            startAngle += 360;
+        }
+        startAngle%=360;
+        
+        if (this.startAngle == startAngle) {
+            return this;
+        }
         this.startAngle = startAngle;
         pointsCache = null;
         return this;
     }
     
     public Element setScale(short scaleX, short scaleY) {
+        if (this.kx == scaleX && this.ky == scaleY) {
+            return this;
+        }
         this.kx = scaleX;
         this.ky = scaleY;
         pointsCache = null;
         return this;
-    }
-    
-    public void paint(Graphics g, int zoomOut, int offsetX, int offsetY) {
-        if (pointsCache == null) {
-            genPoints();
-        }
-        
-        short[] startPoint = pointsCache.getPoint(0);
-        for (int i = 0; i < pointsCache.getSize() - 1; i++) {
-            short[] endPoint = pointsCache.getPoint(i+1);
-            Utils.drawLine(g, xToPX(startPoint[0], zoomOut, offsetX), yToPX(startPoint[1], zoomOut, offsetY), xToPX(endPoint[0], zoomOut, offsetX), yToPX(endPoint[1], zoomOut, offsetY), 24, zoomOut);
-            startPoint = endPoint;
-        }
     }
     
     public Element setArgs(short[] args) {
@@ -121,50 +129,26 @@ public class Circle extends Element {
         return new short[]{(short) (x + r), y};
     }
     
-    private void genPoints() { //k: 10 = 1.0
-        int pointsNumber = arcAngle/CIRCLE_SEGMENT_LEN + 1;
-        if (arcAngle % CIRCLE_SEGMENT_LEN != 0) {
+    protected void genPoints() { //k: 100 = 1.0
+        // calculated formula. r=20: sn=5,sl=72; r=1000: sn=36,sl=10
+        int circleSegmentLen=10000/(140+r);
+        circleSegmentLen = Math.min(72, Math.max(10, circleSegmentLen));
+        int pointsNumber = arcAngle/circleSegmentLen + 1;
+        if (arcAngle % circleSegmentLen != 0) {
             pointsNumber += 1;
         }
         pointsCache = new PointsCache(pointsNumber);
         
-        while (startAngle < 0) {
-            startAngle += 360;
+        int startAngle = this.startAngle;
+        
+        for(int i = 0; i <= arcAngle; i+=circleSegmentLen) {
+            pointsCache.writePointToCache(x+Mathh.cos(i+startAngle)*kx*r/100000, y+Mathh.sin(i+startAngle)*ky*r/100000);
         }
         
-        for(int i = 0; i <= arcAngle; i+=CIRCLE_SEGMENT_LEN) {
-            pointsCache.writePointToCache(x+Mathh.cos(i+startAngle)*kx*r/1000/100, y+Mathh.sin(i+startAngle)*ky*r/1000/100);
+        if (arcAngle % circleSegmentLen != 0) {
+            System.out.println(System.currentTimeMillis());
+            pointsCache.writePointToCache(x+Mathh.cos(startAngle+arcAngle)*kx*r/100000, y+Mathh.sin(startAngle+arcAngle)*ky*r/100000);
         }
-        
-        if (arcAngle % CIRCLE_SEGMENT_LEN != 0) {
-            pointsCache.writePointToCache(Mathh.cos(arcAngle+startAngle)*kx*r/1000/100,
-                    y+Mathh.sin(arcAngle+startAngle)*ky*r/1000/100);
-        }
-    }
-
-    private class PointsCache {
-        
-        short[][] pointsCache;
-        int cacheCarriage = 0;
-
-        public PointsCache(int length) {
-            pointsCache = new short[length][2];
-        }
-
-        private void writePointToCache(int x, int y) {
-            pointsCache[cacheCarriage][0] = (short) x;
-            pointsCache[cacheCarriage][1] = (short) y;
-            cacheCarriage += 1;
-        }
-
-        public int getSize() {
-            return cacheCarriage;
-        }
-        
-        public short[] getPoint(int i) {
-            return pointsCache[i];
-        }
-    
     }
     
 }
