@@ -110,7 +110,7 @@ public class Circle extends AbstractCurve {
     }
     
     public short getID() {
-        return Element.LINE;
+        return Element.CIRCLE;
     }
     
     public int getStepsToPlace() {
