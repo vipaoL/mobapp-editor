@@ -16,6 +16,7 @@ import mobileapplication3.editor.Main;
  */
 public class ButtonCol extends UIComponent {
     
+    AnimationThread animationThread = null;
     public static final int TOP = Graphics.TOP;
     public static final int BOTTOM = Graphics.BOTTOM;
     public static final int LEFT = Graphics.LEFT;
@@ -170,8 +171,11 @@ public class ButtonCol extends UIComponent {
                 continue;
             }
             
+            if (y + btnH/2 > y0 + h) {
+                break;
+            }
+            
             if (y < y0) {
-                g.setFont(Font.getFont(prevFont.getFace(), prevFont.getStyle(), Font.SIZE_SMALL));
                 x += (y0 - y) / 2;
                 w -= (y0 - y);
                 btnH = btnH - (y0 - y);
@@ -179,16 +183,10 @@ public class ButtonCol extends UIComponent {
             }
             
             if (y + btnH > y1) {
-                g.setFont(Font.getFont(prevFont.getFace(), prevFont.getStyle(), Font.SIZE_SMALL));
                 x += (y + btnH - y1) / 2;
                 w -= (y + btnH - y1);
                 btnH = y1 - y;
                 y = y1 - btnH;
-            }
-            
-            if (y + btnH/2 > y0 + h) {
-                g.setFont(prevFont);
-                break;
             }
             
             boolean wasSelected = (i == selected && selectionEnabled);
@@ -239,13 +237,26 @@ public class ButtonCol extends UIComponent {
         
         int selectedH = btnH * selected;
         if (selectedH - btnH < scrollOffset) {
-            scrollOffset = Math.max(0, selectedH - btnH * 3 / 4);
+            initAnimationThread();
+            animationThread.animate(0, scrollOffset, 0, Math.max(0, selectedH - btnH * 3 / 4), 200);
         }
         
         if (selectedH + btnH > scrollOffset + h) {
-            scrollOffset = Math.min(btnH*buttons.length - h, selectedH - h + btnH + btnH * 3 / 4);
+            initAnimationThread();
+            animationThread.animate(0, scrollOffset, 0, Math.min(btnH*buttons.length - h, selectedH - h + btnH + btnH * 3 / 4), 200);
         }
         
         return true;
+    }
+    
+    private void initAnimationThread() {
+        if (animationThread == null) {
+            animationThread = new AnimationThread(new AnimationThread.AnimationWorker() {
+                public void onStep(int newX, int newY) {
+                    //System.out.println("onStep: y=" + newY);
+                    scrollOffset = newY;
+                }
+            });
+        }
     }
 }

@@ -79,10 +79,17 @@ public class Button {
     }
     
     public void paint(Graphics g, int x0, int y0, int w, int h, boolean isSelected) {
+        int prevClipX = g.getClipX();
+        int prevClipY = g.getClipY();
+        int prevClipW = g.getClipWidth();
+        int prevClipH = g.getClipHeight();
+        g.setClip(x0, y0, w, h);
         x0 += bgPadding;
         y0 += bgPadding;
         w -= bgPadding*2;
         h -= bgPadding*2;
+        Font prevFont = g.getFont();
+        
         if (isActive) {
             int bgColor = isSelected ? selectedColor : this.bgColor;
             if (bgColor > 0) {
@@ -102,11 +109,19 @@ public class Button {
         String[] splitted = Utils.split(sb, "\n");
         
         if (splitted.length > 1) {
+            if (h < g.getFont().getHeight() * 2) {
+                g.setFont(Font.getFont(prevFont.getFace(), prevFont.getStyle(), Font.SIZE_SMALL));
+            }
             g.drawString(splitted[0], x0 + w/2, y0+h/2, Graphics.HCENTER | Graphics.BOTTOM);
             g.drawString(splitted[1], x0 + w/2, y0+h/2, Graphics.HCENTER | Graphics.TOP);
         } else {
-            g.drawString(name, x0 + w/2, y0+h/2-Font.getDefaultFont().getHeight()/2, Graphics.HCENTER | Graphics.TOP);
+            if (h < g.getFont().getHeight()) {
+                g.setFont(Font.getFont(prevFont.getFace(), prevFont.getStyle(), Font.SIZE_SMALL));
+            }
+            g.drawString(name, x0 + w/2, y0+h/2-g.getFont().getHeight()/2, Graphics.HCENTER | Graphics.TOP);
         }
+        g.setClip(prevClipX, prevClipY, prevClipW, prevClipH);
+        g.setFont(prevFont);
     }
     
 }
