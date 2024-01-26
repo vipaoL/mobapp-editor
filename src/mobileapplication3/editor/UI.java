@@ -27,42 +27,40 @@ public class UI extends WindowManager {
     private final static int BTNS_IN_ROW = 4;
     public final static int FONT_H = Font.getDefaultFont().getHeight();
     public final static int BTN_H = FONT_H*2;
-    Button btnLoad, btnSave, btnPlace, btnList, zoomIn, zoomOut;;
-    EditorCanvas editorCanvas;
-    ButtonRow bottomButtonPanel;
-    ButtonRow zoomPanel;
-    ButtonPanelHorizontal placementButtonPanel;
-    ButtonCol placedElementsList;
-    PathPicker pathPicker;
-    StructureBuilder elementsBuffer;
-    long prevHandledDragEvent = 0;
+    private Button btnLoad, btnSave, btnPlace, btnList, zoomIn, zoomOut;;
+    private EditorCanvas editorCanvas;
+    private ButtonRow bottomButtonPanel, zoomPanel;
+    private ButtonPanelHorizontal placementButtonPanel;
+    private ButtonCol placedElementsList;
+    private PathPicker pathPicker;
+    private StructureBuilder elementsBuffer;
+    public static Image capture = null; //TODO
     public static boolean isCapturing = false;
-    public static Image capture = null;
     
     public UI() {
         try {
-        setFullScreenMode(true);
-        w = getWidth();
-        h = getHeight();
-        elementsBuffer = new StructureBuilder(new StructureBuilder.Feedback() {
-            public void onUpdate() {
-                initListPanel();
-            }
-        });
-        
-        initBottomPanel();
-        
-        initZoomPanel();
-        
-        initEditorCanvas();
-        
-        initPlacementPanel();
-        
-        initListPanel();
-        
-        initPathPicker();
-        
-        updateUI();
+            setFullScreenMode(true);
+            w = getWidth();
+            h = getHeight();
+            elementsBuffer = new StructureBuilder(new StructureBuilder.Feedback() {
+                public void onUpdate() {
+                    initListPanel();
+                }
+            });
+
+            initBottomPanel();
+
+            initZoomPanel();
+
+            initEditorCanvas();
+
+            initPlacementPanel();
+
+            initListPanel();
+
+            initPathPicker();
+
+            updateUI();
         } catch(Exception ex) {
             Main.setCurrent(new Alert(ex.toString()));
             ex.printStackTrace();
@@ -107,8 +105,9 @@ public class UI extends WindowManager {
                     public void onComplete(final String path) {
                         (new Thread(new Runnable() {
                             public void run() {
-                                elementsBuffer.loadFile(path);
                                 System.out.println("Open: " + path);
+                                elementsBuffer.loadFile(path);
+                                System.out.println("Loaded!");
                                 pathPicker.setVisible(false);
                                 editorCanvas.setVisible(true);
                                 bottomButtonPanel.setVisible(true);
@@ -246,42 +245,42 @@ public class UI extends WindowManager {
     private void initPlacementPanel() {
         Button btnLine = new Button("Line", new Button.ButtonFeedback() {
             public void buttonPressed() {
-                elementsBuffer.place(Element.LINE, (short) editorCanvas.cursorX, (short) editorCanvas.cursorY);
+                elementsBuffer.place(Element.LINE, (short) editorCanvas.getCursorX(), (short) editorCanvas.getCursorY());
                 placementButtonPanel.setVisible(false);
             }
         });
         
         Button btnCircle = new Button("Circle", new Button.ButtonFeedback() {
             public void buttonPressed() {
-                elementsBuffer.place(Element.CIRCLE, (short) editorCanvas.cursorX, (short) editorCanvas.cursorY);
+                elementsBuffer.place(Element.CIRCLE, (short) editorCanvas.getCursorX(), (short) editorCanvas.getCursorY());
                 placementButtonPanel.setVisible(false);
             }
         });
         
         Button btnSine = new Button("Sine", new Button.ButtonFeedback() {
             public void buttonPressed() {
-                elementsBuffer.place(Element.SINE, (short) editorCanvas.cursorX, (short) editorCanvas.cursorY);
+                elementsBuffer.place(Element.SINE, (short) editorCanvas.getCursorX(), (short) editorCanvas.getCursorY());
                 placementButtonPanel.setVisible(false);
             }
         });
         
         Button btnBrLine = new Button("Broken\nline", new Button.ButtonFeedback() {
             public void buttonPressed() {
-                elementsBuffer.place(Element.BROKEN_LINE, (short) editorCanvas.cursorX, (short) editorCanvas.cursorY);
+                elementsBuffer.place(Element.BROKEN_LINE, (short) editorCanvas.getCursorX(), (short) editorCanvas.getCursorY());
                 placementButtonPanel.setVisible(false);
             }
         });
         
         Button btnBrCircle = new Button("Broken\ncircle", new Button.ButtonFeedback() {
             public void buttonPressed() {
-                elementsBuffer.place(Element.BROKEN_CIRCLE, (short) editorCanvas.cursorX, (short) editorCanvas.cursorY);
+                elementsBuffer.place(Element.BROKEN_CIRCLE, (short) editorCanvas.getCursorX(), (short) editorCanvas.getCursorY());
                 placementButtonPanel.setVisible(false);
             }
         });
         
         Button btnAccel = new Button("Accele-\nrator", new Button.ButtonFeedback() {
             public void buttonPressed() {
-                elementsBuffer.place(Element.ACCELERATOR, (short) editorCanvas.cursorX, (short) editorCanvas.cursorY);
+                elementsBuffer.place(Element.ACCELERATOR, (short) editorCanvas.getCursorX(), (short) editorCanvas.getCursorY());
                 placementButtonPanel.setVisible(false);
             }
         });

@@ -16,14 +16,14 @@ import mobileapplication3.elements.Element;
  */
 public class EditorCanvas extends UIComponent {
     
-    public static int ZOOMOUT_MACROVIEW_THRESHOLD = 200;
-    StructureBuilder structurePlacer;
-    Car car = new Car();
-    int bgColor = 0x000000;
-    int cursorX, cursorY = 0;
-    int offsetX, offsetY;
-    int zoomOut = 8192;
-    int keyRepeats = 0;
+    public static final int ZOOMOUT_MACROVIEW_THRESHOLD = 200;
+    private StructureBuilder structurePlacer;
+    private Car car = new Car();
+    private int bgColor = 0x000000;
+    private int cursorX, cursorY = 0;
+    private int offsetX, offsetY;
+    private int zoomOut = 8192;
+    private int keyRepeats = 0;
     
     PointerHandler pointerHandler = new PointerHandler();
     
@@ -197,6 +197,14 @@ public class EditorCanvas extends UIComponent {
         pointerHandler.onCursorMove();
         keyRepeats = Math.min(25, keyRepeats + 1);
         return true;
+    }
+
+    public int getCursorX() {
+        return cursorX;
+    }
+
+    public int getCursorY() {
+        return cursorY;
     }
     
     class Car {

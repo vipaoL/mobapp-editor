@@ -13,13 +13,14 @@ public class AnimationThread implements Runnable {
     public static final int FPS = 20;
     public static final int FRAME_MILLIS = 1000 / FPS;
     public static final int FP_MATH_MULTIPLIER = 1000;
-    Thread thread = null;
-    AnimationWorker feedback;
+    
+    private Thread thread = null;
+    private AnimationWorker feedback;
     private boolean isRunning = false;
-    int framesCount;
-    int x, y, targetX, targetY;
-    int vX = 0, vY = 0;
-    int aX, aY;
+    private int framesCount;
+    private int x, y, targetX, targetY;
+    private int vX = 0, vY = 0;
+    private int aX, aY;
     
     public AnimationThread(AnimationWorker feedback) {
         this.feedback = feedback;

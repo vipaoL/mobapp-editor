@@ -19,30 +19,21 @@ import javax.microedition.lcdui.Graphics;
  */
 public class PathPicker extends UIComponent {
     
-    private static final int TARGET_FOLDER = 0;
-    private static final int TARGET_FILE = 1;
     public static final String QUESTION_TEMPLATE_FILE_PATH = ".filePath.";
+    private static final int TARGET_FOLDER = 0, TARGET_FILE = 1;
     
-    Button okBtn, cancelBtn;
-    ButtonCol list;
-    ButtonRow actionButtonPanel;
-    Button[] actionButtons;
-    Feedback feedback;
-    int btnH;
-    String currentPath;
-    String pickedPath;
-    String fileName = "";
-    private int currentTarget = TARGET_FOLDER;
-    String title = "";
-    String questionTemplate = "";
-    String question = "";
-    int questionOffset = 0;
-    int questionStrW4;
+    private Button okBtn, cancelBtn;
+    private ButtonCol list;
+    private ButtonRow actionButtonPanel;
+    private Button[] actionButtons;
+    private Feedback feedback;
+    private Thread questionAnim;
     
-    boolean dragged = false;
+    private int currentTarget = TARGET_FOLDER, btnH, questionOffset = 0, questionStrW4;
+    private String currentPath, pickedPath, fileName = "";
+    private String title = "", questionTemplate = "", question = "";
     
-    Thread questionAnim;
-    boolean questionAnimIsRunnung = false;
+    private boolean pointerDragged = false, questionAnimIsRunnung = false;
 
     public PathPicker(int w, int screenW, int screenH, int btnH) {
         this.w = w;
@@ -227,8 +218,8 @@ public class PathPicker extends UIComponent {
     }
 
     public boolean handlePointerReleased(int x, int y) {
-        if (dragged) {
-            dragged = false;
+        if (pointerDragged) {
+            pointerDragged = false;
             return false;
         }
         
@@ -252,7 +243,7 @@ public class PathPicker extends UIComponent {
     }
     
     public boolean handlePointerDragged(int x, int y) {
-        dragged = true;
+        pointerDragged = true;
         if (!isVisible) {
             return false;
         }

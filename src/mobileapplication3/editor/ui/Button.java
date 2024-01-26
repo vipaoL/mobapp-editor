@@ -48,9 +48,22 @@ public class Button {
     public boolean isActive() {
         return isActive;
     }
+    
+    public int getBgColor() {
+        return bgColor;
+    }
 
     public Button setBgColor(int bgColor) {
         this.bgColor = bgColor;
+        return this;
+    }
+    
+    public int getSelectedColor() {
+        return selectedColor;
+    }
+
+    public Button setSelectedColor(int selectedColor) {
+        this.selectedColor = selectedColor;
         return this;
     }
 

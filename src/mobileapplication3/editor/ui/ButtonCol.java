@@ -15,20 +15,21 @@ import mobileapplication3.editor.Main;
  * @author vipaol
  */
 public class ButtonCol extends UIComponent {
-    
-    AnimationThread animationThread = null;
     public static final int TOP = Graphics.TOP;
     public static final int BOTTOM = Graphics.BOTTOM;
     public static final int LEFT = Graphics.LEFT;
     public static final int RIGHT = Graphics.RIGHT;
     public static final int BTN_H_AUTO = 0;
-    int btnH;
-    int selected = 0;
-    Button[] buttons;
-    int bgColor = 0x101020;
-    boolean selectionEnabled = false;
-    boolean isScrollable = false;
-    int scrollOffset = 0;
+    
+    private AnimationThread animationThread = null;
+    private int btnH;
+    private int selected = 0;
+    private Button[] buttons;
+    private int bgColor = 0x101020;
+    private boolean selectionEnabled = false;
+    private boolean isScrollable = false;
+    private int scrollOffset = 0;
+    private int pointerPressedX, pointerPressedY, scrollOffsetWhenPressed;
 
     public ButtonCol(int x0, int y0, int w, int h, Button[] buttons, int anchor, int btnH) {
         this.x0 = x0;
@@ -92,8 +93,6 @@ public class ButtonCol extends UIComponent {
         buttons[i].invokePressed(wasSelected);
         return true;
     }
-    
-    int pointerPressedX, pointerPressedY, scrollOffsetWhenPressed;
     
     public boolean handlePointerPressed(int x, int y) {
         if (!isVisible) {
