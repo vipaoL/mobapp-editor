@@ -46,7 +46,7 @@ public class StructureBuilder {
         
         nextPointHandler.handleNextPoint(x, y);
         
-        if (nextPointHandler.step == placingNow.getStepsToPlace()) {
+        if (nextPointHandler.step == placingNow.getStepsToPlace() || nextPointHandler.isEditing) {
             if (!isPreview) {
                 recalcEndPoint();
                 placingNow = null;
@@ -95,15 +95,24 @@ public class StructureBuilder {
     }
     
     public void loadFile(String path) {
-        buffer = new Vector();
-        Element[] elements = FileUtils.readMGStruct(path);
-        if (elements == null) {
-            return;
+        try {
+            buffer = new Vector();
+            Element[] elements = FileUtils.readMGStruct(path);
+            if (elements == null) {
+                System.out.println("error: elements array is null");
+                return;
+            }
+            for (int i = 0; i < elements.length; i++) {
+                if (elements[i] != null) {
+                    buffer.addElement(elements[i]);
+                } else {
+                    System.out.println("elements["+i+"] is null. skipping");
+                }
+            }
+            feedback.onUpdate();
+        } catch(Exception ex) {
+            ex.printStackTrace();
         }
-        for (int i = 0; i < elements.length; i++) {
-            buffer.addElement(elements[i]);
-        }
-        feedback.onUpdate();
     }
     
     public void remove(int i) {
@@ -168,12 +177,13 @@ public class StructureBuilder {
     }
     
     private class NextPointHandler {
-        int step = 0;
-        boolean showingPreview = false;
+        public int step = 0;
+        public boolean showingPreview = false;
+        public boolean isEditing = false;
         
         void handleNextPoint(short x, short y) {
             try {
-                placingNow.placePoint(step, x, y);
+                placingNow.getPlacementSteps()[step].place(x, y);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

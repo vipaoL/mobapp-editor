@@ -38,20 +38,28 @@ public class WindowManager extends Canvas {
     }
     
     protected void keyPressed(int keyCode) {
-        for (int i = uiComponents.length - 1; i >= 0; i--) {
-            if (uiComponents[i].handleKeyPressed(keyCode)) {
-                break;
+        try {
+            for (int i = uiComponents.length - 1; i >= 0; i--) {
+                if (uiComponents[i].handleKeyPressed(keyCode)) {
+                    break;
+                }
             }
+        } catch(Exception ex) {
+            ex.printStackTrace();
         }
         
         repaint();
     }
     
     protected void keyRepeated(int keyCode) {
-        for (int i = uiComponents.length - 1; i >= 0; i--) {
-            if (uiComponents[i].handleKeyRepeated(keyCode)) {
-                break;
+        try {
+            for (int i = uiComponents.length - 1; i >= 0; i--) {
+                if (uiComponents[i].handleKeyRepeated(keyCode)) {
+                    break;
+                }
             }
+        } catch(Exception ex) {
+            ex.printStackTrace();
         }
         
         repaint();
@@ -60,10 +68,14 @@ public class WindowManager extends Canvas {
     protected void pointerPressed(int x, int y) {
         pressedX = x;
         pressedY = y;
-        for (int i = uiComponents.length - 1; i >= 0; i--) {
-            if (uiComponents[i].handlePointerPressed(x, y)) {
-                break;
+        try {
+            for (int i = uiComponents.length - 1; i >= 0; i--) {
+                if (uiComponents[i].handlePointerPressed(x, y)) {
+                    break;
+                }
             }
+        } catch(Exception ex) {
+            ex.printStackTrace();
         }
         repaint();
     }
@@ -74,10 +86,14 @@ public class WindowManager extends Canvas {
         }
         
         dragged = true;
-        for (int i = uiComponents.length - 1; i >= 0; i--) {
-            if (uiComponents[i].handlePointerDragged(x, y)) {
-                break;
+        try {
+            for (int i = uiComponents.length - 1; i >= 0; i--) {
+                if (uiComponents[i].handlePointerDragged(x, y)) {
+                    break;
+                }
             }
+        } catch(Exception ex) {
+            ex.printStackTrace();
         }
         repaint();
     }
@@ -88,10 +104,14 @@ public class WindowManager extends Canvas {
             return;
         }
         
-        for (int i = uiComponents.length - 1; i >= 0; i--) {
-            if (uiComponents[i].handlePointerReleased(x, y)) {
-                break;
+        try {
+            for (int i = uiComponents.length - 1; i >= 0; i--) {
+                if (uiComponents[i].handlePointerReleased(x, y)) {
+                    break;
+                }
             }
+        } catch(Exception ex) {
+            ex.printStackTrace();
         }
         
         repaint();

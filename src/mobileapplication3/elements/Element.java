@@ -125,7 +125,9 @@ public abstract class Element {
         return arr;
     }
     
-    public abstract void placePoint(int i, short x, short y);
+    public abstract PlacementStep[] getPlacementSteps();
+    
+    public abstract PlacementStep[] getExtraEditingSteps();
     
     public abstract void paint(Graphics g, int zoomOut, int offsetX, int offsetY);
     
@@ -140,5 +142,10 @@ public abstract class Element {
     public abstract String getName();
     
     public abstract short[] getEndPoint() throws Exception;
+    
+    public abstract class PlacementStep {
+        public abstract void place(short pointX, short pointY);
+        public abstract String getName();
+    }
     
 }

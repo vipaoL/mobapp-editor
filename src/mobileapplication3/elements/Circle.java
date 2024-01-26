@@ -15,23 +15,42 @@ public class Circle extends AbstractCurve {
     
     short x, y, r, arcAngle = 360, startAngle, kx = 100, ky = 100;
     
-    public void placePoint(int i, short pointX, short pointY) throws IllegalArgumentException {
-        switch (i) {
-            case 0:
-                setCenter(pointX, pointY);
-                break;
-            case 1:
-                short dx = (short) (pointX - x);
-                short dy = (short) (pointY - y);
-                setRadius(calcDistance(dx, dy));
-                break;
-            case 2:
-                throw new IllegalArgumentException("setting start angle is not supported yet");
-            case 3:
-                throw new IllegalArgumentException("setting arc angle is not supported yet");
-            default:
-                throw new IllegalArgumentException();
-        }
+    public PlacementStep[] getPlacementSteps() {
+        return new PlacementStep[] {
+            new PlacementStep() {
+                public void place(short pointX, short pointY) {
+                    setCenter(pointX, pointY);
+                }
+
+                public String getName() {
+                    return "Move";
+                }
+            },
+            new PlacementStep() {
+                public void place(short pointX, short pointY) {
+                    short dx = (short) (pointX - x);
+                    short dy = (short) (pointY - y);
+                    setRadius(calcDistance(dx, dy));
+                }
+
+                public String getName() {
+                    return "Radius";
+                }
+            }
+        };
+    }
+
+    public PlacementStep[] getExtraEditingSteps() {
+        return new PlacementStep[] {
+            new PlacementStep() {
+                public void place(short x, short y) {
+                }
+
+                public String getName() {
+                    return "";
+                }
+            }
+        };
     }
     
     public Element setCenter(short x, short y) {

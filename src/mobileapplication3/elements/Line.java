@@ -16,17 +16,31 @@ public class Line extends Element {
     
     short x1, y1, x2, y2;
     
-    public void placePoint(int i, short x, short y) throws IllegalArgumentException {
-        switch (i) {
-            case 0:
-                setStartPoint(x, y);
-                break;
-            case 1:
-                setEndPoint(x, y);
-                break;
-            default:
-                throw new IllegalArgumentException();
-        }
+    public PlacementStep[] getPlacementSteps() {
+        return new PlacementStep[] {
+            new PlacementStep() {
+                public void place(short pointX, short pointY) {
+                    setStartPoint(pointX, pointY);
+                }
+
+                public String getName() {
+                    return "Start Point";
+                }
+            },
+            new PlacementStep() {
+                public void place(short pointX, short pointY) {
+                    setEndPoint(pointX, pointY);
+                }
+
+                public String getName() {
+                    return "End Point";
+                }
+            }
+        };
+    }
+
+    public PlacementStep[] getExtraEditingSteps() {
+        return new PlacementStep[0];
     }
     
     public void setStartPoint(short x, short y) {

@@ -16,22 +16,42 @@ public class Sine extends AbstractCurve {
     short x0, y0, l, halfperiods = 1, offset = 90, amp;
     short anchorX, anchorY;
     
-    public void placePoint(int i, short pointX, short pointY) throws IllegalArgumentException {
-        switch (i) {
-            case 0:
-                setAnchorPoint(pointX, pointY);
-                break;
-            case 1:
-                setLength((short) (pointX - x0));
-                setAmplitude((short) (-1000*(pointY - anchorY)/(1000+Mathh.sin(offset))));
-                calcStartPoint();
-                break;
-            case 2:
-                setHalfperiodsNumber((short) Math.max(1, l/(pointX - anchorX)));
-                break;
-            default:
-                throw new IllegalArgumentException();
-        }
+    public PlacementStep[] getPlacementSteps() {
+        return new PlacementStep[] {
+            new PlacementStep() {
+                public void place(short pointX, short pointY) {
+                    setAnchorPoint(pointX, pointY);
+                }
+
+                public String getName() {
+                    return "Move";
+                }
+            },
+            new PlacementStep() {
+                public void place(short pointX, short pointY) {
+                    setLength((short) (pointX - x0));
+                    setAmplitude((short) (-1000*(pointY - anchorY)/(1000+Mathh.sin(offset))));
+                    calcStartPoint();
+                }
+
+                public String getName() {
+                    return "2nd Point";
+                }
+            },
+            new PlacementStep() {
+                public void place(short pointX, short pointY) {
+                    setHalfperiodsNumber((short) Math.max(1, l/(pointX - anchorX)));
+                }
+
+                public String getName() {
+                    return "Periods";
+                }
+            }
+        };
+    }
+
+    public PlacementStep[] getExtraEditingSteps() {
+        return new PlacementStep[0];
     }
     
     public void setAnchorPoint(short x, short y) {

@@ -15,15 +15,23 @@ public class EndPoint extends Element {
     
     short x, y;
     
-    public void placePoint(int i, short pointX, short pointY) throws IllegalArgumentException {
-        switch (i) {
-            case 0:
-                x = pointX;
-                y = pointY;
-                break;
-            default:
-                throw new IllegalArgumentException();
-        }
+    public PlacementStep[] getPlacementSteps() {
+        return new PlacementStep[] {
+            new PlacementStep() {
+                public void place(short pointX, short pointY) {
+                    x = pointX;
+                    y = pointY;
+                }
+
+                public String getName() {
+                    return "";
+                }
+            }
+        };
+    }
+
+    public PlacementStep[] getExtraEditingSteps() {
+        return new PlacementStep[0];
     }
     
     public void paint(Graphics g, int zoomOut, int offsetX, int offsetY) {

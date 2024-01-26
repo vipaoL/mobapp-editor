@@ -63,12 +63,15 @@ public class FileUtils {
         try {
             DataInputStream is = fileToDataInputStream(path);
             short fileVer = is.readShort();
+            System.out.println("mgstruct v" + fileVer);
             short elementsCount = is.readShort();
+            System.out.println("elements count: " + elementsCount);
             Element[] elements = new Element[elementsCount];
             for (int i = 0; i < elementsCount; i++) {
                 elements[i] = readNextElement(is);
                 if (elements[i] == null) {
-                    return null;
+                    System.out.println("got null. stopping read");
+                    return elements;
                 }
             }
             return elements;
@@ -79,10 +82,12 @@ public class FileUtils {
     }
     
     public static Element readNextElement(DataInputStream is) {
+        System.err.println("reading next element...");
         try {
             short id = is.readShort();
-            System.out.println(id);
+            System.out.print("id" + id + " ");
             if (id == 0) {
+                System.out.println("id0 is EOF mark. stopping");
                 return null;
             }
             Element element = Element.createTypedInstance(id);
@@ -95,6 +100,9 @@ public class FileUtils {
             for (int i = 0; i < argsCount; i++) {
                 args[i] = is.readShort();
             }
+            
+            System.out.println(Utils.shortArrayToString(args));
+            
             element.setArgs(args);
             return element;
         } catch (IOException ex) {
