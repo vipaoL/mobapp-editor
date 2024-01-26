@@ -114,16 +114,16 @@ public class EditorCanvas extends UIComponent {
     public boolean handleKeyPressed(int keyCode) {
         switch (Main.util.getGameAction(keyCode)) {
             case Canvas.UP:
-                cursorY--;
+                cursorY -= Math.max(1, zoomOut / 1000);
                 break;
             case Canvas.DOWN:
-                cursorY++;
+                cursorY += Math.max(1, zoomOut / 1000);
                 break;
             case Canvas.LEFT:
-                cursorX--;
+                cursorX -= Math.max(1, zoomOut / 1000);
                 break;
             case Canvas.RIGHT:
-                cursorX++;
+                cursorX += Math.max(1, zoomOut / 1000);
                 break;
             case Canvas.FIRE:
                 structurePlacer.handleNextPoint((short) cursorX, (short) cursorY, false);
