@@ -146,7 +146,7 @@ public class Sine extends AbstractCurve {
         return new short[]{(short) (x0 + l), (short) (y0 + amp*Mathh.sin(offset+180*halfperiods)/1000)};
     }
     
-    protected void genPoints() { //k: 10 = 1.0
+    protected void genPoints() {
         if (amp == 0) {
             pointsCache = new PointsCache(2);
             pointsCache.writePointToCache(x0, y0);
