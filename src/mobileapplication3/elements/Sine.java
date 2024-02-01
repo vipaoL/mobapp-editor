@@ -152,17 +152,25 @@ public class Sine extends AbstractCurve {
             pointsCache.writePointToCache(x0, y0);
             pointsCache.writePointToCache(x0 + l, y0);
         } else {
-            int sl = 90;
-            pointsCache = new PointsCache(1 + (l-sl/2)/sl + 1);
+            int step = 30;
+            int startA = offset;
+            int endA = offset + halfperiods * 180;
+            int a = endA - startA;
+
             int nextPointX;
             int nextPointY;
-            for(int i = 0; i < l - sl/2; i+=sl) {
-                nextPointX = x0 + i;
-                nextPointY = y0 + amp*Mathh.sin(180*i*halfperiods/l+offset)/1000;
+            pointsCache = new PointsCache(1 + halfperiods*6);
+            for (int i = startA; i <= endA; i+=step) {
+                nextPointX = x0 + (i - startA)*l/a;
+                nextPointY = y0 + amp*Mathh.sin(i)/1000;
                 pointsCache.writePointToCache(nextPointX, nextPointY);
             }
             
-            pointsCache.writePointToCache(x0 + l, y0 + amp*Mathh.sin(180*halfperiods+offset)/1000);
+            if (a % step != 0) {
+                nextPointX = x0 + l;
+                nextPointY = y0 + amp*Mathh.sin(endA)/1000;
+                pointsCache.writePointToCache(nextPointX, nextPointY);
+            }
         }
     }
     
