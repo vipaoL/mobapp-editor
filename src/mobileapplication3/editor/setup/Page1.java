@@ -19,7 +19,7 @@ public class Page1 extends AbstractSetupWizardPage {
     private UIComponent logo;
     
     public Page1(Button[] buttons, SetupWizard.Feedback feedback) {
-        super("Welcome to mobapp-game editor", buttons, feedback);
+        super("Welcome to the structure editor for mobapp-game", buttons, feedback);
         initPage();
     }
     

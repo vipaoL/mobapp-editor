@@ -18,18 +18,18 @@ public class Page2 extends AbstractSetupWizardPage {
     private TextComponent text = new TextComponent();
     
     public Page2(Button[] buttons, SetupWizard.Feedback feedback) {
-        super("Let's get started", buttons, feedback);
+        super("What are structures?", buttons, feedback);
         initPage();
     }
 
     public void initOnFirstShow() {
         this.text.setText(
-                "This app lets you to create structures for mobapp-game."
-                        + " You can load structures you created into the game"
-                        + " by pressing \"Ext Structs\" in the main menu"
-                        + " of the game. The game will try to find them in several"
-                        + " folders. Let's pick one of them to save structures"
-                        + " you'll create into.");
+                "The structures can be compared to parts of an endless puzzle,"
+                        + " and the world of mobapp-game is just"
+                        + " a random combination of them."
+                        + " You can create your own structures,"
+                        + " load them into the game and the game will use them"
+                        + " to generate the world on a par with the built-in ones.");
     }
 
     protected IUIComponent initAndGetPageContent() {
