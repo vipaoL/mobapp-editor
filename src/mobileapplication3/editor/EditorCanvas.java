@@ -26,18 +26,12 @@ public class EditorCanvas extends UIComponent {
     private int keyRepeats = 0;
     
     PointerHandler pointerHandler = new PointerHandler();
-    
-    EditorCanvas(int x0, int y0, int w, int h, StructureBuilder structure) {
-        this.x0 = x0;
-        this.y0 = y0;
-        this.w = w;
-        this.h = h;
+
+    public EditorCanvas(StructureBuilder structure) {
         this.structurePlacer = structure;
-        offsetX = w/2;
-        offsetY = h/2;
     }
     
-    public void paint(Graphics g) {
+    public void onPaint(Graphics g) {
         g.setColor(bgColor);
         drawBG(g);
         drawElements(g);
@@ -95,6 +89,14 @@ public class EditorCanvas extends UIComponent {
         g.fillRect(xToPX(0) - d, yToPX(0) - d, d*2, d*2);
     }
 
+    public void onSetBounds(int x0, int y0, int w, int h) {
+        recalcOffset();
+    }
+    
+    public boolean canBeFocused() {
+        return true;
+    }
+
     public boolean handlePointerPressed(int x, int y) {
         pointerHandler.handlePointerPressed(x, y);
         return true;
@@ -111,19 +113,25 @@ public class EditorCanvas extends UIComponent {
         return true;
     }
 
-    public boolean handleKeyPressed(int keyCode) {
+    public boolean handleKeyPressed(int keyCode, int count) {
+        System.out.println("count=" + count);
+        if (count > 10) {
+            count = 10;
+        }
+        
+        int minStep = count * count;
         switch (Main.util.getGameAction(keyCode)) {
             case Canvas.UP:
-                cursorY -= Math.max(1, zoomOut / 1000);
+                cursorY -= Math.max(minStep, zoomOut / 1000);
                 break;
             case Canvas.DOWN:
-                cursorY += Math.max(1, zoomOut / 1000);
+                cursorY += Math.max(minStep, zoomOut / 1000);
                 break;
             case Canvas.LEFT:
-                cursorX -= Math.max(1, zoomOut / 1000);
+                cursorX -= Math.max(minStep, zoomOut / 1000);
                 break;
             case Canvas.RIGHT:
-                cursorX += Math.max(1, zoomOut / 1000);
+                cursorX += Math.max(minStep, zoomOut / 1000);
                 break;
             case Canvas.FIRE:
                 structurePlacer.handleNextPoint((short) cursorX, (short) cursorY, false);
@@ -155,20 +163,24 @@ public class EditorCanvas extends UIComponent {
         return true;
     }
     
-    public boolean handleKeyRepeated(int keyCode) {
-        int a = 10 + keyRepeats*4;
+    public boolean handleKeyRepeated(int keyCode, int pressedCount) {
+        // TODO: rewrite to cursormove
+        int minStep = Math.max(zoomOut / 1000, 1);
+        int a = keyRepeats;
+        System.out.println(a);
+        int step = (minStep + a*8) * pressedCount;
         switch (Main.util.getGameAction(keyCode)) {
             case Canvas.UP:
-                cursorY -= a;
+                cursorY -= step;
                 break;
             case Canvas.DOWN:
-                cursorY += a;
+                cursorY += step;
                 break;
             case Canvas.LEFT:
-                cursorX -= a;
+                cursorX -= step;
                 break;
             case Canvas.RIGHT:
-                cursorX += a;
+                cursorX += step;
                 break;
             case Canvas.FIRE:
                 break;
@@ -195,7 +207,7 @@ public class EditorCanvas extends UIComponent {
                 }
         }
         pointerHandler.onCursorMove();
-        keyRepeats = Math.min(25, keyRepeats + 1);
+        keyRepeats = Math.min(15, keyRepeats + 1);
         return true;
     }
 

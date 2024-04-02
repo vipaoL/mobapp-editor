@@ -5,36 +5,60 @@
  */
 package mobileapplication3.editor.ui;
 
+import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
+import mobileapplication3.editor.Main;
+import mobileapplication3.utils.Utils;
 
 /**
  *
  * @author vipaol
  */
-public class ButtonRow extends UIComponent {
-    Button[] buttons;
-    int bgColor = 0x101020;
-
-    public ButtonRow(int x0, int y0, int w, int h, Button[] buttons, int anchor) {
-        this.x0 = x0;
-        this.y0 = y0;
-        this.w = w;
-        this.h = h;
+public class ButtonRow extends AbstractButtonSet {
+    
+    private int leftSoftBindIndex = NOT_SET;
+    private int rightSoftBindIndex = NOT_SET;
+    
+    public ButtonRow() { }
+    
+    public ButtonRow(Button[] buttons) {
         this.buttons = buttons;
-        if (anchor == BOTTOM) {
-            this.y0 -= h;
+    }
+    
+    public ButtonRow bindToSoftButtons(int leftSoftBindIndex, int rightSoftBindIndex) {
+        this.leftSoftBindIndex = leftSoftBindIndex;
+        this.rightSoftBindIndex = rightSoftBindIndex;
+        return this;
+    }
+    
+    public int getMinPossibleWidth() { // need fix
+        int res = 0;
+        for (int i = 0; i < buttons.length; i++) {
+            String[] btnTextLines = Utils.split(buttons[i].getTitle(), "\n");
+            int maxLineW = 0;
+            for (int j = 0; j < btnTextLines.length; j++) {
+                maxLineW = Math.max(maxLineW, Font.getDefaultFont().stringWidth(btnTextLines[j] + "    ") + buttons[i].getBgPagging()*4);
+            }
+            res += maxLineW;
         }
+        return res;
     }
 
-    public ButtonRow setBgColor(int color) {
-        bgColor = color;
-        return this;
+    public void onSetBounds(int x0, int y0, int w, int h) {
+        if (w == W_AUTO) {
+            this.w = getMinPossibleWidth();
+        }
+        if (h == H_AUTO) {
+            this.h = Font.getDefaultFont().getHeight() * 5 / 2 + buttonsBgPadding;
+        }
     }
 
     public boolean handlePointerReleased(int x, int y) {
         if (buttons.length == 0) {
             return false;
         }
+        
         if (!checkTouchEvent(x, y)) {
             return false;
         }
@@ -43,27 +67,82 @@ public class ButtonRow extends UIComponent {
         y -= y0;
         
         int i = x * buttons.length / w;
-        buttons[i].invokePressed(false);
-        return true;
-    }
-
-    public void paint(Graphics g) {
-        if (buttons.length == 0) {
-            return;
+        boolean wasSelected = (i == selected && isSelectionEnabled);
+        if (isSelectionEnabled) {
+            selected = i;
         }
         
-        if (bgColor > 0) {
-            g.setColor(bgColor);
-            g.fillRect(x0, y0, w, h);
+        return buttons[i].invokePressed(wasSelected, isFocused);
+    }
+
+    public boolean handleKeyPressed(int keyCode, int count) {
+        if (!isVisible) {
+            return false;
+        }
+        
+        setIsSelectionEnabled(true);
+        switch (keyCode) {
+            case KEYCODE_LEFT_SOFT:
+                if (leftSoftBindIndex != NOT_SET) {
+                    return buttons[leftSoftBindIndex].invokePressed(selected == leftSoftBindIndex, isFocused);
+                }
+                return false;
+            case KEYCODE_RIGHT_SOFT:
+                if (rightSoftBindIndex != NOT_SET) {
+                    return buttons[rightSoftBindIndex].invokePressed(selected == rightSoftBindIndex, isFocused);
+                }
+                return false;
+            default:
+                switch (Main.util.getGameAction(keyCode)) {
+                    case Canvas.LEFT:
+                        if (selected > 0) {
+                            selected--;
+                        } else {
+                            selected = buttons.length - 1;
+                        }
+                        break;
+                    case Canvas.RIGHT:
+                        if (selected < buttons.length - 1) {
+                            selected++;
+                        } else {
+                            selected = 0;
+                        }
+                        break;
+                    case Canvas.FIRE:
+                        return buttons[selected].invokePressed(true, isFocused);
+                    default:
+                        return false;
+                }
+        }
+        
+        // scrolling is not implemented for rows (maybe yet)
+//        int selectedH = btnH * selected;
+//        if (selectedH - btnH < scrollOffset) {
+//            initAnimationThread();
+//            animationThread.animate(0, scrollOffset, 0, Math.max(0, selectedH - btnH * 3 / 4), 200);
+//        }
+//        
+//        if (selectedH + btnH > scrollOffset + h) {
+//            initAnimationThread();
+//            animationThread.animate(0, scrollOffset, 0, Math.min(btnH*buttons.length - h, selectedH - h + btnH + btnH * 3 / 4), 200);
+//        }
+
+        if (isSelectionEnabled) {
+            isSelectionVisible = true;
+        }
+        
+        return true;
+    }
+    
+    public void onPaint(Graphics g) {
+        if (buttons == null || buttons.length == 0) {
+            return;
         }
 
         for (int i = 0; i < buttons.length; i++) {
-            buttons[i].paint(g, x0 + i*w/buttons.length, y0, w/buttons.length, h, false);
+            boolean drawAsSelected = (i == selected && isSelectionVisible && isFocused);
+            buttons[i].paint(g, x0 + i*w/buttons.length, y0, w/buttons.length, h, drawAsSelected, isFocused);
         }
-    }
-
-    public boolean handleKeyPressed(int keyCode) {
-        return false;
     }
 
 }

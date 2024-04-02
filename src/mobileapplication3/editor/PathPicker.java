@@ -5,22 +5,42 @@
  */
 package mobileapplication3.editor;
 
-import mobileapplication3.editor.ui.UIComponent;
+import mobileapplication3.utils.Utils;
+import mobileapplication3.utils.FileUtils;
 import mobileapplication3.editor.ui.Button;
 import mobileapplication3.editor.ui.ButtonRow;
 import mobileapplication3.editor.ui.ButtonCol;
 import java.io.IOException;
 import java.util.Calendar;
+import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
+import mobileapplication3.editor.ui.Container;
+import mobileapplication3.editor.ui.IUIComponent;
 
 /**
  *
  * @author vipaol
  */
-public class PathPicker extends UIComponent {
+
+
+
+
+
+
+
+// SCARY CODE! DO NOT LOOK, I WARNED YOU.
+// (I'll fix it later)
+
+
+
+
+
+
+
+public class PathPicker extends Container {
     
-    public static final String QUESTION_TEMPLATE_FILE_PATH = ".filePath.";
-    private static final int TARGET_FOLDER = 0, TARGET_FILE = 1;
+    public static final String QUESTION_REPLACE_WITH_PATH = ".picked_path.";
+    private static final int TARGET_SAVE = 0, TARGET_OPEN = 1;
     
     private Button okBtn, cancelBtn;
     private ButtonCol list;
@@ -29,31 +49,23 @@ public class PathPicker extends UIComponent {
     private Feedback feedback;
     private Thread questionAnim;
     
-    private int currentTarget = TARGET_FOLDER, btnH, questionOffset = 0, questionStrW4;
-    private String currentPath, pickedPath, fileName = "";
+    private int currentTarget = TARGET_SAVE, btnH, questionOffset, questionStrW4;
+    private String currentPath = null, pickedPath, fileName = "";
     private String title = "", questionTemplate = "", question = "";
     
     private boolean pointerDragged = false, questionAnimIsRunnung = false;
-
-    public PathPicker(int w, int screenW, int screenH, int btnH) {
-        this.w = w;
-        this.h = screenH;
-        this.btnH = btnH;
-        x0 = (screenW - w) / 2;
-        y0 = 0;
-        list = (ButtonCol) new ButtonCol(x0, h, 1, 1, new Button[0], ButtonCol.LEFT | ButtonCol.BOTTOM, -1);
-        
+    private boolean isFMInited = false;
+    
+    public PathPicker() {
         initActionPanel();
-    }
-    
-    public void pickMGStructFolder(Feedback onComplete) {
         
+        initList();
     }
     
-    public void pickFolder(String question, Feedback onComplete) {
+    public PathPicker pickMGStructFolder(String question, Feedback onComplete) {
         questionTemplate = question;
-        this.question = "";
-        currentTarget = TARGET_FOLDER;
+        this.question = question;
+        currentTarget = TARGET_SAVE;
         setVisible(true);
         feedback = onComplete;
         (new Thread(new Runnable() {
@@ -61,12 +73,18 @@ public class PathPicker extends UIComponent {
                 initFM();
             }
         })).start();
+        return this;
     }
     
-    public void pickFile(String question, Feedback onComplete) {
+    public PathPicker pickFolder(String question, Feedback onComplete) {
+        return pickFolder(null, question, onComplete);
+    }
+    
+    public PathPicker pickFolder(String initialPath, String question, Feedback onComplete) {
         questionTemplate = question;
         this.question = "";
-        currentTarget = TARGET_FILE;
+        currentTarget = TARGET_SAVE;
+        this.currentPath = initialPath;
         setVisible(true);
         feedback = onComplete;
         (new Thread(new Runnable() {
@@ -74,30 +92,61 @@ public class PathPicker extends UIComponent {
                 initFM();
             }
         })).start();
+        return this;
+    }
+    
+    public PathPicker pickFile(String question, Feedback onComplete) {
+        return pickFile(null, question, onComplete);
+    }
+    
+    public PathPicker pickFile(String initialPath, String question, Feedback onComplete) {
+        questionTemplate = question;
+        this.question = "";
+        currentTarget = TARGET_OPEN;
+        this.currentPath = initialPath;
+        setVisible(true);
+        feedback = onComplete;
+        (new Thread(new Runnable() {
+            public void run() {
+                initFM();
+            }
+        })).start();
+        return this;
     }
     
     private void initFM() {
-        if (currentTarget == TARGET_FOLDER) {
+        isFMInited = true;
+        if (currentTarget == TARGET_SAVE) {
             title = "Choose a folder";
-        } else if (currentTarget == TARGET_FILE) {
+        } else if (currentTarget == TARGET_OPEN) {
             title = "Choose a file";
         }
         
-        currentPath = FileUtils.prefix;
-        if (currentTarget == TARGET_FOLDER) {
+        if (currentTarget == TARGET_SAVE) {
             Calendar calendar = Calendar.getInstance();
             fileName = calendar.get(Calendar.YEAR)
-                    + "-" + calendar.get(Calendar.MONTH)
+                    // it counts months from 0 while everything else from 1.
+                    + "-" + (calendar.get(Calendar.MONTH) + 1) // why? who knows...
                     + "-" + calendar.get(Calendar.DAY_OF_MONTH)
                     + "_" + calendar.get(Calendar.HOUR_OF_DAY)
                     + "-" + calendar.get(Calendar.MINUTE)
                     + "-" + calendar.get(Calendar.SECOND)
                     + ".mgstruct";
+            System.out.println(fileName);
         }
+        
         (new Thread(new Runnable() {
             public void run() {
-                String[] roots = FileUtils.getRoots();
-                setButtons(roots);
+                if (currentPath == null) {
+                    currentPath = FileUtils.PREFIX;
+                    String[] roots = FileUtils.getRoots();
+                    initList(roots);
+                } else {
+                    if (currentTarget == TARGET_SAVE) {
+                        pickPath(currentPath + fileName);
+                    }
+                    getNewList();
+                }
             }
         })).start();
     }
@@ -108,7 +157,7 @@ public class PathPicker extends UIComponent {
         (new Thread(new Runnable() {
             public void run() {
                 try {
-                    setButtons(FileUtils.list(currentPath));
+                    initList(FileUtils.list(currentPath));
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -116,83 +165,129 @@ public class PathPicker extends UIComponent {
         })).start();
     }
     
-    private void setButtons(String[] buttons) {
-        Button[] listButtons = new Button[buttons.length];
-        for (int i = 0; i < buttons.length; i++) {
-            final String name = buttons[i];
+    private void pickPath(String path) {
+        pickedPath = path;
+        if (!fileName.equals("")) {
+            question = Utils.replace(questionTemplate, QUESTION_REPLACE_WITH_PATH, pickedPath);
+        } else {
+            question = "";
+        }
+        
+        questionStrW4 = Font.getDefaultFont().stringWidth(question) / 4;
+        questionOffset = questionStrW4;
+        if (!questionAnimIsRunnung) {
+            questionAnim = new Thread(new Runnable() {
+                public void run() {
+                    questionAnimIsRunnung = true;
+                    boolean reverse = false;
+                    while (isVisible) {
+                        try {
+                            long start = System.currentTimeMillis();
+                            if (!reverse) {
+                                if (questionOffset < questionStrW4) {
+                                    questionOffset += questionStrW4 / 64;
+                                } else {
+                                    repaint();
+                                    Thread.sleep(500);
+                                    reverse = true;
+                                }
+                            } else {
+                                if (questionOffset > -questionStrW4) {
+                                    questionOffset -= questionStrW4 / 8;
+                                } else {
+                                    repaint();
+                                    Thread.sleep(500);
+                                    reverse = false;
+                                }
+                            }
+                            repaint();
+                            Thread.sleep(Math.max(0, 20 - (System.currentTimeMillis() - start)));
+                        } catch (InterruptedException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                    questionAnimIsRunnung = false;
+                }
+            });
+            questionAnim.start();
+        }
+    }
+    
+    private void initList(String[] paths) {
+        Button[] listButtons = new Button[paths.length];
+        for (int i = 0; i < paths.length; i++) {
+            final String name = paths[i];
             listButtons[i] = new Button(name, new Button.ButtonFeedback() {
                 public void buttonPressed() {
                     // folder or file
-                    if (name.endsWith(FileUtils.sep)) {
-                        if (currentTarget == TARGET_FILE) {
+                    if (name.endsWith(String.valueOf(FileUtils.SEP))) {
+                        if (currentTarget == TARGET_OPEN) {
                             fileName = "";
                         }
                         currentPath = currentPath + name;
-                        pickedPath = currentPath + fileName;
+                        pickPath(currentPath + fileName);
                         getNewList();
                     } else {
-                        if (currentTarget == TARGET_FILE) {
+                        if (currentTarget == TARGET_OPEN) {
                             fileName = name;
                         }
                         
-                        pickedPath = currentPath + name;
-                    }
-                    
-                    if (!fileName.equals("")) {
-                        question = Utils.replace(questionTemplate, QUESTION_TEMPLATE_FILE_PATH, pickedPath);
-                    } else {
-                        question = "";
-                    }
-                    if (!questionAnimIsRunnung) {
-                        questionAnim = new Thread(new Runnable() {
-                            public void run() {
-                                questionAnimIsRunnung = true;
-                                while (isVisible) {
-                                    long start = System.currentTimeMillis();
-                                    if (questionOffset < questionStrW4) {
-                                        questionOffset += questionStrW4 / 64;
-                                    } else {
-                                        questionOffset = -questionStrW4;
-                                    }
-                                    feedback.needRepaint();
-                                    try {
-                                        Thread.sleep(Math.max(0, 20 - (System.currentTimeMillis() - start)));
-                                    } catch (InterruptedException ex) {
-                                        ex.printStackTrace();
-                                    }
-                                }
-                                questionAnimIsRunnung = false;
-                            }
-                        });
-                        questionAnim.start();
+                        pickPath(currentPath + name);
                     }
                 }
             });
         }
-        list = new ButtonCol(x0, h - btnH*3/2, w, h - btnH*3/2 - btnH*3/2, listButtons, ButtonCol.LEFT | ButtonCol.BOTTOM, btnH)
-                .setIsSelectionEnabled(!Main.hasPointerEvents)
-                .setButtonsBg(0x555555).setBg(-1)
-                .setButtonsBgPadding(3)
-                .enableScrolling(true, false);
-        feedback.needRepaint();
+        initList(listButtons);
+    }
+    
+    private void initList(Button[] buttons) {
+//        list = (ButtonCol) new ButtonCol(x0, y0 + h - btnH*3/2, w, h - btnH*3/2 - btnH*3/2, buttons, ButtonCol.LEFT | ButtonCol.BOTTOM, btnH)
+//                .enableScrolling(true, false)
+//                .setIsSelectionEnabled(true)
+//                .setIsSelectionVisible(!Main.hasPointerEvents)
+//                .setButtonsBgPadding(3)
+//                .setButtonsBgColor(0x555555);
+        
+        list.setButtons(buttons).setParent(this);
+        setSize(w, h);
+        repaint();
+    }
+    
+    private void initList() {
+        if (list == null) {
+            list = (ButtonCol) new ButtonCol()
+                    .enableScrolling(true, true)
+                    .setIsSelectionEnabled(true)
+                    .setIsSelectionVisible(!Main.hasPointerEvents)
+                    .setButtonsBgPadding(3)
+                    .setButtonsBgColor(0x555555);
+        }
     }
     
     public void paint(Graphics g) {
-        if (UI.isCapturing) {
+        if (!isVisible) {
+            return;
+        }
+        
+        if (EditorScreenUI.isCapturing) { // fix hardcode to EditorScreenUI
             drawBG(g);
             return;
         }
+        super.paint(g);
         drawCapturedBG(g);
-        list.paint(g);
-        actionButtonPanel.paint(g);
-        questionStrW4 = g.getFont().stringWidth(question) / 4;
+        if (list != null) {
+            list.onPaint(g);
+        }
+        actionButtonPanel.onPaint(g);
         g.setColor(0xffffff);
         g.drawString(question, x0 + w/2 - questionOffset, y0 + h - btnH*5/4 - g.getFont().getHeight()/2, Graphics.HCENTER | Graphics.TOP);
         g.drawString(title, x0 + w/2, y0 + g.getFont().getHeight(), Graphics.HCENTER | Graphics.TOP);
     }
     
     void drawCapturedBG(Graphics g) {
-        g.drawImage(UI.capture, 0, 0, Graphics.TOP | Graphics.LEFT);
+        if (EditorScreenUI.capture != null) {
+            g.drawImage(EditorScreenUI.capture, 0, 0, Graphics.TOP | Graphics.LEFT);
+        }
     }
     
     void drawBG(Graphics g) {
@@ -217,7 +312,20 @@ public class PathPicker extends UIComponent {
         }
     }
 
-    public boolean handlePointerReleased(int x, int y) {
+    public IUIComponent setPos(int x0, int y0) {
+        return super.setPos(x0, y0);
+    }
+
+    public IUIComponent setSize(int w, int h) {
+        return super.setSize(w, h);
+    }
+    
+    public IUIComponent setSizes(int w, int h, int btnH) {
+        this.btnH = btnH;
+        return super.setSize(w, h);
+    }
+
+    public boolean pointerReleased(int x, int y) {
         if (pointerDragged) {
             pointerDragged = false;
             return false;
@@ -242,7 +350,7 @@ public class PathPicker extends UIComponent {
         return false;
     }
     
-    public boolean handlePointerDragged(int x, int y) {
+    public boolean pointerDragged(int x, int y) {
         pointerDragged = true;
         if (!isVisible) {
             return false;
@@ -250,46 +358,45 @@ public class PathPicker extends UIComponent {
         return list.handlePointerDragged(x, y);
     }
     
-    public boolean handlePointerPressed(int x, int y) {
+    public boolean pointerPressed(int x, int y) {
         if (!isVisible) {
             return false;
         }
         return list.handlePointerPressed(x, y);
     }
 
-    public boolean handleKeyRepeated(int keyCode) {
-        return handleKeyPressed(keyCode);
-    }
-
-    public boolean handleKeyPressed(int keyCode) {
+    public boolean keyPressed(int keyCode, int count) {
         if (!isVisible) {
             return false;
         }
         
         switch (keyCode) {
             case -6:
-                okBtn.invokePressed(false);
+                okBtn.invokePressed(false, false);
                 break;
             case -7:
-                cancelBtn.invokePressed(false);
+                cancelBtn.invokePressed(false, false);
                 break;
             default:
-                return list.handleKeyPressed(keyCode);
+                return list.handleKeyPressed(keyCode, count);
         }
         
         return true;
     }
-    
-    public interface Feedback {
-        void onComplete(final String path);
-        void onCancel();
-        void needRepaint();
+
+    protected void onSetBounds(int x0, int y0, int w, int h) {
+        actionButtonPanel
+                .setSize(w, btnH)
+                .setPos(x0, y0 + h, ButtonRow.BOTTOM | ButtonRow.LEFT);
+        list
+                .setSizes(w, h - btnH*3/2 - btnH*3/2, btnH, false)
+                .setPos(x0, y0 + h - btnH*3/2, ButtonCol.LEFT | ButtonCol.BOTTOM);
     }
     
     private void initActionPanel() {
         okBtn = new Button("OK", new Button.ButtonFeedback() {
             public void buttonPressed() {
-                if (currentTarget == TARGET_FILE && pickedPath.endsWith(FileUtils.sep)) {
+                if (currentTarget == TARGET_OPEN && pickedPath.endsWith(String.valueOf(FileUtils.SEP))) {
                     return;
                 }
                 feedback.onComplete(pickedPath);
@@ -305,8 +412,13 @@ public class PathPicker extends UIComponent {
         
         
         actionButtons = new Button[]{okBtn, cancelBtn};
-        
-        actionButtonPanel = (ButtonRow) new ButtonRow(x0, y0 + h, w, btnH, actionButtons, ButtonRow.BOTTOM).setBgColor(-1);
+        actionButtonPanel = (ButtonRow) new ButtonRow(actionButtons).setButtonsBgColor(-1);
+    }
+    
+    public interface Feedback {
+        void onComplete(final String path);
+        void onCancel();
+        void needRepaint();
     }
     
 }

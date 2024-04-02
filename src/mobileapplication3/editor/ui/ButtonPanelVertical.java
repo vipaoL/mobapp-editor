@@ -45,9 +45,9 @@ public class ButtonPanelVertical extends UIComponent {
         }
     }
 
-    public void paint(Graphics g) {
+    public void onPaint(Graphics g) {
         for (int i = 0; i < buttonCols.length; i++) {
-            buttonCols[i].repaint(g);
+            buttonCols[i].paint(g);
         }
     }
 
@@ -64,16 +64,23 @@ public class ButtonPanelVertical extends UIComponent {
         return false;
     }
 
-    public UIComponent setVisible(boolean b) {
+    public IUIComponent setVisible(boolean b) {
         for (int i = 0; i < buttonCols.length; i++) {
             buttonCols[i].setVisible(b);
         }
         isVisible = b;
         return this;
     }
+    
+    public boolean canBeFocused() {
+        return true;
+    }
 
-    public boolean handleKeyPressed(int keyCode) {
+    public boolean handleKeyPressed(int keyCode, int count) {
         return false;
+    }
+
+    protected void onSetBounds(int x0, int y0, int w, int h) {
     }
 
 }

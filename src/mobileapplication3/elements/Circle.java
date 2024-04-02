@@ -5,7 +5,7 @@
  */
 package mobileapplication3.elements;
 
-import mobileapplication3.Mathh;
+import mobileapplication3.utils.Mathh;
 
 /**
  *

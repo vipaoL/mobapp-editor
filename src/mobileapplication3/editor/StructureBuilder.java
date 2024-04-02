@@ -5,6 +5,8 @@
  */
 package mobileapplication3.editor;
 
+import java.io.IOException;
+import mobileapplication3.utils.FileUtils;
 import java.util.Vector;
 import mobileapplication3.elements.Element;
 import mobileapplication3.elements.EndPoint;
@@ -68,7 +70,7 @@ public class StructureBuilder {
         feedback.onUpdate();
     }
     
-    public void saveToFile(String path) {
+    public void saveToFile(String path) throws IOException, SecurityException {
         int carriage = 0;
         // {file format version, count of elements, ...data..., eof mark}
         short[] data = new short[1 + 1 + getDataLengthInShorts() + 1];

@@ -7,7 +7,7 @@ package mobileapplication3.editor.ui;
 
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
-import mobileapplication3.editor.Utils;
+import mobileapplication3.utils.Utils;
 
 /**
  *
@@ -15,29 +15,51 @@ import mobileapplication3.editor.Utils;
  */
 public class Button {
 
-    private String name;
+    private String text;
     private boolean isActive = true;
     private ButtonFeedback buttonFeedback;
-    private int bgColor = -1;
-    private int bgColorInactive = 0x202020;
-    private int fontColor = 0xffffff;
-    private int fontColorInactive = 0x404040;
-    private int selectedColor = 0x002255;
-    private int bgPadding = 0;
+    private int bgColor;
+    private int bgColorInactive;
+    private int fontColor;
+    private int fontColorInactive;
+    private int selectedBgColor;
+    private int bgPadding;
     
-    public Button(String name, ButtonFeedback buttonFeedback) {
-        this.name = name;
-        this.buttonFeedback = buttonFeedback;
+    private int[][] lineBounds = null;
+    private int prevW, prevH;
+    public Font font;
+    
+    public Button(String title, ButtonFeedback buttonFeedback) {
+        font = Font.getDefaultFont();
+        this.bgPadding = 0;
+        this.selectedBgColor = 0x002255;
+        this.fontColorInactive = 0x404040;
+        this.fontColor = 0xffffff;
+        this.bgColorInactive = 0x202020;
+        this.bgColor = 0x101020;
+        
+        this.text = title;
+        setTitle(getTitle());
+        setFeedback(buttonFeedback);
     }
     
-    public void invokePressed(boolean isSelected) {
+    public boolean invokePressed(boolean isSelected, boolean isFocused) {
+        if (buttonFeedback == null) {
+            System.out.println(text + isFocused);
+            return isFocused;
+        }
+        
         if (isActive) {
             if (!isSelected) {
                 buttonFeedback.buttonPressed();
             } else {
                 buttonFeedback.buttonPressedSelected();
             }
+            setTitle(getTitle());
+            return true;
         }
+        
+        return false;
     }
     
     public Button setIsActive(boolean b) {
@@ -59,12 +81,16 @@ public class Button {
     }
     
     public int getSelectedColor() {
-        return selectedColor;
+        return selectedBgColor;
     }
 
     public Button setSelectedColor(int selectedColor) {
-        this.selectedColor = selectedColor;
+        this.selectedBgColor = selectedColor;
         return this;
+    }
+    
+    public int getBgPagging() {
+        return bgPadding;
     }
 
     public Button setBgPadding(int bgPadding) {
@@ -72,16 +98,23 @@ public class Button {
         return this;
     }
     
-    public void setName(String s) {
-        name = s;
+    public void setTitle(String s) {
+        if (s == null) {
+            s = "<null>";
+        }
+        text = s;
+    }
+
+    public void setFeedback(ButtonFeedback buttonFeedback) {
+        this.buttonFeedback = buttonFeedback;
     }
     
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return text;
     }
     
     public String toString() {
-        return name;
+        return text;
     }
     
     public abstract static class ButtonFeedback {
@@ -91,20 +124,21 @@ public class Button {
         }
     }
     
-    public void paint(Graphics g, int x0, int y0, int w, int h, boolean isSelected) {
+    public void paint(Graphics g, int x0, int y0, int w, int h, boolean isSelected, boolean isFocused) {
         int prevClipX = g.getClipX();
         int prevClipY = g.getClipY();
         int prevClipW = g.getClipWidth();
         int prevClipH = g.getClipHeight();
-        g.setClip(x0, y0, w, h);
+        //g.setClip(x0, y0, w, h);
         x0 += bgPadding;
         y0 += bgPadding;
         w -= bgPadding*2;
         h -= bgPadding*2;
         Font prevFont = g.getFont();
+        g.setFont(font);
         
         if (isActive) {
-            int bgColor = isSelected ? selectedColor : this.bgColor;
+            int bgColor = isSelected ? selectedBgColor : this.bgColor;
             if (bgColor > 0) {
                 g.setColor(bgColor);
                 g.fillRect(x0, y0, w, h);
@@ -118,23 +152,56 @@ public class Button {
             g.setColor(fontColorInactive);
         }
         
-        StringBuffer sb = (new StringBuffer(name));
-        String[] splitted = Utils.split(sb, "\n");
+        int[][] lineBounds = getLineBounds(text, font, w, h, bgPadding);
         
-        if (splitted.length > 1) {
-            if (h < g.getFont().getHeight() * 2) {
-                g.setFont(Font.getFont(prevFont.getFace(), prevFont.getStyle(), Font.SIZE_SMALL));
+        int offset = 0;
+        int step = font.getHeight() * 3 / 2;
+        if (step * lineBounds.length > h - bgPadding * 2) {
+            //step = (h - bgPadding * 2) / (lineBounds.length + 1);
+            if (step * lineBounds.length > h - bgPadding * 2) {
+                step = h / (lineBounds.length);
             }
-            g.drawString(splitted[0], x0 + w/2, y0+h/2, Graphics.HCENTER | Graphics.BOTTOM);
-            g.drawString(splitted[1], x0 + w/2, y0+h/2, Graphics.HCENTER | Graphics.TOP);
-        } else {
-            if (h < g.getFont().getHeight()) {
-                g.setFont(Font.getFont(prevFont.getFace(), prevFont.getStyle(), Font.SIZE_SMALL));
-            }
-            g.drawString(name, x0 + w/2, y0+h/2-g.getFont().getHeight()/2, Graphics.HCENTER | Graphics.TOP);
         }
+        
+        offset += (h-step*(lineBounds.length - 1) - font.getHeight())/2;
+        for (int i = 0; i < lineBounds.length; i++) {
+            int[] bounds = lineBounds[i];
+            g.drawSubstring(text, bounds[0], bounds[1], x0 + w/2, y0 + offset, Graphics.HCENTER | Graphics.TOP);
+            offset += step;
+        }
+        
+        if (isFocused && isSelected) {
+            //g.setColor(0xffffff);
+            int markY0 = h / 3;
+            int markY1 = h - markY0;
+            int markCenterY = (markY0 + markY1) / 2;
+            int markw = (markY1 - markY0) / 2;
+            g.fillTriangle(x0 + 1, y0 + markY0, x0 + 1, y0 + markY1, x0 + markw, y0 + markCenterY);
+            g.fillTriangle(x0 + w - 1, y0 + markY0, x0 + w - 1, y0 + markY1, x0 + w - markw, y0 + markCenterY);
+        }
+        
         g.setClip(prevClipX, prevClipY, prevClipW, prevClipH);
         g.setFont(prevFont);
+    }
+    
+    private int[][] getLineBounds(String text, Font font, int w, int h, int padding) {
+        if (lineBounds != null && w == prevW && h == prevH) {
+            return lineBounds;
+        }
+        
+        prevW = w;
+        prevH = h;
+        
+        return Utils.getLineBounds(text, font, w, padding);
+    }
+    
+    public int getMinPossibleWidth() {
+        int w = 0;
+        String[] words = Utils.split(text, " ");
+        for (int i = 0; i < words.length; i++) {
+            w = Math.max(w, font.stringWidth(words[i]));
+        }
+        return w;
     }
     
 }

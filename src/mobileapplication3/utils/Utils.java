@@ -3,9 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mobileapplication3.editor;
+package mobileapplication3.utils;
 
+import java.util.Vector;
+import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
+import mobileapplication3.editor.EditorCanvas;
 
 /**
  *
@@ -38,13 +41,13 @@ public class Utils {
         }
     }
     
-    public static String[] split(StringBuffer sb, String splitter){
+    public static String[] split(String sb, String splitter){
         String[] strs = new String[sb.length()];
         int splitterLength = splitter.length();
         int initialIndex = 0;
         int indexOfSplitter = indexOf(sb, splitter, initialIndex);
         int count = 0;
-        if(-1==indexOfSplitter) return new String[]{sb.toString()};
+        if(-1==indexOfSplitter) return new String[]{sb};
         while(-1!=indexOfSplitter){
             char[] chars = new char[indexOfSplitter-initialIndex];
             sb.getChars(initialIndex, indexOfSplitter, chars, 0);
@@ -67,7 +70,7 @@ public class Utils {
         return result;
     }
 
-    public static int indexOf(StringBuffer sb, String str, int start){
+    public static int indexOf(String sb, String str, int start){
         int index = -1;
         if((start>=sb.length() || start<-1) || str.length()<=0) return index;
         char[] tofind = str.toCharArray();
@@ -165,4 +168,85 @@ public class Utils {
             g.drawLine(x1, y1, x2, y2);
         }
     }
+    
+    public static int[][] getLineBounds(String text, Font font, int w, int padding) {
+        Vector lineBoundsVector = new Vector(text.length() / 5);
+        int charOffset = 0;
+        if (font.stringWidth(text) <= w - padding * 2 && text.indexOf('\n') == -1) {
+            lineBoundsVector.addElement(new int[]{0, text.length()});
+        } else {
+            while (charOffset < text.length()) {
+                int maxSymsInCurrLine = 1;
+                boolean maxLineLengthReached = false;
+                boolean lineBreakSymFound = false;
+                for (int lineLength = 1; lineLength <= text.length() - charOffset; lineLength++) {
+                    if (font.substringWidth(text, charOffset, lineLength) > w - padding * 2) {
+                        maxLineLengthReached = true;
+                        break;
+                    }
+                    
+                    maxSymsInCurrLine = lineLength;
+                    
+                    if (charOffset + lineLength < text.length()) {
+                        if (text.charAt(charOffset+lineLength) == '\n') {
+                            lineBoundsVector.addElement(new int[]{charOffset, lineLength});
+                            charOffset = charOffset + lineLength + 1;
+                            lineBreakSymFound = true;
+                            break;
+                        }
+                    }
+                }
+                
+                if (lineBreakSymFound) {
+                    continue;
+                }
+                
+
+                boolean spaceFound = false;
+
+                int maxRightBorder = charOffset + maxSymsInCurrLine;
+                
+                if (maxRightBorder >= text.length()) {
+                    lineBoundsVector.addElement(new int[]{charOffset, maxSymsInCurrLine});
+                    break;
+                }
+                
+                if (!maxLineLengthReached) {
+                    lineBoundsVector.addElement(new int[]{charOffset, maxSymsInCurrLine}); //
+                    charOffset = maxRightBorder;
+                } else {
+                    for (int i = maxRightBorder; i > charOffset; i--) {
+                        if (text.charAt(i) == ' ') {
+                            lineBoundsVector.addElement(new int[]{charOffset, i - charOffset});
+                            charOffset = i + 1;
+                            spaceFound = true;
+                            break;
+                        }
+                    }
+
+                    if (!spaceFound) {
+                        lineBoundsVector.addElement(new int[]{charOffset, maxRightBorder - charOffset});
+                        charOffset = maxRightBorder;
+                    }
+                }
+            }
+        }
+        
+        int[][] lineBounds = new int[lineBoundsVector.size()][];
+        for (int i = 0; i < lineBoundsVector.size(); i++) {
+            lineBounds[i] = (int[]) lineBoundsVector.elementAt(i);
+        }
+        return lineBounds;
+    }
+
+    static int count(String s, char c) {
+        int ret = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == c) {
+                ret++;
+            }
+        }
+        return ret;
+    }
+
 }

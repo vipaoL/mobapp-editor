@@ -9,72 +9,132 @@ import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import mobileapplication3.editor.Main;
+import mobileapplication3.utils.Utils;
 
 /**
  *
  * @author vipaol
  */
-public class ButtonCol extends UIComponent {
-    public static final int TOP = Graphics.TOP;
-    public static final int BOTTOM = Graphics.BOTTOM;
-    public static final int LEFT = Graphics.LEFT;
-    public static final int RIGHT = Graphics.RIGHT;
-    public static final int BTN_H_AUTO = 0;
+public class ButtonCol extends AbstractButtonSet {
     
     private AnimationThread animationThread = null;
-    private int btnH;
-    private int selected = 0;
-    private Button[] buttons;
-    private int bgColor = 0x101020;
-    private boolean selectionEnabled = false;
+    private int btnH = H_AUTO;
+    
     private boolean isScrollable = false;
+    private boolean trimHeight = false;
+    private int hUntilTrim, prevTotalBtnsH;
     private int scrollOffset = 0;
     private int pointerPressedX, pointerPressedY, scrollOffsetWhenPressed;
+    private boolean startFromBottom;
+    private boolean enableAnimations = true;
+    
+    public ButtonCol() { }
 
-    public ButtonCol(int x0, int y0, int w, int h, Button[] buttons, int anchor, int btnH) {
-        this.x0 = x0;
-        this.y0 = y0;
+    public ButtonCol(Button[] buttons) {
+        this.buttons = buttons;
+    }
+
+    public void recalcSize() {
+        setSizes(w, hUntilTrim, btnH, trimHeight);
+    }
+
+    public IUIComponent setSize(int w, int h) {
+        return setSizes(w, h, btnH);
+    }
+    
+    public IUIComponent setSizes(int w, int h, int btnH) {
+        return setSizes(w, h, btnH, trimHeight);
+    }
+
+    public IUIComponent setSizes(int w, int h, int btnH, boolean trimHeight) {
+        if (w == 0 || h == 0 || btnH == 0) {
+            try {
+                throw new Exception("Setting zero as a dimension");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return this;
+        }
+        
+        int prevH = this.h;
         this.w = w;
         this.h = h;
+        this.btnH = btnH;
+        this.hUntilTrim = this.h;
+        this.trimHeight = trimHeight;
         
-        this.buttons = buttons;
+        if (buttons == null) {
+            return this;
+        }
         
-        if (btnH == BTN_H_AUTO) {
-            this.btnH = h / buttons.length;
+        if (this.w == W_AUTO) {
+            this.w = getMinPossibleWidth();
+        }
+        
+        if (this.btnH == H_AUTO) {
+            if (this.h == H_AUTO || this.trimHeight) {
+                this.btnH = Font.getDefaultFont().getHeight() * 5 / 2 + buttonsBgPadding*2;
+            } else {
+                this.btnH = this.h / buttons.length;
+            }
         } else {
-            this.btnH = btnH;
-            this.h = Math.min(h, btnH * buttons.length);
+            this.h = Math.min(this.h, this.btnH * buttons.length);
         }
         
-        if ((anchor&BOTTOM) != 0) {
-            this.y0 -= this.h;
+        if (this.h == H_AUTO) {
+            this.h = buttons.length * this.btnH;
         }
-        if ((anchor&RIGHT) != 0) {
-            this.x0 -= this.w;
+        
+        if (this.trimHeight) {
+            this.h = Math.min(this.h, this.btnH * buttons.length);
         }
+        
+        if (startFromBottom) {
+            int dtbh = getTotalBtnsH() - prevTotalBtnsH;
+            int dh = this.h - prevH;
+            prevTotalBtnsH = getTotalBtnsH();
+            
+            scrollOffset += dtbh - dh;
+            
+            selected = buttons.length - 1;
+        }
+        
+        scrollOffsetWhenPressed = scrollOffset = Math.max(0, Math.min(scrollOffset, getTotalBtnsH() - this.h));
+        
+        recalcPos();
+        
+        return super.setSize(this.w, this.h);
+    }
+    
+    public int getMinPossibleWidth() { /////// need fix
+        int res = 0;
+        for (int i = 0; i < buttons.length; i++) {
+            String[] btnTextLines = Utils.split(buttons[i].getTitle(), "\n");
+            for (int j = 0; j < btnTextLines.length; j++) {
+                res = Math.max(res, Font.getDefaultFont().stringWidth(btnTextLines[j] + "  ") + buttons[i].getBgPagging()*4);
+            }
+        }
+        return res;
     }
 
-    public ButtonCol setBg(int color) {
-        bgColor = color;
-        return this;
+    public int getBtnH() {
+        return btnH;
     }
     
-    public ButtonCol setButtonsBg(int color) {
-        for (int i = 0; i < buttons.length; i++) {
-            buttons[i].setBgColor(color);
+    public int getTotalBtnsH() {
+        if (buttons == null) {
+            return 0;
         }
-        return this;
-    }
-    
-    public ButtonCol setButtonsBgPadding(int padding) {
-        for (int i = 0; i < buttons.length; i++) {
-            buttons[i].setBgPadding(padding);
-        }
-        return this;
+        
+        return buttons.length * getBtnH();
     }
     
     public boolean handlePointerReleased(int x, int y) {
-        if (buttons.length == 0) {
+        if (!isVisible) {
+            return false;
+        }
+        
+        if (buttons == null || buttons.length == 0) {
             return false;
         }
         
@@ -82,20 +142,18 @@ public class ButtonCol extends UIComponent {
             return false;
         }
         
-        x -= x0;
-        y -= y0 - scrollOffset;
+        boolean wasSelected = (selected == prevSelected && isSelectionEnabled);
+        prevSelected = selected;
         
-        int i = y / btnH;
-        boolean wasSelected = (i == selected && selectionEnabled);
-        if (selectionEnabled) {
-            selected = i;
-        }
-        buttons[i].invokePressed(wasSelected);
-        return true;
+        return buttons[selected].invokePressed(wasSelected, isFocused);
     }
     
     public boolean handlePointerPressed(int x, int y) {
         if (!isVisible) {
+            return false;
+        }
+        
+        if (buttons == null || buttons.length == 0) {
             return false;
         }
         
@@ -104,7 +162,7 @@ public class ButtonCol extends UIComponent {
         }
         
         if (btnH*buttons.length <= h) {
-            return false;
+            //return false;
         }
         
         if (!checkTouchEvent(x, y)) {
@@ -116,6 +174,14 @@ public class ButtonCol extends UIComponent {
         pointerPressedY = y;
         scrollOffsetWhenPressed = scrollOffset;
         
+        x -= x0;
+        y -= y0 - scrollOffset;
+        selected = y / btnH;
+        
+        if (isSelectionEnabled) {
+            isSelectionVisible = true;
+        }
+        
         return true;
     }
     
@@ -124,38 +190,122 @@ public class ButtonCol extends UIComponent {
             return false;
         }
         
+        if (buttons == null || buttons.length == 0) {
+            return false;
+        }
+        
         if (!isScrollable) {
             return false;
         }
         
         if (btnH*buttons.length <= h) {
-            return false;
+            //return false;
         }
         
         scrollOffset = scrollOffsetWhenPressed - (y - pointerPressedY);
         
-        scrollOffset = Math.max(0, Math.min(scrollOffset, buttons.length*btnH - h));
+        scrollOffset = Math.max(0, Math.min(scrollOffset, getTotalBtnsH() - h));
         
         return true;
     }
+
+    public boolean handleKeyPressed(int keyCode, int count) {
+        if (!isVisible) {
+            return false;
+        }
+        
+        if (!isSelectionEnabled) {
+            return false;
+        }
+        
+        if (buttons == null || buttons.length == 0) {
+            return false;
+        }
+        
+        switch (keyCode) {
+            default:
+                switch (Main.util.getGameAction(keyCode)) {
+                    case Canvas.UP:
+                        do {
+                            if (selected > 0) {
+                                selected--;
+                            } else {
+                                selected = buttons.length - 1;
+                            }
+                        } while(false && !buttons[selected].isActive());
+                        break;
+                    case Canvas.DOWN:
+                        do {
+                            if (selected < buttons.length - 1) {
+                                selected++;
+                            } else {
+                                selected = 0;
+                            }
+                        } while(false && !buttons[selected].isActive());
+                        break;
+                    case Canvas.FIRE:
+                        if (isSelectionEnabled) {
+                            isSelectionVisible = true;
+                        }
+                        return buttons[selected].invokePressed(true, isFocused);
+                    default:
+                        return false;
+                }
+        }
+        
+        int selectedH = btnH * selected;
+        int startY = scrollOffset;
+        int targetY = scrollOffset;
+        if (selectedH - btnH < scrollOffset) {
+            targetY = Math.max(0, selectedH - btnH * 3 / 4);
+        }
+        
+        if (selectedH + btnH > scrollOffset + h) {
+            targetY = Math.min(btnH*buttons.length - h, selectedH - h + btnH + btnH * 3 / 4);
+        }
+        
+        if (enableAnimations && targetY != startY) {
+            initAnimationThread();
+            animationThread.animate(0, startY, 0, targetY, 200);
+        } else {
+            scrollOffset = targetY;
+        }
+        
+        if (isSelectionEnabled) {
+            isSelectionVisible = true;
+        }
+        
+        return true;
+    }
+
+    public boolean handleKeyRepeated(int keyCode, int pressedCount) {
+        return handleKeyPressed(keyCode, 1);
+    }
     
     public ButtonCol enableScrolling(boolean isScrollable, boolean startFromBottom) {
-        this.isScrollable = isScrollable;
-        if (startFromBottom) {
-            scrollOffsetWhenPressed = scrollOffset = Math.max(0, btnH*buttons.length - h);
-            selected = buttons.length - 1;
+        this.startFromBottom = startFromBottom;
+        
+        if (isScrollable) {
+            setIsSelectionEnabled(true);
         }
+        
+        this.isScrollable = isScrollable;
         return this;
     }
 
-    public void paint(Graphics g) {
-        if (buttons.length == 0) {
+    public ButtonCol enableAnimations(boolean b) {
+        enableAnimations = b;
+        return this;
+    }
+
+    public ButtonCol trimHeight(boolean b) {
+        trimHeight = b;
+        return this;
+    }
+    
+    public void onPaint(Graphics g) {
+        if (buttons == null || buttons.length == 0) {
             return;
-        }
-        
-        if (bgColor > 0) {
-            g.setColor(bgColor);
-            g.fillRect(x0, y0, w, h);
         }
 
         for (int i = 0; i < buttons.length; i++) {
@@ -188,72 +338,25 @@ public class ButtonCol extends UIComponent {
                 y = y1 - btnH;
             }
             
-            boolean wasSelected = (i == selected && selectionEnabled);
-            buttons[i].paint(g, x, y, w, btnH, wasSelected);
+            boolean drawAsSelected = (i == selected && isSelectionVisible);
+            buttons[i].paint(g, x, y, w, btnH, drawAsSelected, isFocused);
             g.setFont(prevFont);
         }
-    }
-
-    public ButtonCol setIsSelectionEnabled(boolean selectionEnabled) {
-        this.selectionEnabled = selectionEnabled;
-        return this;
-    }
-
-    public boolean handleKeyRepeated(int keyCode) {
-        return handleKeyPressed(keyCode);
-    }
-
-    public boolean handleKeyPressed(int keyCode) {
-        if (!isVisible) {
-            return false;
-        }
-        setIsSelectionEnabled(true);
-        System.out.println(keyCode);
-        switch (keyCode) {
-            default:
-                switch (Main.util.getGameAction(keyCode)) {
-                    case Canvas.UP:
-                        if (selected > 0) {
-                            selected--;
-                        } else {
-                            selected = buttons.length - 1;
-                        }
-                        break;
-                    case Canvas.DOWN:
-                        if (selected < buttons.length - 1) {
-                            selected++;
-                        } else {
-                            selected = 0;
-                        }
-                        break;
-                    case Canvas.FIRE:
-                        buttons[selected].invokePressed(true);
-                        return true;
-                    default:
-                        return false;
-                }
-        }
         
-        int selectedH = btnH * selected;
-        if (selectedH - btnH < scrollOffset) {
-            initAnimationThread();
-            animationThread.animate(0, scrollOffset, 0, Math.max(0, selectedH - btnH * 3 / 4), 200);
+        if (isSelectionEnabled && h < getTotalBtnsH()) {
+            g.setColor(0xffffff);
+            int selectionMarkY0 = h * scrollOffset / getTotalBtnsH();
+            int selectionMarkY1 = h * (scrollOffset + h) / getTotalBtnsH();
+            g.drawLine(x0 + w - 1, y0 + selectionMarkY0, x0 + w - 1, y0 + selectionMarkY1);
         }
-        
-        if (selectedH + btnH > scrollOffset + h) {
-            initAnimationThread();
-            animationThread.animate(0, scrollOffset, 0, Math.min(btnH*buttons.length - h, selectedH - h + btnH + btnH * 3 / 4), 200);
-        }
-        
-        return true;
     }
     
     private void initAnimationThread() {
         if (animationThread == null) {
             animationThread = new AnimationThread(new AnimationThread.AnimationWorker() {
                 public void onStep(int newX, int newY) {
-                    //System.out.println("onStep: y=" + newY);
                     scrollOffset = newY;
+                    repaint();
                 }
             });
         }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mobileapplication3.editor;
+package mobileapplication3.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -17,6 +17,7 @@ import javax.microedition.io.file.FileConnection;
 import javax.microedition.io.file.FileSystemRegistry;
 import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.AlertType;
+import mobileapplication3.editor.Main;
 import mobileapplication3.elements.Element;
 
 /**
@@ -25,38 +26,33 @@ import mobileapplication3.elements.Element;
  */
 public class FileUtils {
     
-    public static String prefix = "file:///";
-    public static String sep = "/";
+    public static final String PREFIX = "file:///";
+    public static final char SEP = '/';
+    private static final short[] TESTDATA = new short[]{0, 1, 2, 3};
     
-    public static boolean saveShortArrayToFile(short[] arr, String path) {
-        try {
-            FileConnection fc = (FileConnection) Connector.open(path, Connector.READ_WRITE);
-            if (!fc.exists()) {
-                fc.create();
-            }
-            
-            ByteArrayOutputStream buf = new ByteArrayOutputStream(arr.length*2);
-            DataOutputStream dos = new DataOutputStream(buf);
-            for (int i = 0; i < arr.length; i++) {
-                dos.writeShort(arr[i]);
-            }
-            
-            dos.flush();
-            buf.flush();
-            dos.close();
-            
-            OutputStream fos = fc.openOutputStream();
-            fos.write(buf.toByteArray());
-            fos.flush();
-            fos.close();
-            buf.close();
-            fc.close();
-        } catch (Exception ex) {
-            Main.setCurrent(new Alert(ex.toString(), ex.toString(), null, AlertType.ERROR));
-            ex.printStackTrace();
-            return false;
+    public static void saveShortArrayToFile(short[] arr, String path) throws IOException, SecurityException {
+        FileConnection fc = (FileConnection) Connector.open(path, Connector.READ_WRITE);
+        if (!fc.exists()) {
+            fc.create();
         }
-        return true;
+
+        ByteArrayOutputStream buf = new ByteArrayOutputStream(arr.length*2);
+        DataOutputStream dos = new DataOutputStream(buf);
+        for (int i = 0; i < arr.length; i++) {
+            dos.writeShort(arr[i]);
+
+        }
+
+        dos.flush();
+        buf.flush();
+        byte[] data = buf.toByteArray();
+        dos.close();
+        buf.close();
+
+        OutputStream fos = fc.openOutputStream();
+        fos.write(data);
+        fos.close();
+        fc.close();
     }
     
     public static Element[] readMGStruct(String path) {
@@ -140,6 +136,35 @@ public class FileUtils {
             arr[i] = (String) tmp.elementAt(i);
         }
         return arr;
+    }
+
+    public static void createFolder(String path) throws IOException {
+        FileConnection fc = (FileConnection) Connector.open(path, Connector.READ_WRITE);
+        if (!fc.exists()) {
+            // "file:///root/other/MGStructs/" - 6 '/'. we need to check if the parent folder doesn't exist if MGStruct is a subfolder (not in root)
+            if (Utils.count(path, SEP) >= 6) {
+                String parentFolderPath = path.substring(0, path.length() - Paths.GAME_FOLDER_NAME.length() - 1);
+                System.out.println("checking parent folder: " + parentFolderPath);
+                FileConnection parentFc = (FileConnection) Connector.open(parentFolderPath, Connector.READ_WRITE);
+                if (!parentFc.exists()) {
+                    parentFc.mkdir();
+                }
+                parentFc.close();
+            }
+            
+            fc.mkdir();
+        }
+        fc.close();
+    }
+    
+    public static void checkFolder(String path) throws IOException {
+        path = path + "test.mgstruct";
+        
+        saveShortArrayToFile(TESTDATA, path);
+        
+        FileConnection fc = (FileConnection) Connector.open(path, Connector.WRITE);
+        fc.delete();
+        fc.close();
     }
     
 }

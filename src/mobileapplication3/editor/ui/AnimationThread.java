@@ -28,6 +28,9 @@ public class AnimationThread implements Runnable {
     
     public void animate(int currX, int currY, int targetX, int targetY, int durationMillis) {
         System.out.println("from " + currY + " to " + targetY);
+        if (currY == targetY && currX == targetX) {
+            return;
+        }
         framesCount = FPS * durationMillis / 1000;
         System.out.println("framesCount=" + framesCount);
         

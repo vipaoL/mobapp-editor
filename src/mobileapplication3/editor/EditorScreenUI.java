@@ -5,48 +5,65 @@
  */
 package mobileapplication3.editor;
 
-import mobileapplication3.editor.ui.UIComponent;
+import mobileapplication3.utils.Settings;
 import mobileapplication3.editor.ui.Button;
 import mobileapplication3.editor.ui.ButtonPanelHorizontal;
 import mobileapplication3.editor.ui.ButtonRow;
 import mobileapplication3.editor.ui.ButtonCol;
-import mobileapplication3.editor.ui.WindowManager;
+import mobileapplication3.editor.ui.Container;
 import javax.microedition.lcdui.Alert;
+import javax.microedition.lcdui.AlertType;
 import mobileapplication3.elements.Element;
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Font;
-import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
+import mobileapplication3.editor.ui.ButtonComponent;
+import mobileapplication3.editor.ui.IUIComponent;
 
 /**
  *
  * @author vipaol
  */
-public class UI extends WindowManager {
+public class EditorScreenUI extends Container {
     
     private final static int BTNS_IN_ROW = 4;
     public final static int FONT_H = Font.getDefaultFont().getHeight();
     public final static int BTN_H = FONT_H*2;
     private Button btnLoad, btnSave, btnPlace, btnList, zoomIn, zoomOut;;
-    private EditorCanvas editorCanvas;
-    private ButtonRow bottomButtonPanel, zoomPanel;
-    private ButtonPanelHorizontal placementButtonPanel;
-    private ButtonCol placedElementsList;
-    private PathPicker pathPicker;
+    private EditorCanvas editorCanvas = null;
+    private ButtonRow bottomButtonPanel = null, zoomPanel = null;
+    private ButtonPanelHorizontal placementButtonPanel = null;
+    private ButtonCol placedElementsList = null;
+    private ButtonComponent settingsButton = null;
+    private PathPicker pathPicker = null;
     private StructureBuilder elementsBuffer;
     public static Image capture = null; //TODO
     public static boolean isCapturing = false;
     
-    public UI() {
+    public EditorScreenUI() {
         try {
-            setFullScreenMode(true);
-            w = getWidth();
-            h = getHeight();
             elementsBuffer = new StructureBuilder(new StructureBuilder.Feedback() {
                 public void onUpdate() {
                     initListPanel();
                 }
             });
+            
+            settingsButton = new ButtonComponent(new Button("Settings" + (Main.hasPointerEvents ? "" : " (0)"), new Button.ButtonFeedback() {
+                public void buttonPressed() {
+                    showPopup(getSettingsUIObject());
+                }
+            })) {
+            public boolean handleKeyPressed(int keyCode, int count) {
+                switch (keyCode) {
+                    case Canvas.KEY_NUM0:
+                        buttons[0].invokePressed(false, false);
+                        break;
+                    default:
+                        return false;
+                }
+                return true;
+            }
+        };
 
             initBottomPanel();
 
@@ -59,49 +76,33 @@ public class UI extends WindowManager {
             initListPanel();
 
             initPathPicker();
-
-            updateUI();
+            
+            setComponents(new IUIComponent[]{editorCanvas, bottomButtonPanel, zoomPanel, placementButtonPanel, placedElementsList, settingsButton, pathPicker});
         } catch(Exception ex) {
-            Main.setCurrent(new Alert(ex.toString()));
             ex.printStackTrace();
+            Main.setCurrent(new Alert(ex.toString()));
         }
     }
     
-    protected void showNotify() {
-        setFullScreenMode(true);
-    }
-
-    private void updateUI() {
-        updateUI(new UIComponent[]{editorCanvas, bottomButtonPanel, zoomPanel, placementButtonPanel, placedElementsList, pathPicker});
-    }
-    
-    long prevPaintTime = System.currentTimeMillis();
-    public void paint(Graphics g) {
-        //int frameTime = (int) (System.currentTimeMillis() - prevPaintTime);
-        //prevPaintTime = System.currentTimeMillis();
-        super.paint(g);
-        if (isCapturing) {
-            return;
-        }
-        g.setColor(0xffffff);
-        //g.drawString("Frame time: " + frameTime, 0, 0, Graphics.TOP | Graphics.LEFT);
+    private SettingsUI getSettingsUIObject() {
+        return new SettingsUI(this);
     }
     
     private void initEditorCanvas() {
-        editorCanvas = new EditorCanvas(0, 0, w, h - bottomButtonPanel.h, elementsBuffer);
+        editorCanvas = (EditorCanvas) new EditorCanvas(elementsBuffer);
     }
-
     
     private void initBottomPanel() {
         btnPlace = new Button("Place", new Button.ButtonFeedback() {
             public void buttonPressed() {
+                placedElementsList.setVisible(false);
                 placementButtonPanel.toggleIsVisible();
             }
         });
         
         btnLoad = new Button("Open" + (Main.hasPointerEvents ? "" : " (8)"), new Button.ButtonFeedback() {
             public void buttonPressed() {
-                pathPicker.pickFile("Open " + PathPicker.QUESTION_TEMPLATE_FILE_PATH + " ?", new PathPicker.Feedback() {
+                pathPicker.pickFile(Settings.getMgstructsFolderPath(), "Open " + PathPicker.QUESTION_REPLACE_WITH_PATH + " ?", new PathPicker.Feedback() {
                     public void onComplete(final String path) {
                         (new Thread(new Runnable() {
                             public void run() {
@@ -140,16 +141,21 @@ public class UI extends WindowManager {
         
         btnSave = new Button("Save" + (Main.hasPointerEvents ? "" : " (9)"), new Button.ButtonFeedback() {
             public void buttonPressed() {
-                pathPicker.pickFolder("Save as " + PathPicker.QUESTION_TEMPLATE_FILE_PATH + " ?", new PathPicker.Feedback() {
+                pathPicker.pickFolder(Settings.getMgstructsFolderPath(), "Save as " + PathPicker.QUESTION_REPLACE_WITH_PATH + " ?", new PathPicker.Feedback() {
                     public void onComplete(final String path) {
                         (new Thread(new Runnable() {
                             public void run() {
-                                elementsBuffer.saveToFile(path);
-                                System.out.println("Save: " + path);
-                                pathPicker.setVisible(false);
-                                editorCanvas.setVisible(true);
-                                bottomButtonPanel.setVisible(true);
-                                zoomPanel.setVisible(true);
+                                try {
+                                    elementsBuffer.saveToFile(path);
+                                    System.out.println("Save: " + path);
+                                    pathPicker.setVisible(false);
+                                    editorCanvas.setVisible(true);
+                                    bottomButtonPanel.setVisible(true);
+                                    zoomPanel.setVisible(true);
+                                } catch (Exception ex) {
+                                    ex.printStackTrace();
+                                    Main.setCurrent(new Alert(ex.toString(), ex.toString(), null, AlertType.ERROR));
+                                }
                                 repaint();
                             }
                         })).start();
@@ -178,25 +184,26 @@ public class UI extends WindowManager {
         
         btnList = new Button("List", new Button.ButtonFeedback() {
             public void buttonPressed() {
+                placementButtonPanel.setVisible(false);
                 placedElementsList.toggleIsVisible();
             }
         });
         
         Button[] bottomButtons = {btnPlace, btnLoad, btnSave, btnList};
-        bottomButtonPanel = new ButtonRow(0, h, w, BTN_H, bottomButtons, ButtonRow.BOTTOM){
-            public boolean handleKeyPressed(int keyCode) {
+        bottomButtonPanel = (ButtonRow) new ButtonRow(){
+            public boolean handleKeyPressed(int keyCode, int count) {
                 switch (keyCode) {
                     case -6:
-                        btnPlace.invokePressed(false);
+                        btnPlace.invokePressed(false, false);
                         break;
                     case -7:
-                        btnList.invokePressed(false);
+                        btnList.invokePressed(false, false);
                         break;
                     case Canvas.KEY_NUM8:
-                        btnLoad.invokePressed(false);
+                        btnLoad.invokePressed(false, false);
                         break;
                     case Canvas.KEY_NUM9:
-                        btnSave.invokePressed(false);
+                        btnSave.invokePressed(false, false);
                         break;
                     case Canvas.KEY_NUM0:
                         // new file
@@ -206,7 +213,7 @@ public class UI extends WindowManager {
                 }
                 return true;
             }
-        }.setBgColor(0x303030);
+        }.setButtons(bottomButtons).setButtonsBgColor(0x303030);
     }
     
     private void initZoomPanel() {
@@ -223,14 +230,14 @@ public class UI extends WindowManager {
         });
         
         Button[] zoomPanelButtons = {zoomIn, zoomOut};
-        zoomPanel = new ButtonRow(w/2, h - bottomButtonPanel.h, w/2, BTN_H, zoomPanelButtons, ButtonRow.BOTTOM){
-            public boolean handleKeyPressed(int keyCode) {
+        zoomPanel = (ButtonRow) new ButtonRow(zoomPanelButtons){
+            public boolean handleKeyPressed(int keyCode, int count) {
                 switch (keyCode) {
                     case Canvas.KEY_STAR:
-                        zoomIn.invokePressed(false);
+                        zoomIn.invokePressed(false, false);
                         break;
                     case Canvas.KEY_POUND:
-                        zoomOut.invokePressed(false);
+                        zoomOut.invokePressed(false, false);
                         break;
                     default:
                         return false;
@@ -238,9 +245,8 @@ public class UI extends WindowManager {
                 return true;
             }
             
-        }.setBgColor(0x000020);
+        }.setButtonsBgColor(0x000020);
     }
-    
     
     private void initPlacementPanel() {
         Button btnLine = new Button("Line", new Button.ButtonFeedback() {
@@ -286,7 +292,11 @@ public class UI extends WindowManager {
         });
         
         Button[] placementButtons = {btnLine, btnCircle, btnSine, btnBrLine, btnBrCircle.setIsActive(false), btnAccel.setIsActive(false)};
-        placementButtonPanel = (ButtonPanelHorizontal) new ButtonPanelHorizontal(0, h - bottomButtonPanel.h, w, placementButtons, ButtonPanelHorizontal.BOTTOM, BTN_H, BTNS_IN_ROW).setVisible(false);
+        placementButtonPanel = new ButtonPanelHorizontal(placementButtons)
+                .setBtnsInRowCount(BTNS_IN_ROW);
+        placementButtonPanel.setIsSelectionEnabled(true);
+        placementButtonPanel.setVisible(false);
+        placementButtonPanel.setIsSelectionVisible(!Main.hasPointerEvents);
     }
 
     private void initListPanel() {
@@ -297,7 +307,7 @@ public class UI extends WindowManager {
             final int o = i;
             listButtons[i] = new Button(elements[i].getName(), new Button.ButtonFeedback() {
                 public void buttonPressed() {
-                    //System.out.println(o + "pressed");
+                    //System.out.println(o + "selected");
                 }
                 public void buttonPressedSelected() {
                     // there should be edit, but there's deleting for test
@@ -306,14 +316,45 @@ public class UI extends WindowManager {
                 }
             });
         }
-        placedElementsList = ((ButtonCol) new ButtonCol(w, h - bottomButtonPanel.h, w/5, h-bottomButtonPanel.h, listButtons, ButtonCol.RIGHT | ButtonCol.BOTTOM, FONT_H * 3)
-                .setVisible(false))
-                .setIsSelectionEnabled(true)
-                .enableScrolling(true, true);
-        updateUI();
+        
+        if (placedElementsList == null) {
+            placedElementsList = (ButtonCol) new ButtonCol()
+                    .enableScrolling(true, true)
+                    .setIsSelectionEnabled(true)
+                    .setIsSelectionVisible(true)
+                    .setVisible(false);
+        }
+        
+        placedElementsList.setButtons(listButtons);
     }
     
     private void initPathPicker() {
-        pathPicker = (PathPicker) new PathPicker(w - w/20, w, h, BTN_H).setVisible(false);
+        pathPicker = (PathPicker) new PathPicker()
+                .setVisible(false);
+    }
+
+    public void onSetBounds(int x0, int y0, int w, int h) {
+        bottomButtonPanel
+                .setSize(w, BTN_H)
+                .setPos(x0, y0 + h, BOTTOM | LEFT);
+        editorCanvas
+                .setSize(w, h - bottomButtonPanel.h)
+                .setPos(x0, y0, TOP | LEFT);
+        zoomPanel
+                .setSize(w/2, BTN_H)
+                .setPos(x0 + w/2, y0 + h - bottomButtonPanel.h, BOTTOM | LEFT);
+        placementButtonPanel
+                .setSizes(w, ButtonPanelHorizontal.H_AUTO, BTN_H)
+                .setPos(x0, y0 + h - bottomButtonPanel.h, BOTTOM | LEFT);
+        settingsButton
+                .setSize(ButtonComponent.W_AUTO, ButtonComponent.H_AUTO)
+                .setPos(x0 + w, y0, TOP | RIGHT)
+                .setVisible(true);
+        placedElementsList
+                .setSizes(w/5, bottomButtonPanel.getTopY() - settingsButton.getBottomY() - BTN_H / 4, FONT_H * 3)
+                .setPos(x0 + w, y0 + h - bottomButtonPanel.h, RIGHT | BOTTOM);
+        pathPicker
+                .setSizes(w - w/20, h, BTN_H)
+                .setPos(x0 + w/2, y0, HCENTER | TOP);
     }
 }
