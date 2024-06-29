@@ -6,6 +6,7 @@
 package mobileapplication3.editor.ui;
 
 import javax.microedition.lcdui.Graphics;
+import javax.microedition.lcdui.Image;
 
 /**
  *
@@ -22,6 +23,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     boolean dragged = false;
     int pressedX, pressedY;
     int bgColor = 0x000000;
+    protected Image bg = null;
     private AbstractPopupWindow popupWindow = null;
     protected IContainer parent = null;
     
@@ -32,6 +34,22 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     
     public void init() {
         
+    }
+
+    public Container setBgColor(int bgColor) {
+        this.bgColor = bgColor;
+        return this;
+    }
+
+    public Container setBgImage(Image bg) {
+        this.bg = bg;
+        return this;
+    }
+    
+    public Image getCapture() {
+        Image capture = Image.createImage(w, h);
+        onPaint(capture.getGraphics());
+        return capture;
     }
 
     protected final Container setComponents(IUIComponent[] components) {
@@ -78,6 +96,10 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
             return;
         }
         
+        onPaint(g);
+    }
+    
+    private void onPaint(Graphics g) {
         IUIComponent[] uiComponents = getComponents();
         
         int prevClipX = g.getClipX();
@@ -86,8 +108,14 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         int prevClipH = g.getClipHeight();
         g.setClip(x0, y0, w, h);
         
-        g.setColor(bgColor);
-        g.fillRect(x0, y0, w, h);
+        if (bgColor >= 0) {
+            g.setColor(bgColor);
+            g.fillRect(x0, y0, w, h);
+        }
+        
+        if (bg != null) {
+            g.drawImage(bg, x0, y0, Graphics.TOP | Graphics.LEFT);
+        }
         
         for (int i = 0; i < uiComponents.length; i++) {
             if (uiComponents[i] != null) {
@@ -173,6 +201,10 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     }
 
     public boolean pointerReleased(int x, int y) {
+        if (!checkTouchEvent(x, y)) {
+            return false;
+        }
+        
         if (dragged) {
             dragged = false;
             return false;
@@ -209,6 +241,10 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     }
 
     public boolean pointerDragged(int x, int y) {
+        if (!checkTouchEvent(x, y)) {
+            return false;
+        }
+        
         if (Math.abs(x - pressedX) + Math.abs(y - pressedY) < 5) {
             return false;
         }
@@ -243,6 +279,10 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     }
 
     public boolean pointerPressed(int x, int y) {
+        if (!checkTouchEvent(x, y)) {
+            return false;
+        }
+        
         pressedX = x;
         pressedY = y;
         
@@ -274,6 +314,10 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     }
     
     public boolean keyPressed(int keyCode, int count) {
+        if (!isVisible) {
+            return false;
+        }
+        
         if (popupWindow != null) {
             popupWindow.keyPressed(keyCode, count);
             repaint();
@@ -299,6 +343,10 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     }
 
     public boolean keyRepeated(int keyCode, int pressedCount) {
+        if (!isVisible) {
+            return false;
+        }
+        
         if (popupWindow != null) {
             popupWindow.keyRepeated(keyCode, pressedCount);
             repaint();

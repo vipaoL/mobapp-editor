@@ -29,7 +29,7 @@ public abstract class UIComponent implements IUIComponent {
             int prevClipW = g.getClipWidth();
             int prevClipH = g.getClipHeight();
             
-            //g.setClip(x0, y0, w, h);
+            g.setClip(x0, y0, w, h);
             
             drawBg(g);
             onPaint(g);

@@ -8,8 +8,6 @@ package mobileapplication3.utils;
 import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.AlertType;
 import mobileapplication3.editor.Main;
-import mobileapplication3.utils.RecordStores;
-import mobileapplication3.utils.Utils;
 
 /**
  *

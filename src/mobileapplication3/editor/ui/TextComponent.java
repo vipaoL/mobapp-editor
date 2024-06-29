@@ -18,9 +18,14 @@ public class TextComponent extends UIComponent {
     public static final int HEIGHT_AUTO = -1;
     private String text = null;
     private int[][] lineBounds = null;
-    private int prevW, prevH;
+    private int prevW;
     public Font font;
     public int padding;
+    private Thread scrollAnimThread = null;
+    private boolean isHorizontalScrollingEnabled = false;
+    int horizontalScrollOffset = 0;
+    int textW2 = 0;
+    int textAlignment = VCENTER;
     
     public TextComponent() {
         font = Font.getDefaultFont();
@@ -30,7 +35,7 @@ public class TextComponent extends UIComponent {
     
     public TextComponent(String text) {
         this();
-        this.text = text;
+        setText(text);
     }
     
     private int getOptimalHeight() {
@@ -38,9 +43,12 @@ public class TextComponent extends UIComponent {
     }
 
     public void onPaint(Graphics g) {
+        if (text == null) {
+            return;
+        }
+        
         int[][] lineBounds = getLineBounds(text, font, w, padding);
         
-        int offset = 0;
         int step = font.getHeight() * 3 / 2;
         if (step * lineBounds.length > h - padding * 2) {
             //step = (h - padding * 2) / (lineBounds.length+1);
@@ -49,10 +57,16 @@ public class TextComponent extends UIComponent {
             }
         }
         
+        int offset = padding;
+        if ((textAlignment & VCENTER) != 0) {
+            offset = -step * (lineBounds.length - 1) / 2 + h/2 - font.getHeight() / 2;
+        }
+        
+        
         g.setColor(0xffffff);
         for (int i = 0; i < lineBounds.length; i++) {
             int[] bounds = lineBounds[i];
-            g.drawSubstring(text, bounds[0], bounds[1], x0 + padding, y0 + padding + offset, 0);
+            g.drawSubstring(text, bounds[0], bounds[1], x0 + w/2 + horizontalScrollOffset, y0 + offset, Graphics.HCENTER | Graphics.TOP);
             offset += step;
         }
         
@@ -60,14 +74,18 @@ public class TextComponent extends UIComponent {
     }
     
     private int[][] getLineBounds(String text, Font font, int w, int padding) {
-        if (lineBounds != null && w == prevW && h == prevH) {
+        if (isHorizontalScrollingEnabled) {
+            return new int[][]{{0, text.length()}};
+        }
+        
+        if (lineBounds != null && w == prevW) {
             return lineBounds;
         }
         
         prevW = w;
-        prevH = h;
         
-        return Utils.getLineBounds(text, font, w, padding);
+        lineBounds = Utils.getLineBounds(text, font, w, padding);
+        return lineBounds;
     }
     
     public boolean canBeFocused() {
@@ -88,13 +106,72 @@ public class TextComponent extends UIComponent {
 
     public TextComponent setText(String text) {
         this.text = text;
+        textW2 = Font.getDefaultFont().stringWidth(text) / 2;
+        lineBounds = null;
+        if (h == HEIGHT_AUTO) {
+            onSetBounds(x0, y0, w, h);
+        }
+        return this;
+    }
+    
+    public TextComponent setTextAlignment(int a) {
+        if (a != HCENTER || a != TOP) {
+            throw new IllegalArgumentException("Only TOP and HCENTER are supported.");
+        }
+        textAlignment = a;
+        return this;
+    }
+    
+    public TextComponent enableHorizontalScrolling(boolean b) {
+        if (b && !isHorizontalScrollingEnabled) {
+            scrollAnimThread = new Thread(new Runnable() {
+                public void run() {
+                    horizontalScrollOffset = textW2;
+                    boolean reverse = false;
+                    while (isHorizontalScrollingEnabled) {
+                        try {
+                            long start = System.currentTimeMillis();
+                            if (!reverse) {
+                                if (horizontalScrollOffset < textW2 - w / 3) {
+                                    horizontalScrollOffset += textW2 / 128;
+                                } else {
+                                    repaint();
+                                    Thread.sleep(500);
+                                    reverse = true;
+                                }
+                            } else {
+                                if (horizontalScrollOffset > -textW2 + w / 3) {
+                                    horizontalScrollOffset -= textW2 / 16;
+                                } else {
+                                    repaint();
+                                    Thread.sleep(500);
+                                    reverse = false;
+                                }
+                            }
+                            repaint();
+                            Thread.sleep(Math.max(0, 20 - (System.currentTimeMillis() - start)));
+                        } catch (InterruptedException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                }
+            });
+            
+            scrollAnimThread.start();
+        }
+        isHorizontalScrollingEnabled = b;
         return this;
     }
 
     public void onSetBounds(int x0, int y0, int w, int h) {
+        this.x0 = x0;
+        this.y0 = y0;
         this.w = w;
+        this.h = h;
         if (h == HEIGHT_AUTO) {
-            this.h = getOptimalHeight();
+            if (text != null) {
+                this.h = getOptimalHeight();
+            }
         }
     }
     

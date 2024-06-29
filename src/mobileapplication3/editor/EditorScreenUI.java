@@ -16,7 +16,6 @@ import javax.microedition.lcdui.AlertType;
 import mobileapplication3.elements.Element;
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Font;
-import javax.microedition.lcdui.Image;
 import mobileapplication3.editor.ui.ButtonComponent;
 import mobileapplication3.editor.ui.IUIComponent;
 
@@ -37,8 +36,6 @@ public class EditorScreenUI extends Container {
     private ButtonComponent settingsButton = null;
     private PathPicker pathPicker = null;
     private StructureBuilder elementsBuffer;
-    public static Image capture = null; //TODO
-    public static boolean isCapturing = false;
     
     public EditorScreenUI() {
         try {
@@ -109,33 +106,21 @@ public class EditorScreenUI extends Container {
                                 System.out.println("Open: " + path);
                                 elementsBuffer.loadFile(path);
                                 System.out.println("Loaded!");
-                                pathPicker.setVisible(false);
-                                editorCanvas.setVisible(true);
-                                bottomButtonPanel.setVisible(true);
-                                zoomPanel.setVisible(true);
+                                setIsPathPickerVisible(false);
                                 repaint();
                             }
                         })).start();
                     }
 
                     public void onCancel() {
-                        pathPicker.setVisible(false);
-                        editorCanvas.setVisible(true);
-                        bottomButtonPanel.setVisible(true);
-                        zoomPanel.setVisible(true);
+                        setIsPathPickerVisible(false);
                     }
 
                     public void needRepaint() {
                         repaint();
                     }
                 });
-                isCapturing = true;
-                capture = Image.createImage(w, h);
-                paint(capture.getGraphics());
-                isCapturing = false;
-                editorCanvas.setVisible(false);
-                bottomButtonPanel.setVisible(false);
-                zoomPanel.setVisible(false);
+                setIsPathPickerVisible(true);
             }
         });
         
@@ -146,12 +131,10 @@ public class EditorScreenUI extends Container {
                         (new Thread(new Runnable() {
                             public void run() {
                                 try {
-                                    elementsBuffer.saveToFile(path);
                                     System.out.println("Save: " + path);
-                                    pathPicker.setVisible(false);
-                                    editorCanvas.setVisible(true);
-                                    bottomButtonPanel.setVisible(true);
-                                    zoomPanel.setVisible(true);
+                                    elementsBuffer.saveToFile(path);
+                                    System.out.println("Saved!");
+                                    setIsPathPickerVisible(false);
                                 } catch (Exception ex) {
                                     ex.printStackTrace();
                                     Main.setCurrent(new Alert(ex.toString(), ex.toString(), null, AlertType.ERROR));
@@ -166,19 +149,10 @@ public class EditorScreenUI extends Container {
                     }
 
                     public void onCancel() {
-                        pathPicker.setVisible(false);
-                        editorCanvas.setVisible(true);
-                        bottomButtonPanel.setVisible(true);
-                        zoomPanel.setVisible(true);
+                        setIsPathPickerVisible(false);
                     }
                 });
-                isCapturing = true;
-                capture = Image.createImage(w, h);
-                paint(capture.getGraphics());
-                isCapturing = false;
-                editorCanvas.setVisible(false);
-                bottomButtonPanel.setVisible(false);
-                zoomPanel.setVisible(false);
+                setIsPathPickerVisible(true);
             }
         });
         
@@ -332,6 +306,17 @@ public class EditorScreenUI extends Container {
         pathPicker = (PathPicker) new PathPicker()
                 .setVisible(false);
     }
+    
+    private void setIsPathPickerVisible(boolean b) {
+        if (b) {
+            pathPicker.setBgImage(getCapture());
+        }
+        pathPicker.setVisible(b);
+        editorCanvas.setVisible(!b);
+        bottomButtonPanel.setVisible(!b);
+        zoomPanel.setVisible(!b);
+        settingsButton.setVisible(!b);
+    }
 
     public void onSetBounds(int x0, int y0, int w, int h) {
         bottomButtonPanel
@@ -354,7 +339,7 @@ public class EditorScreenUI extends Container {
                 .setSizes(w/5, bottomButtonPanel.getTopY() - settingsButton.getBottomY() - BTN_H / 4, FONT_H * 3)
                 .setPos(x0 + w, y0 + h - bottomButtonPanel.h, RIGHT | BOTTOM);
         pathPicker
-                .setSizes(w - w/20, h, BTN_H)
-                .setPos(x0 + w/2, y0, HCENTER | TOP);
+                .setSizes(w, h, BTN_H)
+                .setPos(x0, y0);
     }
 }
