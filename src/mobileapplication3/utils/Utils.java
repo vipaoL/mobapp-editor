@@ -158,7 +158,7 @@ public class Utils {
                 g.fillArc(x1-r, y1-r, d, d, 0, 360);
                 g.fillArc(x2-r, y2-r, d, d, 0, 360);
             }
-            if (markSkeleton) {
+            if (markSkeleton && thickness * 1000 / zoomOut > 8) {
                 int prevCol = g.getColor();
                 g.setColor(0xff0000);
                 g.drawLine(x1, y1, x2, y2);
