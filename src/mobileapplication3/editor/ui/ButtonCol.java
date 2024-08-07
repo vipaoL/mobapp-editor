@@ -96,7 +96,7 @@ public class ButtonCol extends AbstractButtonSet {
             
             scrollOffset += dtbh - dh;
             
-            selected = buttons.length - 1;
+            setSelected(buttons.length - 1);
         }
         
         scrollOffsetWhenPressed = scrollOffset = Math.max(0, Math.min(scrollOffset, getTotalBtnsH() - this.h));
@@ -176,7 +176,7 @@ public class ButtonCol extends AbstractButtonSet {
         
         x -= x0;
         y -= y0 - scrollOffset;
-        selected = y / btnH;
+        setSelected(y / btnH);
         
         if (isSelectionEnabled) {
             isSelectionVisible = true;
@@ -228,18 +228,18 @@ public class ButtonCol extends AbstractButtonSet {
                     case Canvas.UP:
                         do {
                             if (selected > 0) {
-                                selected--;
+                                setSelected(selected-1);
                             } else {
-                                selected = buttons.length - 1;
+                            	setSelected(buttons.length - 1);
                             }
                         } while(false && !buttons[selected].isActive());
                         break;
                     case Canvas.DOWN:
                         do {
                             if (selected < buttons.length - 1) {
-                                selected++;
+                            	setSelected(selected+1);
                             } else {
-                                selected = 0;
+                            	setSelected(0);
                             }
                         } while(false && !buttons[selected].isActive());
                         break;

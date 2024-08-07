@@ -24,6 +24,7 @@ public class EditorCanvas extends UIComponent {
     private int offsetX, offsetY;
     private int zoomOut = 8192;
     private int keyRepeats = 0;
+    public int selectedElement = 0;
     
     PointerHandler pointerHandler = new PointerHandler();
 
@@ -74,10 +75,10 @@ public class EditorCanvas extends UIComponent {
             return;
         }
         for (int i = 0; i < structurePlacer.buffer.size(); i++) {
-            if (((Element) structurePlacer.buffer.elementAt(i)) == structurePlacer.placingNow) {
+            if (i == selectedElement) {
                 g.setColor(0xaaffff);
             } else {
-                g.setColor(0xffffff);
+                g.setColor(0x2222ff);
             }
             ((Element) structurePlacer.buffer.elementAt(i)).paint(g, zoomOut, offsetX, offsetY);
         }

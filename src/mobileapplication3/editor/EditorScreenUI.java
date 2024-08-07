@@ -6,6 +6,7 @@
 package mobileapplication3.editor;
 
 import mobileapplication3.utils.Settings;
+import mobileapplication3.editor.ui.AbstractButtonSet;
 import mobileapplication3.editor.ui.Button;
 import mobileapplication3.editor.ui.ButtonPanelHorizontal;
 import mobileapplication3.editor.ui.ButtonRow;
@@ -292,7 +293,12 @@ public class EditorScreenUI extends Container {
         }
         
         if (placedElementsList == null) {
-            placedElementsList = (ButtonCol) new ButtonCol()
+            placedElementsList = (ButtonCol) new ButtonCol() {
+            	public AbstractButtonSet setSelected(int selected) {
+            		editorCanvas.selectedElement = selected;
+            		return super.setSelected(selected);
+            	}
+            }
                     .enableScrolling(true, true)
                     .setIsSelectionEnabled(true)
                     .setIsSelectionVisible(true)

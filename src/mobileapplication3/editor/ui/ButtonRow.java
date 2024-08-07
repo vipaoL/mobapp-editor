@@ -69,7 +69,7 @@ public class ButtonRow extends AbstractButtonSet {
         int i = x * buttons.length / w;
         boolean wasSelected = (i == selected && isSelectionEnabled);
         if (isSelectionEnabled) {
-            selected = i;
+        	setSelected(i);
         }
         
         return buttons[i].invokePressed(wasSelected, isFocused);
@@ -95,17 +95,17 @@ public class ButtonRow extends AbstractButtonSet {
             default:
                 switch (Main.util.getGameAction(keyCode)) {
                     case Canvas.LEFT:
-                        if (selected > 0) {
-                            selected--;
+                    	if (selected > 0) {
+                            setSelected(selected-1);
                         } else {
-                            selected = buttons.length - 1;
+                        	setSelected(buttons.length - 1);
                         }
                         break;
                     case Canvas.RIGHT:
-                        if (selected < buttons.length - 1) {
-                            selected++;
+                    	if (selected < buttons.length - 1) {
+                        	setSelected(selected+1);
                         } else {
-                            selected = 0;
+                        	setSelected(0);
                         }
                         break;
                     case Canvas.FIRE:
