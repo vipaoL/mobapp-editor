@@ -89,5 +89,9 @@ public class Line extends Element {
     public short[] getEndPoint() {
         return new short[]{x2, y2};
     }
+
+	public boolean isBody() {
+		return false;
+	}
     
 }

@@ -132,4 +132,8 @@ public class BrokenLine extends Line {
         String info = "plL=" + platformLength + " ang=" + ang;
         return info;
     }
+    
+    public boolean isBody() {
+		return true;
+	}
 }

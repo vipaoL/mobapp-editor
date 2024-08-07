@@ -46,4 +46,8 @@ public class BrokenCircle extends Circle {
         return super.getEndPoint(); //To change body of generated methods, choose Tools | Templates.
     }
     
+    public boolean isBody() {
+		return true;
+	}
+    
 }

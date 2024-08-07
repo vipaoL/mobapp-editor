@@ -35,6 +35,10 @@ public abstract class AbstractCurve extends Element {
         }
     }
     
+    public boolean isBody() {
+		return false;
+	}
+    
     protected class PointsCache {
         
         short[][] pointsCache;

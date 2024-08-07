@@ -24,7 +24,7 @@ public abstract class Element {
     public static final short TRAMPOLINE = 8;
     
     public static final int[] ARGS_NUMBER = {0, /*1*/2, /*2*/4, /*3*/7, /*4*/9, /*5*/10, /*6*/5, /*7*/8, /*7         */8};
-    int[] stepsToPlace = {0, /*1*/1, /*2*/2, /*3*/2, /*4*/2, /*5*/2, /*6*/3, /*7*/2, /*8*/2};
+    public static final int[] stepsToPlace = {0, /*1*/1, /*2*/2, /*3*/2, /*4*/2, /*5*/2, /*6*/3, /*7*/2, /*8*/2};
     
     protected Element() {}
 
@@ -142,6 +142,8 @@ public abstract class Element {
     public abstract String getName();
     
     public abstract short[] getEndPoint() throws Exception;
+    
+    public abstract boolean isBody();
     
     public abstract class PlacementStep {
         public abstract void place(short pointX, short pointY);

@@ -19,7 +19,10 @@ public class EditorCanvas extends UIComponent {
     public static final int ZOOMOUT_MACROVIEW_THRESHOLD = 200;
     private StructureBuilder structurePlacer;
     private Car car = new Car();
-    private int bgColor = 0x000000;
+    private int colBg = 0x000000;
+    private int colLandscape = 0x4444ff;
+    private int colBody = 0xffffff;
+    private int colSelected = 0xaaffff;
     private int cursorX, cursorY = 0;
     private int offsetX, offsetY;
     private int zoomOut = 8192;
@@ -33,7 +36,7 @@ public class EditorCanvas extends UIComponent {
     }
     
     public void onPaint(Graphics g) {
-        g.setColor(bgColor);
+        g.setColor(colBg);
         drawBG(g);
         drawElements(g);
         drawStartPoint(g);
@@ -75,12 +78,17 @@ public class EditorCanvas extends UIComponent {
             return;
         }
         for (int i = 0; i < structurePlacer.buffer.size(); i++) {
+        	Element element = (Element) structurePlacer.buffer.elementAt(i);
             if (i == selectedElement) {
-                g.setColor(0xaaffff);
+                g.setColor(colSelected);
             } else {
-                g.setColor(0x2222ff);
+            	if (!element.isBody()) {
+            		g.setColor(colLandscape);
+            	} else {
+            		g.setColor(colBody);
+            	}
             }
-            ((Element) structurePlacer.buffer.elementAt(i)).paint(g, zoomOut, offsetX, offsetY);
+            element.paint(g, zoomOut, offsetX, offsetY);
         }
     }
     
@@ -243,7 +251,7 @@ public class EditorCanvas extends UIComponent {
             rwY = yToPX(carY + wr / 2);
             
             int wrScaled = wr * 1000 / zoomOut;
-            g.setColor(bgColor);
+            g.setColor(colBg);
             g.fillArc(lwX - wrScaled, lwY - wrScaled, wrScaled*2, wrScaled*2, 0, 360);
             g.fillArc(rwX - wrScaled, rwY - wrScaled, wrScaled*2, wrScaled*2, 0, 360);
             g.setColor(0x444444);

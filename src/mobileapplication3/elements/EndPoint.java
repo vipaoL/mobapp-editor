@@ -81,5 +81,9 @@ public class EndPoint extends Element {
         }
         return false;
     }
+
+	public boolean isBody() {
+		return false;
+	}
     
 }
