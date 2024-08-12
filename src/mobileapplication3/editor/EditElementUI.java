@@ -42,7 +42,9 @@ public class EditElementUI extends AbstractPopupWindow {
             		}
                 	element.setArgs(args);
                 	element.recalcCalculatedArgs();
-                	sb.recalcEndPoint();
+                	if (element.getID() != Element.END_POINT) {
+                		sb.recalcEndPoint();
+                	}
                     close();
                 }
             }),
@@ -212,7 +214,6 @@ public class EditElementUI extends AbstractPopupWindow {
 		}
 		
 		public boolean keyPressed(int keyCode, int count) {
-			System.out.println("pressed " + count);
 			switch (Main.util.getGameAction(keyCode)) {
 	            case Canvas.RIGHT:
 	            	setValue(value + count * count);
@@ -226,7 +227,6 @@ public class EditElementUI extends AbstractPopupWindow {
 		}
 		
 		public boolean keyRepeated(int keyCode, int pressedCount) {
-			System.out.println("repeated " + pressedCount);
 			switch (Main.util.getGameAction(keyCode)) {
 	            case Canvas.RIGHT:
 	            	setValue(value + pressedCount * pressedCount);
