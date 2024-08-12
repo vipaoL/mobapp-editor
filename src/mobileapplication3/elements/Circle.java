@@ -35,20 +35,39 @@ public class Circle extends AbstractCurve {
                 }
 
                 public String getName() {
-                    return "Radius";
+                    return "Change radius";
                 }
             }
         };
     }
 
     public PlacementStep[] getExtraEditingSteps() {
+    	final short centerX = x;
+    	final short centerY = y;
+    	final short startAngle = this.startAngle;
         return new PlacementStep[] {
             new PlacementStep() {
                 public void place(short x, short y) {
+                	short ang = (short) (Mathh.arctg(x - centerX, y - centerY) - startAngle);
+                	ang %= 360;
+                	while (ang < 1) {
+                		ang += 360;
+                	}
+                	setArcAngle((short) ang);
                 }
 
                 public String getName() {
-                    return "";
+                    return "Change angle";
+                }
+            },
+            new PlacementStep() {
+                public void place(short x, short y) {
+                	short ang = (short) Mathh.arctg(x - centerX, y - centerY);
+                	setStartAngle(ang);
+                }
+
+                public String getName() {
+                    return "Change start angle";
                 }
             }
         };
@@ -170,7 +189,6 @@ public class Circle extends AbstractCurve {
         }
         
         if (arcAngle % circleSegmentLen != 0) {
-            System.out.println(System.currentTimeMillis());
             pointsCache.writePointToCache(x+Mathh.cos(startAngle+arcAngle)*kx*r/100000, y+Mathh.sin(startAngle+arcAngle)*ky*r/100000);
         }
     }
