@@ -104,7 +104,7 @@ public class EditorCanvas extends UIComponent {
 
     public void onSetBounds(int x0, int y0, int w, int h) {
     	if (!isSizeSet()) {
-    		zoomOut = Mathh.constrain(MIN_ZOOM_OUT, 2000000 / w, MAX_ZOOM_OUT);
+    		zoomOut = Mathh.constrain(MIN_ZOOM_OUT, 4000000 / w, MAX_ZOOM_OUT);
     	}
         recalcOffset();
     }
