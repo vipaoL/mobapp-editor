@@ -21,7 +21,7 @@ WTK_HOME="${PROJ_HOME}"/bin/j2me_compiler/WTK2.5.2
 ########
 YOUR_LIBS="${PROJ_HOME}"/lib       # YOUR LIBRARIES
 RES="${PROJ_HOME}"/rsc
-APP="${PROJ_HOME}"/bin/MobileApplication3.jar   # Output jar name
+APP="${PROJ_HOME}"/bin/mobapp-editor.jar   # Output jar name
 MANIFEST="${PROJ_HOME}"'/Application Descriptor'
 ########
 ########
@@ -80,7 +80,7 @@ rm -rf ../classes/*
 
 echo "Unpacking your libraries: " ${YOUR_LIBS}/*.jar
 cd ../tmpclasses
-${JAR} xf ${YOUR_LIBS}/*.jar
+# ${JAR} xf ${YOUR_LIBS}/*.jar
 rm -rf META-INF
 
 
