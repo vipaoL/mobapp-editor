@@ -125,6 +125,15 @@ public abstract class Element {
         return arr;
     }
     
+    public PlacementStep[] getAllSteps() {
+    	PlacementStep[] placementSteps = getPlacementSteps();
+    	PlacementStep[] editSteps = getExtraEditingSteps();
+    	PlacementStep[] allSteps = new PlacementStep[placementSteps.length + editSteps.length];
+    	System.arraycopy(placementSteps, 0, allSteps, 0, placementSteps.length);
+    	System.arraycopy(editSteps, 0, allSteps, placementSteps.length, editSteps.length);
+    	return allSteps;
+    }
+    
     public abstract PlacementStep[] getPlacementSteps();
     
     public abstract PlacementStep[] getExtraEditingSteps();

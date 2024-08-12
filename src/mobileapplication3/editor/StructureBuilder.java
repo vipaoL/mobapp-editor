@@ -19,10 +19,11 @@ import mobileapplication3.elements.EndPoint;
 public class StructureBuilder {
     
     public static final int PLACE_NOTHING = -1;
-    Vector buffer;
-    Element placingNow;
-    NextPointHandler nextPointHandler;
-    Feedback feedback;
+    private Vector buffer;
+    public Element placingNow;
+    private NextPointHandler nextPointHandler;
+    private Feedback feedback;
+    public boolean isEditing = false;
 
     public StructureBuilder(Feedback feedback) {
         this.feedback = feedback;
@@ -30,13 +31,31 @@ public class StructureBuilder {
         buffer.addElement(new EndPoint().setArgs(new short[]{0, 0}));
     }
     
-    void place(short id, short x, short y) throws IllegalArgumentException {
+    public void place(short id, short x, short y) throws IllegalArgumentException {
+    	isEditing = false;
         placingNow = Element.createTypedInstance(id);
         System.out.println("Placing " + id);
         nextPointHandler = new NextPointHandler();
         handleNextPoint(x, y, false);
         add(placingNow);
         handleNextPoint(x, y, true);
+    }
+    
+    public void edit(Element e, int step) {
+    	Element[] elements = getElementsAsArray();
+    	for (int i = 0; i < elements.length; i++) {
+			if (elements[i] != null && elements[i].equals(e)) {
+				edit(i, step);
+				break;
+			}
+			
+		}
+    }
+    
+    public void edit(int i, int step) {
+    	placingNow = getElementsAsArray()[i];
+    	nextPointHandler = new NextPointHandler(step);
+    	isEditing = true;
     }
     
     public void handleNextPoint(short x, short y, boolean isPreview) {
@@ -48,9 +67,11 @@ public class StructureBuilder {
         
         nextPointHandler.handleNextPoint(x, y);
         
-        if (nextPointHandler.step == placingNow.getStepsToPlace() || nextPointHandler.isEditing) {
+        if (nextPointHandler.step == placingNow.getStepsToPlace() || isEditing) {
             if (!isPreview) {
-                recalcEndPoint();
+            	if (placingNow.getID() != Element.END_POINT) {
+            		recalcEndPoint();
+            	}
                 placingNow = null;
                 nextPointHandler = null;
             }
@@ -192,11 +213,18 @@ public class StructureBuilder {
     private class NextPointHandler {
         public int step = 0;
         public boolean showingPreview = false;
-        public boolean isEditing = false;
+        
+        public NextPointHandler(int step) {
+        	this.step = step;
+		}
+        
+        public NextPointHandler() {
+        	this(0);
+		}
         
         void handleNextPoint(short x, short y) {
             try {
-                placingNow.getPlacementSteps()[step].place(x, y);
+                placingNow.getAllSteps()[step].place(x, y);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

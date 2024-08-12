@@ -86,8 +86,8 @@ public class MainScreenUI extends Container {
         return new SettingsUI(this);
     }
     
-    private EditElementUI getElementEditScreenObject(Element element, StructureBuilder sb) {
-        return new EditElementUI(element, sb, this);
+    private ElementEditUI getElementEditScreenObject(Element element, StructureBuilder sb) {
+        return new ElementEditUI(element, sb, this);
     }
     
     private void initEditorCanvas() {
@@ -290,8 +290,6 @@ public class MainScreenUI extends Container {
                     //System.out.println(o + "selected");
                 }
                 public void buttonPressedSelected() {
-                    // there should be edit, but there's deleting for test
-                    System.out.println("removing");
                     showPopup(getElementEditScreenObject(element, elementsBuffer));
                     //elementsBuffer.remove(o);
                 }

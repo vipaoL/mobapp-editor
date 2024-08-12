@@ -80,8 +80,9 @@ public class EditorCanvas extends UIComponent {
         if (structurePlacer.getElementsCount() == 0) {
             return;
         }
-        for (int i = 0; i < structurePlacer.buffer.size(); i++) {
-        	Element element = (Element) structurePlacer.buffer.elementAt(i);
+        Element[] elements = structurePlacer.getElementsAsArray();
+        for (int i = 0; i < elements.length; i++) {
+        	Element element = elements[i];
             if (i == selectedElement) {
                 g.setColor(colSelected);
             } else {

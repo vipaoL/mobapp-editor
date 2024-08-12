@@ -13,20 +13,19 @@ import mobileapplication3.editor.ui.IPopupFeedback;
 import mobileapplication3.editor.ui.IUIComponent;
 import mobileapplication3.editor.ui.List;
 import mobileapplication3.editor.ui.TextComponent;
-import mobileapplication3.editor.ui.UIComponent;
 import mobileapplication3.elements.Element;
 import mobileapplication3.elements.EndPoint;
 import mobileapplication3.utils.Mathh;
 
-public class EditElementUI extends AbstractPopupWindow {
+public class AdvancedElementEditUI extends AbstractPopupWindow {
 	
 	private Element element;
 	private IUIComponent[] rows;
 	private List list;
 	private StructureBuilder sb;
 
-	public EditElementUI(Element element, StructureBuilder sb, IPopupFeedback parent) {
-		super("Edit " + element.getName(), parent);
+	public AdvancedElementEditUI(Element element, StructureBuilder sb, IPopupFeedback parent) {
+		super("Advanced edit: " + element.getName(), parent);
 		this.element = element;
 		this.sb = sb;
 		initPage();
@@ -59,25 +58,10 @@ public class EditElementUI extends AbstractPopupWindow {
 	protected IUIComponent initAndGetPageContent() {
 		short[] args = element.getArgs();
 		String[] argsNames = element.getArgsNames();
-		rows = new IUIComponent[args.length + 1];
+		rows = new IUIComponent[args.length];
 		for (int i = 0; i < args.length; i++) {
 			rows[i] = new ListRow(argsNames[i], args[i]);
 		}
-		
-		Button deleteButton = new Button("Delete element", new ButtonFeedback() {
-			public void buttonPressed() {
-				sb.remove(element);
-				close();
-			}
-		});
-		
-		deleteButton.setBgColor(0x550000);
-		
-		if (element instanceof EndPoint) {
-			deleteButton.setIsActive(false);
-		}
-		
-		rows[args.length] = new ButtonComponent(deleteButton);
 		
 		list = new List() {
 			public final void onSetBounds(int x0, int y0, int w, int h) {
@@ -105,7 +89,6 @@ public class EditElementUI extends AbstractPopupWindow {
 		private short minValue = Short.MIN_VALUE;
 		private short maxValue = Short.MAX_VALUE;
 		private short value;
-		private short valueWhenPointerPressed;
 		
 		public ListRow(String paramName, short value) {
 			this.value = value;
@@ -178,7 +161,6 @@ public class EditElementUI extends AbstractPopupWindow {
 		}
 		
 		public boolean pointerPressed(int x, int y) {
-			valueWhenPointerPressed = value;
 			prevDraggedX = x;
 			prevDraggedTime = System.currentTimeMillis();
 			return super.pointerPressed(x, y);
