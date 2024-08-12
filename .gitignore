@@ -1,5 +1,4 @@
 /dist/
 *classes
-/bin/*
-!/bin/build.sh
-!/bin/MANIFEST.MF
+/.mtj.tmp/
+/bin/

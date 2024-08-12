@@ -1,0 +1,7 @@
+MIDlet-Vendor: vipaoL
+MIDlet-Version: 1.2.0
+MicroEdition-Configuration: CLDC-1.1
+MIDlet-1: Mobapp Editor,,mobileapplication3.editor.Main
+MIDlet-Name: mobapp editor
+MicroEdition-Profile: MIDP-2.0
+MIDlet-Jar-URL: mobapp-editor.jar
