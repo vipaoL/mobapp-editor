@@ -16,6 +16,9 @@ public class StartPoint {
 	}
 	
 	public static short[] findStartPoint(Element[] elements) {
+		if (elements == null || elements.length == 0) {
+			return new short[] {0, 0};
+		}
 		short[] ret = elements[0].getStartPoint();
 		for (int i = 1; i < elements.length; i++) {
 			short[] currElemStartPoint = elements[i].getStartPoint();
