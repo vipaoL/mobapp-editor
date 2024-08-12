@@ -69,12 +69,17 @@ public abstract class Page extends Container {
         setPageContentBounds(x0, title.getBottomY(), w, actionButtons.getTopY() - title.getBottomY());
     }
     
-    public void setPageContentBounds(int x0, int y0, int w, int h) {
+    private void setPageContentBounds(int x0, int y0, int w, int h) {
         if (pageContent != null) {
             pageContent
                     .setSize(w - margin*2, h - margin*2)
                     .setPos(x0 + w/2, y0 + h - margin, BOTTOM | HCENTER);
         }
+    }
+    
+    public Page setTitle(String title) {
+    	this.title.setText(title);
+    	return this;
     }
     
     protected abstract Button[] getActionButtons();
