@@ -41,7 +41,7 @@ public class MainScreenUI extends Container {
     private ButtonCol placedElementsList = null;
     private ButtonComponent settingsButton = null;
     private PathPicker pathPicker = null;
-    private NotFromStartWarning notFromStartWarning = null;
+    private StartPointWarning startPointWarning = null;
     private StructureBuilder elementsBuffer;
     
     public MainScreenUI() {
@@ -51,40 +51,24 @@ public class MainScreenUI extends Container {
                     initListPanel();
                 }
             });
-            
-            settingsButton = new ButtonComponent(new Button("Settings" + (Main.hasPointerEvents ? "" : " (0)"), new Button.ButtonFeedback() {
-                public void buttonPressed() {
-                    showPopup(getSettingsUIObject());
-                }
-            })) {
-            public boolean handleKeyPressed(int keyCode, int count) {
-                switch (keyCode) {
-                    case Canvas.KEY_NUM0:
-                        buttons[0].invokePressed(false, false);
-                        break;
-                    default:
-                        return false;
-                }
-                return true;
-            }
-        };
 
+	        initEditorCanvas();
+	        
             initBottomPanel();
+            
+            initStartPointWarning();
 
             initZoomPanel();
 
-            initEditorCanvas();
-
             initPlacementPanel();
 
+            initSettingsButton();
+            
             initListPanel();
 
             initPathPicker();
             
-            notFromStartWarning = new NotFromStartWarning();
-            notFromStartWarning.setVisible(false);
-            
-            setComponents(new IUIComponent[]{editorCanvas, bottomButtonPanel, notFromStartWarning, zoomPanel, placementButtonPanel, settingsButton, placedElementsList, pathPicker});
+            setComponents(new IUIComponent[]{editorCanvas, bottomButtonPanel, startPointWarning, zoomPanel, placementButtonPanel, settingsButton, placedElementsList, pathPicker});
         } catch(Exception ex) {
             ex.printStackTrace();
             Main.setCurrent(new Alert(ex.toString()));
@@ -204,6 +188,11 @@ public class MainScreenUI extends Container {
         }.setButtons(bottomButtons).setButtonsBgColor(0x303030);
     }
     
+    private void initStartPointWarning() {
+    	startPointWarning = new StartPointWarning();
+        startPointWarning.setVisible(false);
+    }
+    
     private void initZoomPanel() {
         zoomIn = new Button("+" + (Main.hasPointerEvents ? "" : " (*)"), new Button.ButtonFeedback() {
             public void buttonPressed() {
@@ -286,13 +275,31 @@ public class MainScreenUI extends Container {
         placementButtonPanel.setVisible(false);
         placementButtonPanel.setIsSelectionVisible(!Main.hasPointerEvents);
     }
+    
+    private void initSettingsButton() {
+    	settingsButton = new ButtonComponent(new Button("Settings" + (Main.hasPointerEvents ? "" : " (0)"), new Button.ButtonFeedback() {
+            public void buttonPressed() {
+                showPopup(getSettingsUIObject());
+            }
+        })) {
+            public boolean handleKeyPressed(int keyCode, int count) {
+                switch (keyCode) {
+                    case Canvas.KEY_NUM0:
+                        buttons[0].invokePressed(false, false);
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        };
+    }
 
     private void initListPanel() {
         Element[] elements = elementsBuffer.getElementsAsArray();
         System.out.println("updating, " + elements.length);
         Button[] listButtons = new Button[elements.length];
         for (int i = 0; i < elements.length; i++) {
-            final int o = i;
+            //final int o = i;
             final Element element = elements[i];
             listButtons[i] = new Button(elements[i].getName(), new Button.ButtonFeedback() {
                 public void buttonPressed() {
@@ -326,8 +333,8 @@ public class MainScreenUI extends Container {
     }
     
     private void initPathPicker() {
-        pathPicker = (PathPicker) new PathPicker()
-                .setVisible(false);
+        pathPicker = new PathPicker();
+        pathPicker.setVisible(false);
     }
     
     private void setIsPathPickerVisible(boolean b) {
@@ -364,13 +371,13 @@ public class MainScreenUI extends Container {
         pathPicker
                 .setSizes(w, h, BTN_H)
                 .setPos(x0, y0);
-        notFromStartWarning
-        		.setSize(notFromStartWarning.getOptimalW(zoomPanel.getLeftX() - x0), notFromStartWarning.getOptimalH(bottomButtonPanel.getTopY() - y0))
+        startPointWarning
+        		.setSize(startPointWarning.getOptimalW(zoomPanel.getLeftX() - x0), startPointWarning.getOptimalH(bottomButtonPanel.getTopY() - y0))
         		.setPos(bottomButtonPanel.getLeftX(), bottomButtonPanel.getTopY(), LEFT | BOTTOM);
     }
     
     public void paint(Graphics g, int x0, int y0, int w, int h) {
-    	notFromStartWarning.setVisible(!StartPoint.checkStartPoint(elementsBuffer.getElementsAsArray()));
+    	startPointWarning.setVisible(!StartPoint.checkStartPoint(elementsBuffer.getElementsAsArray()));
     	super.paint(g, x0, y0, w, h);
     }
     
@@ -378,21 +385,32 @@ public class MainScreenUI extends Container {
     	StartPoint.moveToZeros(elementsBuffer.getElementsAsArray());
     }
     
-    class NotFromStartWarning extends Container {
+    class StartPointWarning extends Container {
     	TextComponent message;
     	ButtonComponent button;
     	
-    	public NotFromStartWarning() {
+    	public StartPointWarning() {
     		setBgColor(COLOR_TRANSPARENT);
     		message = new TextComponent("Warn: start point of the structure should be on (x,y) 0 0");
     		message.setBgColor(COLOR_TRANSPARENT);
     		message.setFontColor(0xffff00);
-    		Button button = new Button("Move to 0 0", new Button.ButtonFeedback() {
+    		Button button = new Button("Move to 0 0" + (Main.hasPointerEvents ? "" : " (7)"), new Button.ButtonFeedback() {
 				public void buttonPressed() {
 					moveToZeros();
 				}
 			}).setBgColor(0x002200);
-    		this.button = new ButtonComponent(button);
+    		this.button = new ButtonComponent(button) {
+    			public boolean handleKeyPressed(int keyCode, int count) {
+    	            switch (keyCode) {
+    	                case Canvas.KEY_NUM7:
+    	                    buttons[0].invokePressed(false, false);
+    	                    break;
+    	                default:
+    	                    return false;
+    	            }
+    	            return true;
+    	        }
+    		};
     		setComponents(new IUIComponent[] {message, this.button});
 		}
     	

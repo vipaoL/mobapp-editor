@@ -140,6 +140,7 @@ public class TextComponent extends UIComponent {
             scrollAnimThread = new Thread(new Runnable() {
                 public void run() {
                     horizontalScrollOffset = textW2;
+                    int prevScrollOffset = horizontalScrollOffset;
                     boolean reverse = false;
                     while (isHorizontalScrollingEnabled) {
                         try {
@@ -148,7 +149,6 @@ public class TextComponent extends UIComponent {
                                 if (horizontalScrollOffset < textW2 - w / 3) {
                                     horizontalScrollOffset += textW2 / 128;
                                 } else {
-                                    repaint();
                                     Thread.sleep(500);
                                     reverse = true;
                                 }
@@ -156,12 +156,14 @@ public class TextComponent extends UIComponent {
                                 if (horizontalScrollOffset > -textW2 + w / 3) {
                                     horizontalScrollOffset -= textW2 / 16;
                                 } else {
-                                    repaint();
                                     Thread.sleep(500);
                                     reverse = false;
                                 }
                             }
-                            repaint();
+                            if (horizontalScrollOffset != prevScrollOffset) {
+                            	repaint();
+                            }
+                            prevScrollOffset = horizontalScrollOffset;
                             Thread.sleep(Math.max(0, 20 - (System.currentTimeMillis() - start)));
                         } catch (InterruptedException ex) {
                             ex.printStackTrace();

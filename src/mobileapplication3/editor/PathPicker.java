@@ -155,7 +155,7 @@ public class PathPicker extends Container {
     }
     
     private void setListButtons(Button[] buttons) {
-        list.setButtons(buttons).setParent(this);
+        list.setButtons(buttons);
         setSize(w, h);
         repaint();
     }

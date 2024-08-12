@@ -77,6 +77,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         if (components != null) {
             for (int i = 0; i < components.length; i++) {
                 if (components[i] != null) {
+                	System.out.println(getClass().getName() + " set as parent for " + components[i].getClass().getName());
                     components[i].setParent(this);
                 }
             }
@@ -499,7 +500,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
             parent.repaint();
         } else {
             try {
-                throw new NullPointerException("Can't call parent's repaint: parent component is not set!");
+                throw new NullPointerException("Can't call parent's repaint: parent component is not set! " + getClass().getName());
             } catch (NullPointerException ex) {
                 ex.printStackTrace();
             }
