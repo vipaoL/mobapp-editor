@@ -72,7 +72,7 @@ public class TextComponent extends UIComponent {
             g.drawSubstring(
             		text,
             		bounds[0], bounds[1],
-            		x0 + (hCenter ? w/2 : 0) + horizontalScrollOffset, y0 + offset,
+            		x0 + (hCenter ? w/2 : 0) - horizontalScrollOffset, y0 + offset,
             		(hCenter ? Graphics.HCENTER : Graphics.LEFT) | Graphics.TOP);
             offset += step;
         }
