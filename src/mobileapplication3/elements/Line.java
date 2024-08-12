@@ -25,7 +25,7 @@ public class Line extends Element {
                 }
 
                 public String getName() {
-                    return "Start Point";
+                    return "Move start point";
                 }
             },
             new PlacementStep() {
@@ -34,7 +34,7 @@ public class Line extends Element {
                 }
 
                 public String getName() {
-                    return "End Point";
+                    return "Move end point";
                 }
             }
         };

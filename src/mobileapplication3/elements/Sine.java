@@ -25,7 +25,7 @@ public class Sine extends AbstractCurve {
                 }
 
                 public String getName() {
-                    return "Move";
+                    return "Move start point";
                 }
             },
             new PlacementStep() {
@@ -36,7 +36,7 @@ public class Sine extends AbstractCurve {
                 }
 
                 public String getName() {
-                    return "2nd Point";
+                    return "Move end Point";
                 }
             },
             new PlacementStep() {
@@ -45,7 +45,7 @@ public class Sine extends AbstractCurve {
                 }
 
                 public String getName() {
-                    return "Periods";
+                    return "Change number of periods";
                 }
             }
         };

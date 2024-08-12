@@ -25,7 +25,7 @@ public class EndPoint extends Element {
                 }
 
                 public String getName() {
-                    return "";
+                    return "Move";
                 }
             }
         };

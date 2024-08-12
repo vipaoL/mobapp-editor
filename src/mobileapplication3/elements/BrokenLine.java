@@ -26,7 +26,7 @@ public class BrokenLine extends Line {
                 }
 
                 public String getName() {
-                    return "Start Point";
+                    return "Move start point";
                 }
             },
             new PlacementStep() {
@@ -36,7 +36,7 @@ public class BrokenLine extends Line {
                 }
 
                 public String getName() {
-                    return "End Point";
+                    return "Move end point";
                 }
             }
         };
