@@ -95,6 +95,17 @@ public class Line extends Element {
         return "Line";
     }
     
+    public void move(short dx, short dy) {
+    	x1 += dx;
+    	y1 += dy;
+    	x2 += dx;
+    	y2 += dy;
+    }
+    
+    public short[] getStartPoint() {
+        return new short[]{x1, y1};
+    }
+    
     public short[] getEndPoint() {
         return new short[]{x2, y2};
     }

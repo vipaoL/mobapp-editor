@@ -53,6 +53,13 @@ public abstract class AbstractCurve extends Element {
             pointsCache[cacheCarriage][1] = (short) y;
             cacheCarriage += 1;
         }
+        
+        public void movePoints(short dx, short dy) {
+        	for (int i = 0; i < pointsCache.length; i++) {
+				pointsCache[i][0] += dx;
+				pointsCache[i][1] += dy;
+			}
+        }
 
         public int getSize() {
             return cacheCarriage;

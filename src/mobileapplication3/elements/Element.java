@@ -148,6 +148,10 @@ public abstract class Element {
 
     public abstract String getName();
     
+    public abstract void move(short dx, short dy);
+    
+    public abstract short[] getStartPoint();
+    
     public abstract short[] getEndPoint() throws Exception;
     
     public abstract boolean isBody();

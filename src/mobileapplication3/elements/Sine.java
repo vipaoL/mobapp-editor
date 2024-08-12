@@ -88,7 +88,9 @@ public class Sine extends AbstractCurve {
         if (x0 == x && y0 == y) {
             return;
         }
-        pointsCache = null;
+        if (pointsCache != null) {
+        	pointsCache.movePoints((short) (x - x0), (short) (y - y0));
+        }
         x0 = x;
         y0 = y;
     }
@@ -157,6 +159,16 @@ public class Sine extends AbstractCurve {
 
     public String getName() {
         return "Sine";
+    }
+    
+    public void move(short dx, short dy) {
+    	x0 += dx;
+    	y0 += dy;
+    	pointsCache.movePoints(dx, dy);
+    }
+    
+    public short[] getStartPoint() {
+        return new short[]{x0, y0};
     }
 
     public short[] getEndPoint() throws Exception {

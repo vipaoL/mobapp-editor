@@ -93,9 +93,11 @@ public class Circle extends AbstractCurve {
         if (this.x == x && this.y == y) {
             return this;
         }
+        if (pointsCache != null) {
+        	pointsCache.movePoints((short) (x - this.x), (short) (y - this.y));
+        }
         this.x = x;
         this.y = y;
-        pointsCache = null;
         return this;
     }
     
@@ -178,6 +180,15 @@ public class Circle extends AbstractCurve {
 
     public String getName() {
         return "Circle";
+    }
+    
+    public void move(short dx, short dy) {
+    	x += dx;
+    	y += dy;
+    }
+    
+    public short[] getStartPoint() {
+        return new short[]{(short) (x - r), y};
     }
     
     public short[] getEndPoint() {

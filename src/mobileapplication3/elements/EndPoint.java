@@ -74,6 +74,15 @@ public class EndPoint extends Element {
         return "End point";
     }
     
+    public void move(short dx, short dy) {
+    	x += dx;
+    	y += dy;
+    }
+    
+    public short[] getStartPoint() {
+    	return new short[] {x, y};
+    }
+    
     public short[] getEndPoint() throws Exception {
         throw new Exception("Never ask end point its end point");
     }

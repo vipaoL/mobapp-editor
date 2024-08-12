@@ -15,10 +15,15 @@ import mobileapplication3.editor.ui.Container;
 import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.AlertType;
 import mobileapplication3.elements.Element;
+import mobileapplication3.elements.StartPoint;
+
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Font;
+import javax.microedition.lcdui.Graphics;
+
 import mobileapplication3.editor.ui.ButtonComponent;
 import mobileapplication3.editor.ui.IUIComponent;
+import mobileapplication3.editor.ui.TextComponent;
 
 /**
  *
@@ -36,6 +41,7 @@ public class MainScreenUI extends Container {
     private ButtonCol placedElementsList = null;
     private ButtonComponent settingsButton = null;
     private PathPicker pathPicker = null;
+    private NotFromStartWarning notFromStartWarning = null;
     private StructureBuilder elementsBuffer;
     
     public MainScreenUI() {
@@ -75,7 +81,10 @@ public class MainScreenUI extends Container {
 
             initPathPicker();
             
-            setComponents(new IUIComponent[]{editorCanvas, bottomButtonPanel, zoomPanel, placementButtonPanel, placedElementsList, settingsButton, pathPicker});
+            notFromStartWarning = new NotFromStartWarning();
+            notFromStartWarning.setVisible(false);
+            
+            setComponents(new IUIComponent[]{editorCanvas, bottomButtonPanel, zoomPanel, placementButtonPanel, placedElementsList, settingsButton, pathPicker, notFromStartWarning});
         } catch(Exception ex) {
             ex.printStackTrace();
             Main.setCurrent(new Alert(ex.toString()));
@@ -290,6 +299,8 @@ public class MainScreenUI extends Container {
                     //System.out.println(o + "selected");
                 }
                 public void buttonPressedSelected() {
+                	placedElementsList.setVisible(false);
+                	placementButtonPanel.setVisible(false);
                     showPopup(getElementEditScreenObject(element, elementsBuffer));
                     //elementsBuffer.remove(o);
                 }
@@ -351,5 +362,45 @@ public class MainScreenUI extends Container {
         pathPicker
                 .setSizes(w, h, BTN_H)
                 .setPos(x0, y0);
+        notFromStartWarning
+        		.setSize(notFromStartWarning.getOptimalW(), notFromStartWarning.getOptimalH())
+        		.setPos(placementButtonPanel.getLeftX(), placementButtonPanel.getTopY(), LEFT | BOTTOM);
+    }
+    
+    public void paint(Graphics g, int x0, int y0, int w, int h) {
+    	if (!StartPoint.checkStartPoint(elementsBuffer.getElementsAsArray())) {
+    		notFromStartWarning.setVisible(true);
+    	}
+    	super.paint(g, x0, y0, w, h);
+    }
+    
+    class NotFromStartWarning extends Container {
+    	TextComponent message;
+    	ButtonComponent button;
+    	
+    	public NotFromStartWarning() {
+    		message = new TextComponent("Warn: start point of the structure should be on (x,y) 0 0");
+    		Button button = new Button("Move to 0 0", new Button.ButtonFeedback() {
+				public void buttonPressed() {
+					StartPoint.moveToZeros(elementsBuffer.getElementsAsArray());
+					setVisible(false);
+				}
+			});
+    		this.button = new ButtonComponent(button);
+    		setComponents(new IUIComponent[] {message, this.button});
+		}
+    	
+		protected void onSetBounds(int x0, int y0, int w, int h) {
+			message.setPos(x0, y0, LEFT | TOP).setSize(w, h/2);
+			button.setPos(x0, y0 + h/2, LEFT | TOP).setSize(w, h/2);
+		}
+		
+		public int getOptimalW() {
+			return Font.getDefaultFont().stringWidth(message.getText()) * 2 / 3;
+		}
+		
+		public int getOptimalH() {
+			return Font.getDefaultFont().getHeight() * 5;
+		}
     }
 }
