@@ -5,8 +5,11 @@
  */
 package mobileapplication3.editor.ui;
 
+import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
+
+import mobileapplication3.editor.Main;
 import mobileapplication3.utils.Utils;
 
 /**
@@ -50,10 +53,12 @@ public class ButtonComponent extends AbstractButtonSet {
     }
 
     public boolean handleKeyPressed(int keyCode, int count) {
-        if (isSelectionEnabled) {
+        if (isFocused && Main.util.getGameAction(keyCode) == Canvas.FIRE) {
             buttons[0].invokePressed(true, true);
+            return true;
+        } else {
+        	return false;
         }
-        return true;
     }
     
     public IUIComponent setBgColor(int color) {
