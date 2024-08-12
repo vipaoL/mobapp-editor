@@ -370,10 +370,12 @@ public class MainScreenUI extends Container {
     }
     
     public void paint(Graphics g, int x0, int y0, int w, int h) {
-    	if (!StartPoint.checkStartPoint(elementsBuffer.getElementsAsArray())) {
-    		notFromStartWarning.setVisible(true);
-    	}
+    	notFromStartWarning.setVisible(!StartPoint.checkStartPoint(elementsBuffer.getElementsAsArray()));
     	super.paint(g, x0, y0, w, h);
+    }
+    
+    public void moveToZeros() {
+    	StartPoint.moveToZeros(elementsBuffer.getElementsAsArray());
     }
     
     class NotFromStartWarning extends Container {
@@ -387,8 +389,7 @@ public class MainScreenUI extends Container {
     		message.setFontColor(0xffff00);
     		Button button = new Button("Move to 0 0", new Button.ButtonFeedback() {
 				public void buttonPressed() {
-					StartPoint.moveToZeros(elementsBuffer.getElementsAsArray());
-					setVisible(false);
+					moveToZeros();
 				}
 			}).setBgColor(0x002200);
     		this.button = new ButtonComponent(button);

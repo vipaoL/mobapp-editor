@@ -6,6 +6,8 @@
 package mobileapplication3.elements;
 
 import javax.microedition.lcdui.Graphics;
+
+import mobileapplication3.utils.Mathh;
 import mobileapplication3.utils.Utils;
 
 /**
@@ -102,12 +104,21 @@ public class Line extends Element {
     	y2 += dy;
     }
     
-    public short[] getStartPoint() {
-        return new short[]{x1, y1};
+    private short[][] getEnds() {
+    	return new short[][] {
+    			new short[]{x1, y1},
+    			new short[]{x2, y2}
+		};
     }
     
+    public short[] getStartPoint() {
+    	short[][] ends = getEnds();
+        return StartPoint.compareAsStartPoints(ends[0], ends[1]);
+    }
+
     public short[] getEndPoint() {
-        return new short[]{x2, y2};
+    	short[][] ends = getEnds();
+    	return EndPoint.compareAsEndPoints(ends[0], ends[1]);
     }
 
 	public boolean isBody() {

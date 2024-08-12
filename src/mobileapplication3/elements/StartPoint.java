@@ -26,6 +26,14 @@ public class StartPoint {
 		return ret;
 	}
 	
+	public static short[] compareAsStartPoints(short[] a, short[] b) {
+		if (compareAsStartPoints(a[0], a[1], b[0], b[1])) {
+			return b;
+		} else {
+			return a;
+		}
+	}
+	
 	/**
      * @return true if the second point is more likely the start point than the first one
      */

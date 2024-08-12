@@ -99,6 +99,14 @@ public class EndPoint extends Element {
         }
         return false;
     }
+    
+    public static short[] compareAsEndPoints(short[] a, short[] b) {
+		if (compare(a, b)) {
+			return b;
+		} else {
+			return a;
+		}
+	}
 
 	public boolean isBody() {
 		return false;

@@ -185,7 +185,9 @@ public class Circle extends AbstractCurve {
     public void move(short dx, short dy) {
     	x += dx;
     	y += dy;
-    	pointsCache.movePoints(dx, dy);
+    	if (pointsCache != null) {
+    		pointsCache.movePoints(dx, dy);
+    	}
     }
     
     public short[] getStartPoint() {

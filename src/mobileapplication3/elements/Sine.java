@@ -75,6 +75,9 @@ public class Sine extends AbstractCurve {
         if (anchorX == x && anchorY == y) {
             return;
         }
+        if (pointsCache != null) {
+        	pointsCache.movePoints((short) (x - x0), (short) (y - y0));
+        }
         pointsCache = null;
         anchorX = x;
         anchorY = y;
@@ -162,17 +165,31 @@ public class Sine extends AbstractCurve {
     }
     
     public void move(short dx, short dy) {
+    	anchorX += dx;
+    	anchorY += dy;
     	x0 += dx;
     	y0 += dy;
-    	pointsCache.movePoints(dx, dy);
+    	
+    	if (pointsCache != null) {
+    		pointsCache.movePoints(dx, dy);
+    	}
+    }
+    
+    private short[][] getEnds() {
+    	return new short[][] {
+	    		new short[]{anchorX, anchorY},
+	    		new short[]{(short) (x0 + l), (short) (y0 + amp*Mathh.sin(offset+180*halfperiods)/1000)}
+		};
     }
     
     public short[] getStartPoint() {
-        return new short[]{x0, y0};
+    	short[][] ends = getEnds();
+        return StartPoint.compareAsStartPoints(ends[0], ends[1]);
     }
 
-    public short[] getEndPoint() throws Exception {
-        return new short[]{(short) (x0 + l), (short) (y0 + amp*Mathh.sin(offset+180*halfperiods)/1000)};
+    public short[] getEndPoint() {
+    	short[][] ends = getEnds();
+    	return EndPoint.compareAsEndPoints(ends[0], ends[1]);
     }
     
     protected void genPoints() {
