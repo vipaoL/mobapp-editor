@@ -24,7 +24,7 @@ import mobileapplication3.editor.ui.IUIComponent;
  *
  * @author vipaol
  */
-public class EditorScreenUI extends Container {
+public class MainScreenUI extends Container {
     
     private final static int BTNS_IN_ROW = 4;
     public final static int FONT_H = Font.getDefaultFont().getHeight();
@@ -38,7 +38,7 @@ public class EditorScreenUI extends Container {
     private PathPicker pathPicker = null;
     private StructureBuilder elementsBuffer;
     
-    public EditorScreenUI() {
+    public MainScreenUI() {
         try {
             elementsBuffer = new StructureBuilder(new StructureBuilder.Feedback() {
                 public void onUpdate() {
@@ -84,6 +84,10 @@ public class EditorScreenUI extends Container {
     
     private SettingsUI getSettingsUIObject() {
         return new SettingsUI(this);
+    }
+    
+    private EditElementUI getElementEditScreenObject(Element element, StructureBuilder sb) {
+        return new EditElementUI(element, sb, this);
     }
     
     private void initEditorCanvas() {
@@ -280,6 +284,7 @@ public class EditorScreenUI extends Container {
         Button[] listButtons = new Button[elements.length];
         for (int i = 0; i < elements.length; i++) {
             final int o = i;
+            final Element element = elements[i];
             listButtons[i] = new Button(elements[i].getName(), new Button.ButtonFeedback() {
                 public void buttonPressed() {
                     //System.out.println(o + "selected");
@@ -287,7 +292,8 @@ public class EditorScreenUI extends Container {
                 public void buttonPressedSelected() {
                     // there should be edit, but there's deleting for test
                     System.out.println("removing");
-                    elementsBuffer.remove(o);
+                    showPopup(getElementEditScreenObject(element, elementsBuffer));
+                    //elementsBuffer.remove(o);
                 }
             });
         }

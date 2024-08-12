@@ -30,6 +30,10 @@ public class BrokenCircle extends Circle {
         return null;
     }
     
+//    public String[] getArgsNames() {
+//		TODO return ARGS_NAMES;
+//	}
+    
     public short getID() {
         return Element.BROKEN_CIRCLE;
     }

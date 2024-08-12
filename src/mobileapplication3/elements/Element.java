@@ -135,6 +135,8 @@ public abstract class Element {
     
     public abstract short[] getArgs();
     
+    public abstract String[] getArgsNames();
+    
     public abstract short getID();
     
     public abstract int getStepsToPlace();
@@ -144,6 +146,8 @@ public abstract class Element {
     public abstract short[] getEndPoint() throws Exception;
     
     public abstract boolean isBody();
+    
+    public abstract void recalcCalculatedArgs();
     
     public abstract class PlacementStep {
         public abstract void place(short pointX, short pointY);

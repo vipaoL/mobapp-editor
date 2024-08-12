@@ -44,6 +44,7 @@ public abstract class Page extends Container {
             actionButtons.bindToSoftButtons(0, actionButtons.getButtonCount() - 1);
             actionButtons.setSelected(actionButtons.getButtonCount() - 1);
             setComponents(new IUIComponent[]{title, actionButtons, pageContent});
+            // TODO call onSetBounds if it was called before and failed because initPage had't done
         }
     }
 
@@ -56,7 +57,7 @@ public abstract class Page extends Container {
             }
         }
         
-        margin = w / 16;
+        margin = w / 32;
         
         title
                 .setSize(w, TextComponent.HEIGHT_AUTO)

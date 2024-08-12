@@ -21,6 +21,8 @@ public class RootContainer extends Canvas implements IContainer {
     private boolean isKeyRepeaterRunning = false;
     private int keyRepeaterDelay;
     private KeyboardHelper kbHelper;
+    private int bgColor = 0x000000;
+    public int w, h;
 
     public RootContainer(IUIComponent rootUIComponent) {
         setFullScreenMode(true);
@@ -42,10 +44,21 @@ public class RootContainer extends Canvas implements IContainer {
     }
 
     protected void paint(Graphics g) {
+    	if (bgColor >= 0) {
+    		g.fillRect(0, 0, w, h);
+    	}
         if (rootUIComponent != null) {
             rootUIComponent.paint(g);
         }
     }
+    
+    public int getBgColor() {
+		return bgColor;
+	}
+    
+    public void setBgColor(int bgColor) {
+		this.bgColor = bgColor;
+	}
     
 //    private void startKeyRepeatedThread() {
 //        if (isKeyRepeaterRunning) {
@@ -161,6 +174,8 @@ public class RootContainer extends Canvas implements IContainer {
     }
     
     protected void sizeChanged(int w, int h) {
+    	this.w = w;
+    	this.h = h;
         if (rootUIComponent != null) {
             rootUIComponent.setSize(w, h);
             repaint();
@@ -198,7 +213,7 @@ public class RootContainer extends Canvas implements IContainer {
             lastKey = 0;
             pressedAgainInDelay = false;
             
-            repeatThread=new Thread() {
+            repeatThread = new Thread() {
                 public void run() {
                     try {
                         while(true) {

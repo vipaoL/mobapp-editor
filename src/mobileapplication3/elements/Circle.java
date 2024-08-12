@@ -13,7 +13,8 @@ import mobileapplication3.utils.Mathh;
  */
 public class Circle extends AbstractCurve {
     
-    short x, y, r, arcAngle = 360, startAngle, kx = 100, ky = 100;
+	private static final String[] ARGS_NAMES = {"X", "Y", "R", "Arc angle", "Start angle", "kX", "kY"};
+    private short x, y, r, arcAngle = 360, startAngle, kx = 100, ky = 100;
     
     public PlacementStep[] getPlacementSteps() {
         return new PlacementStep[] {
@@ -128,6 +129,10 @@ public class Circle extends AbstractCurve {
         return args;
     }
     
+    public String[] getArgsNames() {
+    	return ARGS_NAMES;
+    }
+    
     public short getID() {
         return Element.CIRCLE;
     }
@@ -169,5 +174,7 @@ public class Circle extends AbstractCurve {
             pointsCache.writePointToCache(x+Mathh.cos(startAngle+arcAngle)*kx*r/100000, y+Mathh.sin(startAngle+arcAngle)*ky*r/100000);
         }
     }
+    
+    public void recalcCalculatedArgs() { }
     
 }

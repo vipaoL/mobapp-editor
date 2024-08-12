@@ -36,7 +36,7 @@ public class Button {
         this.fontColorInactive = 0x404040;
         this.fontColor = 0xffffff;
         this.bgColorInactive = 0x202020;
-        this.bgColor = 0x101020;
+        this.bgColor = IUIComponent.COLOR_ACCENT_MUTED;
         
         this.text = title;
         setTitle(getTitle());
@@ -129,25 +129,33 @@ public class Button {
         int prevClipY = g.getClipY();
         int prevClipW = g.getClipWidth();
         int prevClipH = g.getClipHeight();
-        //g.setClip(x0, y0, w, h);
+        
         x0 += bgPadding;
         y0 += bgPadding;
         w -= bgPadding*2;
         h -= bgPadding*2;
+        if (w <= 0 || h <= 0) {
+        	return;
+        }
+        g.setClip(x0, y0, w, h);
+        
         Font prevFont = g.getFont();
         g.setFont(font);
         
+        int r = Math.min(w/5, h/5);
         if (isActive) {
             int bgColor = isSelected ? selectedBgColor : this.bgColor;
             if (bgColor > 0) {
                 g.setColor(bgColor);
-                g.fillRect(x0, y0, w, h);
+                //g.fillRect(x0, y0, w, h); // TODO add feature to disable rouding
+                g.fillRoundRect(x0, y0, w, h, r, r);
             }
             g.setColor(fontColor);
         } else {
             if (bgColorInactive > 0) {
                 g.setColor(bgColorInactive);
-                g.fillRect(x0, y0, w, h);
+                //g.fillRect(x0, y0, w, h);
+                g.fillRoundRect(x0, y0, w, h, r, r);
             }
             g.setColor(fontColorInactive);
         }

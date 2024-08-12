@@ -15,14 +15,16 @@ import javax.microedition.lcdui.Image;
 public abstract class Container implements IContainer, IUIComponent, IPopupFeedback {
     
     private IUIComponent[] components;
-    public int x0, y0, w, h,
+    protected int x0, y0, w, h, prevX0, prevY0, prevW, prevH,
             anchorX0, anchorY0,
             anchor = IUIComponent.LEFT | IUIComponent.TOP;
     protected boolean isVisible = true;
     protected boolean isFocused = true;
-    boolean dragged = false;
-    int pressedX, pressedY;
-    int bgColor = 0x000000;
+    private boolean dragged = false;
+    protected int pressedX, pressedY;
+    private int bgColor = 0x000000;
+    private boolean roundBg = false;
+    private int padding;
     protected Image bg = null;
     private AbstractPopupWindow popupWindow = null;
     protected IContainer parent = null;
@@ -36,8 +38,18 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         
     }
 
-    public Container setBgColor(int bgColor) {
+    public IUIComponent setBgColor(int bgColor) {
         this.bgColor = bgColor;
+        return this;
+    }
+    
+    public IUIComponent roundBg(boolean b) {
+    	roundBg = b;
+    	return this;
+    }
+    
+    public IUIComponent setPadding(int padding) {
+        this.padding = padding;
         return this;
     }
 
@@ -53,6 +65,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     }
 
     protected final Container setComponents(IUIComponent[] components) {
+    	prevW = prevH = 0; // next setBounds call after the components have changed shouldn't be ignored
         if (this.components != null) {
             for (int i = 0; i < this.components.length; i++) {
                 if (this.components[i] != null) {
@@ -75,6 +88,13 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     }
     
     protected final IUIComponent[] getComponents() {
+    	if (components.length == 0) {
+    		try {
+    			throw new IllegalStateException("No components in the container. Did you forgot to call setComponents()?");
+    		} catch (IllegalStateException ex) {
+    			ex.printStackTrace();
+    		}
+    	}
         return components;
     }
     
@@ -92,14 +112,40 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     }
     
     public void paint(Graphics g) {
+    	paint(g, x0, y0, w, h);
+    }
+    
+    public void paint(Graphics g, int x0, int y0, int w, int h) {
         if (!isVisible) {
             return;
         }
         
-        onPaint(g);
+        onPaint(g, x0, y0, w, h);
     }
     
     private void onPaint(Graphics g) {
+    	onPaint(g, x0, y0, w, h);
+    }
+    
+    private void onPaint(Graphics g, int x0, int y0, int w, int h) {
+    	if (w == 0 || h == 0) {
+    		try {
+    			throw new Exception("Can't paint: w=" + w + " h=" + h);
+    		} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+    		return;
+    	}
+    	
+    	x0 += padding;
+        y0 += padding;
+        w -= padding*2;
+        h -= padding*2;
+        
+        if (w <= 0 || h <= 0) {
+        	return;
+        }
+    	
         IUIComponent[] uiComponents = getComponents();
         
         int prevClipX = g.getClipX();
@@ -107,16 +153,8 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         int prevClipW = g.getClipWidth();
         int prevClipH = g.getClipHeight();
         g.setClip(x0, y0, w, h);
-        
-        if (bgColor >= 0) {
-            g.setColor(bgColor);
-            g.fillRect(x0, y0, w, h);
-        }
-        
-        if (bg != null) {
-            g.drawImage(bg, x0, y0, Graphics.TOP | Graphics.LEFT);
-        }
-        
+        drawBg(g, x0, y0, w, h);
+        setBounds(x0, y0, w, h);
         for (int i = 0; i < uiComponents.length; i++) {
             if (uiComponents[i] != null) {
                 uiComponents[i].paint(g);
@@ -124,10 +162,26 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         }
         
         if (popupWindow != null) {
-            popupWindow.paint(g);
+            popupWindow.paint(g, x0, y0, w, h);
         }
         
         g.setClip(prevClipX, prevClipY, prevClipW, prevClipH);
+    }
+    
+    protected void drawBg(Graphics g, int x0, int y0, int w, int h) {
+    	if (bgColor >= 0) {
+            g.setColor(bgColor);
+            if (roundBg) {
+	            int r = Math.min(w/5, h/5);
+	            g.fillRoundRect(x0, y0, w, h, r, r);
+            } else {
+            	g.fillRect(x0, y0, w, h);
+            }
+        }
+        
+        if (bg != null) {
+            g.drawImage(bg, x0 + w/2, y0 + h/2, Graphics.VCENTER | Graphics.HCENTER);
+        }
     }
     
     public IUIComponent refreshSizes() {
@@ -229,7 +283,6 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
                     continue;
                 }
                 if (uiComponents[i].pointerReleased(x, y)) {
-                    repaint();
                     return true;
                 }
             }
@@ -408,10 +461,22 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     }
     
     private final void setBounds(int x0, int y0, int w, int h) {
-        this.w = w;
-        this.h = h;
-        this.x0 = x0;
-        this.y0 = y0;
+    	if (w == 0 || h == 0) {
+            try {
+                throw new Exception("Setting zero as a dimension");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return;
+        }
+    	if (x0 == prevX0 && y0 == prevY0 && w == prevW && h == prevH) {
+    		return;
+    	}
+    	
+    	prevW = this.w = w;
+    	prevH = this.h = h;
+        prevX0 = this.x0 = x0;
+        prevY0 = this.y0 = y0;
         
         if (popupWindow != null) {
             popupWindow.setSize(w, h).setPos(x0, y0, LEFT | TOP);

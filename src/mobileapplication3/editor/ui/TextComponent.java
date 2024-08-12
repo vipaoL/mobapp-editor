@@ -25,12 +25,12 @@ public class TextComponent extends UIComponent {
     private boolean isHorizontalScrollingEnabled = false;
     int horizontalScrollOffset = 0;
     int textW2 = 0;
-    int textAlignment = VCENTER;
+    int textAlignment = HCENTER | VCENTER;
     
     public TextComponent() {
         font = Font.getDefaultFont();
         padding = font.getHeight()/6;
-        bgColor = 0x000055;
+        bgColor = COLOR_ACCENT;
     }
     
     public TextComponent(String text) {
@@ -42,7 +42,7 @@ public class TextComponent extends UIComponent {
         return font.getHeight() * (getLineBounds(text, font, w, padding).length) + font.getHeight() / 2;
     }
 
-    public void onPaint(Graphics g) {
+    public void onPaint(Graphics g, int x0, int y0, int w, int h) {
         if (text == null) {
             return;
         }
@@ -62,11 +62,17 @@ public class TextComponent extends UIComponent {
             offset = -step * (lineBounds.length - 1) / 2 + h/2 - font.getHeight() / 2;
         }
         
+        boolean hCenter = (textAlignment & HCENTER) != 0;
+        
         
         g.setColor(0xffffff);
         for (int i = 0; i < lineBounds.length; i++) {
             int[] bounds = lineBounds[i];
-            g.drawSubstring(text, bounds[0], bounds[1], x0 + w/2 + horizontalScrollOffset, y0 + offset, Graphics.HCENTER | Graphics.TOP);
+            g.drawSubstring(
+            		text,
+            		bounds[0], bounds[1],
+            		x0 + (hCenter ? w/2 : 0) + horizontalScrollOffset, y0 + offset,
+            		(hCenter ? Graphics.HCENTER : Graphics.LEFT) | Graphics.TOP);
             offset += step;
         }
         
@@ -115,9 +121,6 @@ public class TextComponent extends UIComponent {
     }
     
     public TextComponent setTextAlignment(int a) {
-        if (a != HCENTER || a != TOP) {
-            throw new IllegalArgumentException("Only TOP and HCENTER are supported.");
-        }
         textAlignment = a;
         return this;
     }

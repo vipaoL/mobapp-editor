@@ -15,33 +15,55 @@ public abstract class UIComponent implements IUIComponent {
     
     protected boolean isVisible = true;
     protected boolean isFocused = true;
-    public int x0, y0, w, h,
+    public int x0, y0, w, h, prevX0, prevY0, prevW, prevH,
             anchorX0, anchorY0,
             anchor = IUIComponent.LEFT | IUIComponent.TOP;
     private boolean isSizeSet = false;
     protected int bgColor;
+    private boolean roundBg = true;
+    private int padding;
     private IContainer parent = null;
     
     public final void paint(Graphics g) {
+    	paint(g, x0, y0, w, h);
+    }
+    
+    public final void paint(Graphics g, int x0, int y0, int w, int h) {
         if (isVisible) {
             int prevClipX = g.getClipX();
             int prevClipY = g.getClipY();
             int prevClipW = g.getClipWidth();
             int prevClipH = g.getClipHeight();
             
+            x0 += padding;
+            y0 += padding;
+            w -= padding*2;
+            h -= padding*2;
+            
+            if (w <= 0 || h <= 0) {
+            	return;
+            }
+            
             g.setClip(x0, y0, w, h);
             
-            drawBg(g);
-            onPaint(g);
+            setBounds(x0, y0, w, h);
+            
+            drawBg(g, x0, y0, w, h);
+            onPaint(g, x0, y0, w, h);
             
             g.setClip(prevClipX, prevClipY, prevClipW, prevClipH);
         }
     }
     
-    public void drawBg(Graphics g) {
+    public void drawBg(Graphics g, int x0, int y0, int w, int h) {
         if (bgColor >= 0) {
             g.setColor(bgColor);
-            g.fillRect(x0, y0, w, h);
+            if (roundBg) {
+	            int r = Math.min(w/5, h/5);
+	            g.fillRoundRect(x0, y0, w, h, r, r);
+            } else {
+            	g.fillRect(x0, y0, w, h);
+            }
         }
     }
     
@@ -118,14 +140,13 @@ public abstract class UIComponent implements IUIComponent {
     }
     
     public IUIComponent setSize(int w, int h) {
-        if (w != 0 && h != 0) {
-            isSizeSet = true;
-        } else {
+        if (w == 0 || h == 0) {
             try {
                 throw new Exception("Setting zero as a dimension");
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+            return this;
         }
         
         this.w = w;
@@ -136,19 +157,34 @@ public abstract class UIComponent implements IUIComponent {
     }
     
     private final void setBounds(int x0, int y0, int w, int h) {
-        this.w = w;
-        this.h = h;
-        this.x0 = x0;
-        this.y0 = y0;
+    	if (x0 == prevX0 && y0 == prevY0 && w == prevW && h == prevH) {
+    		return;
+    	}
+    	
+    	prevW = this.w = w;
+    	prevH = this.h = h;
+        prevX0 = this.x0 = x0;
+        prevY0 = this.y0 = y0;
         
         onSetBounds(x0, y0, w, h);
+        isSizeSet = true;
     }
     
     protected void onSetBounds(int x0, int y0, int w, int h) { }
     
-    public UIComponent setBgColor(int color) {
+    public IUIComponent setBgColor(int color) {
         bgColor = color;
         return this;
+    }
+    
+    public IUIComponent setPadding(int padding) {
+        this.padding = padding;
+        return this;
+    }
+    
+    public IUIComponent roundBg(boolean b) {
+    	roundBg = b;
+    	return this;
     }
     
     public int getLeftX() {
@@ -245,6 +281,6 @@ public abstract class UIComponent implements IUIComponent {
     
     protected abstract boolean handlePointerReleased(int x, int y);
     protected abstract boolean handleKeyPressed(int keyCode, int count);
-    protected abstract void onPaint(Graphics g);
+    protected abstract void onPaint(Graphics g, int x0, int y0, int w, int h);
     
 }

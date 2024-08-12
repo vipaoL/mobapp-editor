@@ -9,6 +9,7 @@ import mobileapplication3.editor.ui.UIComponent;
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Graphics;
 import mobileapplication3.elements.Element;
+import mobileapplication3.utils.Mathh;
 
 /**
  *
@@ -16,7 +17,9 @@ import mobileapplication3.elements.Element;
  */
 public class EditorCanvas extends UIComponent {
     
-    public static final int ZOOMOUT_MACROVIEW_THRESHOLD = 200;
+    private static final int MIN_ZOOM_OUT = 8;
+	private static final int MAX_ZOOM_OUT = 200000;
+	public static final int ZOOMOUT_MACROVIEW_THRESHOLD = 200;
     private StructureBuilder structurePlacer;
     private Car car = new Car();
     private int colBg = 0x000000;
@@ -35,20 +38,20 @@ public class EditorCanvas extends UIComponent {
         this.structurePlacer = structure;
     }
     
-    public void onPaint(Graphics g) {
+    public void onPaint(Graphics g, int x0, int y0, int w, int h) {
         g.setColor(colBg);
-        drawBG(g);
-        drawElements(g);
-        drawStartPoint(g);
-        drawCursor(g);
-        car.drawCar(g);
+        drawBG(g, x0, y0, w, h);
+        drawElements(g, x0, y0);
+        drawStartPoint(g, x0, y0);
+        drawCursor(g, x0, y0);
+        car.drawCar(g, x0, y0);
         if (structurePlacer.placingNow != null) {
             g.setColor(0xaaffaa);
             g.drawString(structurePlacer.placingNow.getInfoStr(), 0, 0, 0);
         }
     }
     
-    private void drawBG(Graphics g) {
+    private void drawBG(Graphics g, int x0, int y0, int w, int h) {
         g.fillRect(x0, y0, w, h);
         if (zoomOut < ZOOMOUT_MACROVIEW_THRESHOLD) {
             g.setColor(0x000077);
@@ -64,16 +67,16 @@ public class EditorCanvas extends UIComponent {
         }
     }
     
-    private void drawCursor(Graphics g) {
-        int x = xToPX(cursorX);
-        int y = yToPX(cursorY);
+    private void drawCursor(Graphics g, int x0, int y0) {
+        int x = x0 + xToPX(cursorX);
+        int y = y0 + yToPX(cursorY);
         int r = 2;
         g.setColor(0x22aa22);
         g.drawArc(x - r, y - r, r*2, r*2, 0, 360);
         g.drawString(cursorX + " " + cursorY, x, y + r, Graphics.TOP | Graphics.LEFT);
     }
     
-    private void drawElements(Graphics g) {
+    private void drawElements(Graphics g, int x0, int y0) {
         if (structurePlacer.getElementsCount() == 0) {
             return;
         }
@@ -88,17 +91,20 @@ public class EditorCanvas extends UIComponent {
             		g.setColor(colBody);
             	}
             }
-            element.paint(g, zoomOut, offsetX, offsetY);
+            element.paint(g, zoomOut, x0 + offsetX, y0 + offsetY);
         }
     }
     
-    private void drawStartPoint(Graphics g) {
+    private void drawStartPoint(Graphics g, int x0, int y0) {
         int d = 2;
         g.setColor(0x00ff00);
-        g.fillRect(xToPX(0) - d, yToPX(0) - d, d*2, d*2);
+        g.fillRect(x0 + xToPX(0) - d, y0 + yToPX(0) - d, d*2, d*2);
     }
 
     public void onSetBounds(int x0, int y0, int w, int h) {
+    	if (!isSizeSet()) {
+    		zoomOut = Mathh.constrain(MIN_ZOOM_OUT, 2000000 / w, MAX_ZOOM_OUT);
+    	}
         recalcOffset();
     }
     
@@ -234,21 +240,17 @@ public class EditorCanvas extends UIComponent {
         int wr = 40;
         int carX = 0 - (carbodyLength / 2 - wr);
         int carY = 0 - wr / 2 * 3 - 2;
-        int lwX = carX - (carbodyLength / 2 - wr);
-        int lwY = carY + wr / 2;
-        int rwX = carX + (carbodyLength / 2 - wr);
-        int rwY = carY + wr / 2;
     
-        void drawCar(Graphics g) {
+        void drawCar(Graphics g, int x0, int y0) {
             g.setColor(0x444444);
-            g.drawRect(xToPX(carX - carbodyLength / 2),
-                    yToPX(carY - carbodyHeight / 2),
+            g.drawRect(x0 + xToPX(carX - carbodyLength / 2),
+                    y0 + yToPX(carY - carbodyHeight / 2),
                     carbodyLength*1000/zoomOut,
                     carbodyHeight*1000/zoomOut);
-            lwX = xToPX(carX - (carbodyLength / 2 - wr));
-            lwY = yToPX(carY + wr / 2);
-            rwX = xToPX(carX + (carbodyLength / 2 - wr));
-            rwY = yToPX(carY + wr / 2);
+            int lwX = x0 + xToPX(carX - (carbodyLength / 2 - wr));
+            int lwY = y0 + yToPX(carY + wr / 2);
+            int rwX = x0 + xToPX(carX + (carbodyLength / 2 - wr));
+            int rwY = y0 + yToPX(carY + wr / 2);
             
             int wrScaled = wr * 1000 / zoomOut;
             g.setColor(colBg);
@@ -261,15 +263,15 @@ public class EditorCanvas extends UIComponent {
             int lineEndX = carX - carbodyLength / 2 - wr / 2;
             int lineStartX = lineEndX - wr;
             int lineY = carY + carbodyHeight / 3;
-            g.drawLine(xToPX(lineStartX), yToPX(lineY), xToPX(lineEndX), yToPX(lineY));
+            g.drawLine(x0 + xToPX(lineStartX), y0 + yToPX(lineY), x0 + xToPX(lineEndX), y0 + yToPX(lineY));
             lineStartX += carbodyHeight / 3;
             lineEndX += carbodyHeight / 3;
             lineY += carbodyHeight / 3;
-            g.drawLine(xToPX(lineStartX), yToPX(lineY), xToPX(lineEndX), yToPX(lineY));
+            g.drawLine(x0 + xToPX(lineStartX), y0 + yToPX(lineY), x0 + xToPX(lineEndX), y0 + yToPX(lineY));
             lineStartX -= carbodyHeight * 2 / 3;
             lineEndX -= carbodyHeight * 2 / 3;
             lineY -= carbodyHeight * 2 / 3;
-            g.drawLine(xToPX(lineStartX), yToPX(lineY), xToPX(lineEndX), yToPX(lineY));
+            g.drawLine(x0 + xToPX(lineStartX), y0 + yToPX(lineY), x0 + xToPX(lineEndX), y0 + yToPX(lineY));
         }
     }
     
@@ -335,7 +337,7 @@ public class EditorCanvas extends UIComponent {
     
     void zoomIn() {
         int newZoomOut = zoomOut / 2;
-        if (newZoomOut > 15) {
+        if (newZoomOut > MIN_ZOOM_OUT) {
             zoomOut = newZoomOut;
         }
         recalcOffset();
@@ -343,7 +345,7 @@ public class EditorCanvas extends UIComponent {
     
     void zoomOut() {
         int newZoomOut = zoomOut * 2;
-        if (newZoomOut < 200000) {
+        if (newZoomOut < MAX_ZOOM_OUT) {
             zoomOut = newZoomOut;
         }
         recalcOffset();

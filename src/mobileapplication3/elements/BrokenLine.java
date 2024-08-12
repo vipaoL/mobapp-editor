@@ -15,7 +15,8 @@ import mobileapplication3.utils.Utils;
  */
 public class BrokenLine extends Line {
     
-    short thickness = 20, platformLength, spacing = 10, l, ang;
+	private static final String[] ARGS_NAMES = {"X1", "Y1", "X2", "Y2", "Thickness", "Platform length (calculated)", "Spacing", "Length (calculated)", "Angle (calculated)"};
+    protected short thickness = 20, platformLength, spacing = 10, l, ang;
     
     public PlacementStep[] getPlacementSteps() {
         return new PlacementStep[] {
@@ -31,37 +32,7 @@ public class BrokenLine extends Line {
             new PlacementStep() {
                 public void place(short pointX, short pointY) {
                     setEndPoint(pointX, pointY);
-                    short dx = (short) (x2 - x1);
-                    short dy = (short) (y2 - y1);
-                    if (dy == 0) {
-                        l = dx;
-                    } else if (dx == 0) {
-                        l = dy;
-                    } else {
-                        l = calcDistance(dx, dy);
-                    }
-                    if (l <= 0) {
-                        l = 1;
-                    }
-                    short optimalPlatfL = 260;
-                    platformLength = optimalPlatfL;
-                    if (platformLength > l) {
-                        platformLength = l;
-                    } else {
-                        short platfL1 = platformLength;
-                        while ((l + spacing) % (platformLength + spacing) != 0 & platformLength < l & (l + spacing) % (platfL1 + spacing) != 0) {
-                            platformLength++;
-                            if (platfL1 > 5)
-                                platfL1--;
-                        }
-                        if ((l + spacing) % (platformLength + spacing) == 0) {
-                            platfL1 = platformLength;
-                        }
-                        platformLength = platfL1;
-                    }
-                    if (platformLength <= 0)
-                        platformLength = l;
-                    ang = (short) Mathh.arctg(dx, dy);
+                    recalcCalculatedArgs();
                 }
 
                 public String getName() {
@@ -69,6 +40,40 @@ public class BrokenLine extends Line {
                 }
             }
         };
+    }
+    
+    public void recalcCalculatedArgs() {
+    	short dx = (short) (x2 - x1);
+        short dy = (short) (y2 - y1);
+        if (dy == 0) {
+            l = dx;
+        } else if (dx == 0) {
+            l = dy;
+        } else {
+            l = calcDistance(dx, dy);
+        }
+        if (l <= 0) {
+            l = 1;
+        }
+        short optimalPlatfL = 260;
+        platformLength = optimalPlatfL;
+        if (platformLength > l) {
+            platformLength = l;
+        } else {
+            short platfL1 = platformLength;
+            while ((l + spacing) % (platformLength + spacing) != 0 & platformLength < l & (l + spacing) % (platfL1 + spacing) != 0) {
+                platformLength++;
+                if (platfL1 > 5)
+                    platfL1--;
+            }
+            if ((l + spacing) % (platformLength + spacing) == 0) {
+                platfL1 = platformLength;
+            }
+            platformLength = platfL1;
+        }
+        if (platformLength <= 0)
+            platformLength = l;
+        ang = (short) Mathh.arctg(dx, dy);
     }
 
     public PlacementStep[] getExtraEditingSteps() {
@@ -114,6 +119,10 @@ public class BrokenLine extends Line {
     
     public short[] getArgs() {
         return new short[]{x1, y1, x2, y2, thickness, platformLength, spacing, l, ang};
+    }
+    
+    public String[] getArgsNames() {
+    	return ARGS_NAMES;
     }
 
     public short getID() {

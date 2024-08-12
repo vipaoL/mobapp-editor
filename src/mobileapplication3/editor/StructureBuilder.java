@@ -137,6 +137,17 @@ public class StructureBuilder {
         feedback.onUpdate();
     }
     
+    public void remove(Element e) {
+    	Element[] elements = getElementsAsArray();
+    	for (int i = 0; i < elements.length; i++) {
+			if (elements[i] != null && elements[i].equals(e)) {
+				remove(i);
+				break;
+			}
+			
+		}
+    }
+    
     public void recalcEndPoint() {
         EndPoint endPointObj = (EndPoint) buffer.elementAt(0);
         short[] endPoint = {0, 0};

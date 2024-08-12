@@ -14,7 +14,8 @@ import mobileapplication3.utils.Utils;
  */
 public class Line extends Element {
     
-    short x1, y1, x2, y2;
+	private static final String[] ARGS_NAMES = {"X1", "Y1", "X2", "Y2"};
+    protected short x1, y1, x2, y2;
     
     public PlacementStep[] getPlacementSteps() {
         return new PlacementStep[] {
@@ -70,6 +71,10 @@ public class Line extends Element {
         return args;
     }
     
+    public String[] getArgsNames() {
+    	return ARGS_NAMES;
+    }
+    
     public short getID() {
         return Element.LINE;
     }
@@ -93,5 +98,7 @@ public class Line extends Element {
 	public boolean isBody() {
 		return false;
 	}
+	
+	public void recalcCalculatedArgs() { }
     
 }

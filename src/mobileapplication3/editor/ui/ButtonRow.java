@@ -134,7 +134,7 @@ public class ButtonRow extends AbstractButtonSet {
         return true;
     }
     
-    public void onPaint(Graphics g) {
+    public void onPaint(Graphics g, int x0, int y0, int w, int h) {
         if (buttons == null || buttons.length == 0) {
             return;
         }

@@ -13,8 +13,9 @@ import mobileapplication3.utils.Mathh;
  */
 public class Sine extends AbstractCurve {
     
-    short x0, y0, l, halfperiods = 1, offset = 90, amp;
-    short anchorX, anchorY;
+	private static final String[] ARGS_NAMES = {"X0", "Y0", "Length", "Halfperiods", "Phase shift", "Amplitude"};
+    private short x0, y0, l, halfperiods = 1, offset = 90, amp;
+    private short anchorX, anchorY;
     
     public PlacementStep[] getPlacementSteps() {
         return new PlacementStep[] {
@@ -126,6 +127,10 @@ public class Sine extends AbstractCurve {
         return new short[]{x0, y0, l, halfperiods, offset, amp};
     }
     
+    public String[] getArgsNames() {
+    	return ARGS_NAMES;
+    }
+    
     public short getID() {
         return Element.SINE;
     }
@@ -173,5 +178,7 @@ public class Sine extends AbstractCurve {
             }
         }
     }
+    
+    public void recalcCalculatedArgs() { }
     
 }

@@ -9,9 +9,12 @@ import mobileapplication3.utils.Settings;
 import mobileapplication3.editor.setup.SetupWizard;
 import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Command;
+import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Graphics;
+import javax.microedition.lcdui.TextBox;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 import mobileapplication3.editor.ui.RootContainer;
@@ -37,11 +40,11 @@ public class Main extends MIDlet {
         display = Display.getDisplay(this);
         try {
             if (Settings.isSetupWizardCompleted()) {
-                setCurrent(new RootContainer(new EditorScreenUI()));
+                setCurrent(new RootContainer(new MainScreenUI()));
             } else {
                 setCurrent(new RootContainer(new SetupWizard(new SetupWizard.FinishSetup() {
                     public void startEditor() {
-                        setCurrent(new RootContainer(new EditorScreenUI()));
+                        setCurrent(new RootContainer(new MainScreenUI()));
                     }
                 })));
             }
@@ -73,6 +76,24 @@ public class Main extends MIDlet {
     
     public static void vibrate(int duration) {
         display.vibrate(duration);
+    }
+    
+    public static void showTextBox(TextBox textBox) {
+    	//TextBoxCommandListener cl = new TextBoxCommandListener();
+    	//textBox.setCommandListener(new TextBoxCommandListener());
+    }
+    
+    public class TextBoxCommandListener implements CommandListener {
+
+		public void commandAction(Command command, Displayable displayable) {
+			switch (command.getCommandType()) {
+				case Command.OK:
+				case Command.CANCEL:
+					
+					break;
+			}
+		}
+    	
     }
     
 }

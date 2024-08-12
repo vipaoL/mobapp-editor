@@ -57,8 +57,7 @@ public class ButtonCol extends AbstractButtonSet {
         }
         
         int prevH = this.h;
-        this.w = w;
-        this.h = h;
+        super.setSize(w, h);
         this.btnH = btnH;
         this.hUntilTrim = this.h;
         this.trimHeight = trimHeight;
@@ -102,8 +101,7 @@ public class ButtonCol extends AbstractButtonSet {
         scrollOffsetWhenPressed = scrollOffset = Math.max(0, Math.min(scrollOffset, getTotalBtnsH() - this.h));
         
         recalcPos();
-        
-        return super.setSize(this.w, this.h);
+        return this;
     }
     
     public int getMinPossibleWidth() { /////// need fix
@@ -277,10 +275,6 @@ public class ButtonCol extends AbstractButtonSet {
         
         return true;
     }
-
-    public boolean handleKeyRepeated(int keyCode, int pressedCount) {
-        return handleKeyPressed(keyCode, 1);
-    }
     
     public ButtonCol enableScrolling(boolean isScrollable, boolean startFromBottom) {
         this.startFromBottom = startFromBottom;
@@ -303,7 +297,7 @@ public class ButtonCol extends AbstractButtonSet {
         return this;
     }
     
-    public void onPaint(Graphics g) {
+    public void onPaint(Graphics g, int x0, int y0, int w, int h) {
         if (buttons == null || buttons.length == 0) {
             return;
         }
@@ -311,35 +305,35 @@ public class ButtonCol extends AbstractButtonSet {
         for (int i = 0; i < buttons.length; i++) {
             Font prevFont = g.getFont();
             int btnH = this.btnH;
-            int x = x0;
-            int y = y0 - scrollOffset + i*btnH;
-            int w = this.w;
-            int y1 = y0 + h;
+            int btnX = x0;
+            int btnY = y0 - scrollOffset + i*btnH;
+            int btnBottomY = y0 + h;
+            int btnW = w;
             
-            if (y + btnH - prevFont.getHeight() < y0) {
+            if (btnY + btnH - prevFont.getHeight() < y0) {
                 continue;
             }
             
-            if (y + btnH/2 > y0 + h) {
+            if (btnY + btnH/2 > y0 + h) {
                 break;
             }
             
-            if (y < y0) {
-                x += (y0 - y) / 2;
-                w -= (y0 - y);
-                btnH = btnH - (y0 - y);
-                y = y0;
+            if (btnY < y0) {
+                btnX += (y0 - btnY) / 2;
+                btnW -= (y0 - btnY);
+                btnH = btnH - (y0 - btnY);
+                btnY = y0;
             }
             
-            if (y + btnH > y1) {
-                x += (y + btnH - y1) / 2;
-                w -= (y + btnH - y1);
-                btnH = y1 - y;
-                y = y1 - btnH;
+            if (btnY + btnH > btnBottomY) {
+                btnX += (btnY + btnH - btnBottomY) / 2;
+                btnW -= (btnY + btnH - btnBottomY);
+                btnH = btnBottomY - btnY;
+                btnY = btnBottomY - btnH;
             }
             
             boolean drawAsSelected = (i == selected && isSelectionVisible);
-            buttons[i].paint(g, x, y, w, btnH, drawAsSelected, isFocused);
+            buttons[i].paint(g, btnX, btnY, btnW, btnH, drawAsSelected, isFocused);
             g.setFont(prevFont);
         }
         

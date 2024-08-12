@@ -37,7 +37,7 @@ public class ButtonComponent extends AbstractButtonSet {
         }
     }
 
-    public void onPaint(Graphics g) {
+    public void onPaint(Graphics g, int x0, int y0, int w, int h) {
         buttons[0].paint(g, x0, y0, w, h, isSelectionVisible, isFocused);
     }
 
@@ -54,6 +54,11 @@ public class ButtonComponent extends AbstractButtonSet {
             buttons[0].invokePressed(true, true);
         }
         return true;
+    }
+    
+    public IUIComponent setBgColor(int color) {
+    	buttons[0].setBgColor(color);
+    	return this;
     }
     
 }
