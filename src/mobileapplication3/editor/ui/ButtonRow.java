@@ -145,7 +145,7 @@ public class ButtonRow extends AbstractButtonSet {
         }
 
         for (int i = 0; i < buttons.length; i++) {
-            boolean drawAsSelected = (i == selected && isSelectionVisible && isFocused);
+            boolean drawAsSelected = (i == selected && isSelectionVisible && isSelectionEnabled && isFocused);
             buttons[i].paint(g, x0 + i*w/buttons.length, y0, w/buttons.length, h, drawAsSelected, isFocused);
         }
     }

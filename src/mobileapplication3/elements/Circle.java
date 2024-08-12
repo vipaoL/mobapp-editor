@@ -190,6 +190,7 @@ public class Circle extends AbstractCurve {
     	}
     }
     
+    // TODO check if this point is on the curve
     public short[] getStartPoint() {
         return new short[]{(short) (x - r), y};
     }

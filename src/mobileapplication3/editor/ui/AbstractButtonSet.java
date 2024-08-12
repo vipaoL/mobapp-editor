@@ -32,6 +32,7 @@ public abstract class AbstractButtonSet extends UIComponent {
         setSelectedColor(buttonsSelectedColor);
         setButtonsBgPadding(buttonsBgPadding);
         setIsSelectionEnabled(isSelectionEnabled);
+        setIsSelectionVisible(isSelectionVisible);
         
         if (isSizeSet()) {
             recalcSize();

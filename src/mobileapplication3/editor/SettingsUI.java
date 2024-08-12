@@ -100,7 +100,7 @@ public class SettingsUI extends AbstractPopupWindow {
         return settingsList;
     }
     
-    public void setPageContentBounds(int x0, int y0, int w, int h) {
+    public void setPageContentBounds(IUIComponent pageContent, int x0, int y0, int w, int h) {
         if (pageContent != null) {
             ((ButtonCol) pageContent)
                     .setButtonsBgPadding(margin/8)

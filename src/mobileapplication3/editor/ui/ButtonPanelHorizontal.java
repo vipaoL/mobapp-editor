@@ -25,16 +25,10 @@ public class ButtonPanelHorizontal extends AbstractButtonSet {
     public ButtonPanelHorizontal(Button[] buttons) {
         setButtons(buttons);
     }
-    
-//    public void setButtons(Button[] buttons) {
-//        this.buttons = buttons;
-//        initRows();
-//    }
 
     public AbstractButtonSet setButtons(Button[] buttons) {
         this.buttons = buttons;
         initRows();
-        setIsSelectionVisible(isSelectionVisible);
         return super.setButtons(buttons);
     }
     
@@ -50,6 +44,7 @@ public class ButtonPanelHorizontal extends AbstractButtonSet {
             System.arraycopy(buttons, i*btnsInRow, row, 0, row.length);
             buttonRows[i] = (ButtonRow) new ButtonRow(row);
         }
+        super.setButtons(buttons);
     }
     
     public IUIComponent setSizes(int w, int h, int btnH) {
@@ -175,13 +170,6 @@ public class ButtonPanelHorizontal extends AbstractButtonSet {
         return true;
     }
 
-    public AbstractButtonSet setIsSelectionVisible(boolean isSelectionVisible) {
-        if (buttonRows != null && buttonRows.length > selectedRow && buttonRows[selectedRow] != null) {
-            buttonRows[selectedRow].setIsSelectionVisible(isSelectionVisible);
-        }
-        return super.setIsSelectionVisible(isSelectionVisible);
-    }
-
     public ButtonPanelHorizontal setBtnsInRowCount(int btnsInRow) {
         this.btnsInRow = btnsInRow;
         int buttonsNumber = buttons.length;
@@ -197,6 +185,21 @@ public class ButtonPanelHorizontal extends AbstractButtonSet {
         }
         
         return this;
+    }
+    
+    public AbstractButtonSet setIsSelectionVisible(boolean isSelectionVisible) {
+        if (buttonRows != null && buttonRows.length > selectedRow && buttonRows[selectedRow] != null) {
+            buttonRows[selectedRow].setIsSelectionVisible(isSelectionVisible);
+        }
+        return super.setIsSelectionVisible(isSelectionVisible);
+    }
+    
+    public AbstractButtonSet setIsSelectionEnabled(boolean selectionEnabled) {
+    	super.setIsSelectionEnabled(selectionEnabled);
+    	for (int i = 0; i < buttonRows.length; i++) {
+			buttonRows[i].setIsSelectionEnabled(selectionEnabled);
+		}
+    	return this;
     }
     
     protected void onSetBounds(int x0, int y0, int w, int h) {

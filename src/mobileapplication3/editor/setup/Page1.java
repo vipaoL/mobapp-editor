@@ -51,11 +51,11 @@ public class Page1 extends AbstractSetupWizardPage {
         return logo;
     }
 
-    public void setPageContentBounds(int x0, int y0, int w, int h) {
+    public void setPageContentBounds(IUIComponent pageContent, int x0, int y0, int w, int h) {
         int freeSpaceH = h - margin*2;
         int logoSide = Math.min(freeSpaceH, w - margin * 2);
 
-        logo.setSize(logoSide, logoSide)
+        pageContent.setSize(logoSide, logoSide)
                 .setPos(x0 + w / 2, y0 + h / 2, IUIComponent.VCENTER | IUIComponent.HCENTER);
     }
     

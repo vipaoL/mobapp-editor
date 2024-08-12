@@ -42,6 +42,7 @@ public abstract class Page extends Container {
             pageContent = initAndGetPageContent();
             actionButtons.setButtons(getActionButtons());
             actionButtons.bindToSoftButtons(0, actionButtons.getButtonCount() - 1);
+            actionButtons.setIsSelectionEnabled(true);
             actionButtons.setSelected(actionButtons.getButtonCount() - 1);
             setComponents(new IUIComponent[]{title, actionButtons, pageContent});
             // TODO call onSetBounds if it was called before and failed because initPage had't done
@@ -66,10 +67,10 @@ public abstract class Page extends Container {
                 .setButtonsBgPadding(margin/4)
                 .setSize(w, AbstractButtonSet.H_AUTO)
                 .setPos(x0 + w/2, y0 + h, BOTTOM | HCENTER);
-        setPageContentBounds(x0, title.getBottomY(), w, actionButtons.getTopY() - title.getBottomY());
+        setPageContentBounds(pageContent, x0, title.getBottomY(), w, actionButtons.getTopY() - title.getBottomY());
     }
     
-    private void setPageContentBounds(int x0, int y0, int w, int h) {
+    protected void setPageContentBounds(IUIComponent pageContent, int x0, int y0, int w, int h) {
         if (pageContent != null) {
             pageContent
                     .setSize(w - margin*2, h - margin*2)
