@@ -84,7 +84,7 @@ public class MainScreenUI extends Container {
             notFromStartWarning = new NotFromStartWarning();
             notFromStartWarning.setVisible(false);
             
-            setComponents(new IUIComponent[]{editorCanvas, bottomButtonPanel, notFromStartWarning, zoomPanel, placementButtonPanel, placedElementsList, settingsButton, pathPicker});
+            setComponents(new IUIComponent[]{editorCanvas, bottomButtonPanel, notFromStartWarning, zoomPanel, placementButtonPanel, settingsButton, placedElementsList, pathPicker});
         } catch(Exception ex) {
             ex.printStackTrace();
             Main.setCurrent(new Alert(ex.toString()));
@@ -313,13 +313,15 @@ public class MainScreenUI extends Container {
             		editorCanvas.selectedElement = selected;
             		return super.setSelected(selected);
             	}
-            }
-                    .enableScrolling(true, true)
-                    .setIsSelectionEnabled(true)
-                    .setIsSelectionVisible(true)
-                    .setVisible(false);
+            };
         }
         
+        placedElementsList
+		        .enableScrolling(true, true)
+		        .setIsSelectionEnabled(true)
+		        .setIsSelectionVisible(true)
+		        .setVisible(false)
+		        .setBgColor(COLOR_TRANSPARENT);
         placedElementsList.setButtons(listButtons);
     }
     
@@ -357,14 +359,14 @@ public class MainScreenUI extends Container {
                 .setPos(x0 + w, y0, TOP | RIGHT)
                 .setVisible(true);
         placedElementsList
-                .setSizes(w/5, bottomButtonPanel.getTopY() - settingsButton.getBottomY() - BTN_H / 4, FONT_H * 3)
+                .setSizes(w/3, bottomButtonPanel.getTopY() - y0 - BTN_H / 4, FONT_H * 3)
                 .setPos(x0 + w, y0 + h - bottomButtonPanel.h, RIGHT | BOTTOM);
         pathPicker
                 .setSizes(w, h, BTN_H)
                 .setPos(x0, y0);
         notFromStartWarning
-        		.setSize(notFromStartWarning.getOptimalW(w), notFromStartWarning.getOptimalH(placementButtonPanel.getTopY() - y0))
-        		.setPos(placementButtonPanel.getLeftX(), placementButtonPanel.getTopY(), LEFT | BOTTOM);
+        		.setSize(notFromStartWarning.getOptimalW(zoomPanel.getLeftX() - x0), notFromStartWarning.getOptimalH(bottomButtonPanel.getTopY() - y0))
+        		.setPos(bottomButtonPanel.getLeftX(), bottomButtonPanel.getTopY(), LEFT | BOTTOM);
     }
     
     public void paint(Graphics g, int x0, int y0, int w, int h) {
