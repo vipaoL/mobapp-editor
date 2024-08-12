@@ -80,19 +80,24 @@ public class ButtonRow extends AbstractButtonSet {
             return false;
         }
         
-        setIsSelectionEnabled(true);
+        //setIsSelectionEnabled(true);
         switch (keyCode) {
             case KEYCODE_LEFT_SOFT:
                 if (leftSoftBindIndex != NOT_SET) {
                     return buttons[leftSoftBindIndex].invokePressed(selected == leftSoftBindIndex, isFocused);
+                } else {
+                	return false;
                 }
-                return false;
             case KEYCODE_RIGHT_SOFT:
                 if (rightSoftBindIndex != NOT_SET) {
                     return buttons[rightSoftBindIndex].invokePressed(selected == rightSoftBindIndex, isFocused);
+                } else {
+                	return false;
                 }
-                return false;
             default:
+            	if (!isSelectionEnabled) {
+            		return false;
+            	}
                 switch (Main.util.getGameAction(keyCode)) {
                     case Canvas.LEFT:
                     	if (selected > 0) {

@@ -194,14 +194,16 @@ public class PathPicker extends Container {
         
         actionButtons = new Button[]{okBtn, cancelBtn};
         actionButtonPanel = (ButtonRow) new ButtonRow(actionButtons)
+        		.setIsSelectionEnabled(false)
                 .setButtonsBgColor(COLOR_TRANSPARENT)
                 .setBgColor(COLOR_TRANSPARENT);
+        actionButtonPanel.bindToSoftButtons(0, actionButtonPanel.getButtonCount() - 1);
         
         question = (TextComponent) new TextComponent()
                 .enableHorizontalScrolling(true)
                 .setBgColor(COLOR_TRANSPARENT);
         
-        setComponents(new IUIComponent[]{list, actionButtonPanel, question, title});
+        setComponents(new IUIComponent[]{actionButtonPanel, list, question, title});
     }
     
     public Container setBgImage(Image bg) {
@@ -209,8 +211,11 @@ public class PathPicker extends Container {
         return super.setBgImage(bg);
     }
     
-    void blurImg(Image img) {
+    private void blurImg(Image img) {
         Graphics g = img.getGraphics();
+        int x0 = 0, y0 = 0;
+        int w = img.getWidth();
+        int h = img.getHeight();
         int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
         int a = 3;
         for (int i = 0; i < (w + h) / a; i++) {
@@ -236,25 +241,6 @@ public class PathPicker extends Container {
         this.btnH = btnH;
         super.setSize(w, h);
         return this;
-    }
-
-    public boolean keyPressed(int keyCode, int count) {
-        if (!isVisible) {
-            return false;
-        }
-        
-        switch (keyCode) {
-            case -6:
-                okBtn.invokePressed(false, false);
-                break;
-            case -7:
-                cancelBtn.invokePressed(false, false);
-                break;
-            default:
-                return super.keyPressed(keyCode, count);
-        }
-        
-        return true;
     }
 
     protected void onSetBounds(int x0, int y0, int w, int h) {
