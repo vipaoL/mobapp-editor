@@ -17,6 +17,7 @@ public class TextComponent extends UIComponent {
     
     public static final int HEIGHT_AUTO = -1;
     private String text = null;
+    private int fontColor = 0xffffff;
     private int[][] lineBounds = null;
     private int prevW;
     public Font font;
@@ -65,7 +66,7 @@ public class TextComponent extends UIComponent {
         boolean hCenter = (textAlignment & HCENTER) != 0;
         
         
-        g.setColor(0xffffff);
+		g.setColor(fontColor);
         for (int i = 0; i < lineBounds.length; i++) {
             int[] bounds = lineBounds[i];
             g.drawSubstring(
@@ -124,6 +125,15 @@ public class TextComponent extends UIComponent {
         textAlignment = a;
         return this;
     }
+    
+    public TextComponent setFontColor(int fontColor) {
+		this.fontColor = fontColor;
+		return this;
+	}
+    
+    public int getFontColor() {
+		return fontColor;
+	}
     
     public TextComponent enableHorizontalScrolling(boolean b) {
         if (b && !isHorizontalScrollingEnabled) {

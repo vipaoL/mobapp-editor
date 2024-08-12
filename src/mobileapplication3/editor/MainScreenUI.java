@@ -84,7 +84,7 @@ public class MainScreenUI extends Container {
             notFromStartWarning = new NotFromStartWarning();
             notFromStartWarning.setVisible(false);
             
-            setComponents(new IUIComponent[]{editorCanvas, bottomButtonPanel, zoomPanel, placementButtonPanel, placedElementsList, settingsButton, pathPicker, notFromStartWarning});
+            setComponents(new IUIComponent[]{editorCanvas, bottomButtonPanel, notFromStartWarning, zoomPanel, placementButtonPanel, placedElementsList, settingsButton, pathPicker});
         } catch(Exception ex) {
             ex.printStackTrace();
             Main.setCurrent(new Alert(ex.toString()));
@@ -363,7 +363,7 @@ public class MainScreenUI extends Container {
                 .setSizes(w, h, BTN_H)
                 .setPos(x0, y0);
         notFromStartWarning
-        		.setSize(notFromStartWarning.getOptimalW(), notFromStartWarning.getOptimalH())
+        		.setSize(notFromStartWarning.getOptimalW(w), notFromStartWarning.getOptimalH(placementButtonPanel.getTopY() - y0))
         		.setPos(placementButtonPanel.getLeftX(), placementButtonPanel.getTopY(), LEFT | BOTTOM);
     }
     
@@ -379,28 +379,31 @@ public class MainScreenUI extends Container {
     	ButtonComponent button;
     	
     	public NotFromStartWarning() {
+    		setBgColor(COLOR_TRANSPARENT);
     		message = new TextComponent("Warn: start point of the structure should be on (x,y) 0 0");
+    		message.setBgColor(COLOR_TRANSPARENT);
+    		message.setFontColor(0xffff00);
     		Button button = new Button("Move to 0 0", new Button.ButtonFeedback() {
 				public void buttonPressed() {
 					StartPoint.moveToZeros(elementsBuffer.getElementsAsArray());
 					setVisible(false);
 				}
-			});
+			}).setBgColor(0x002200);
     		this.button = new ButtonComponent(button);
     		setComponents(new IUIComponent[] {message, this.button});
 		}
     	
 		protected void onSetBounds(int x0, int y0, int w, int h) {
-			message.setPos(x0, y0, LEFT | TOP).setSize(w, h/2);
-			button.setPos(x0, y0 + h/2, LEFT | TOP).setSize(w, h/2);
+			button.setSize(w, ButtonComponent.H_AUTO).setPos(x0, y0 + h, LEFT | BOTTOM);
+			message.setSize(w, h - button.getHeight()).setPos(x0, y0, LEFT | TOP);
 		}
 		
-		public int getOptimalW() {
-			return Font.getDefaultFont().stringWidth(message.getText()) * 2 / 3;
+		public int getOptimalW(int freeSpace) {
+			return Math.min(freeSpace, Font.getDefaultFont().stringWidth(message.getText()) / 2);
 		}
 		
-		public int getOptimalH() {
-			return Font.getDefaultFont().getHeight() * 5;
+		public int getOptimalH(int freeSpace) {
+			return Math.min(freeSpace, Font.getDefaultFont().getHeight() * 10);
 		}
     }
 }
