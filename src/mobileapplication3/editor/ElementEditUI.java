@@ -63,6 +63,7 @@ public class ElementEditUI extends AbstractPopupWindow {
 			Button editStepButton = new Button(extraEditSteps[i].getName(), new ButtonFeedback() {
 				public void buttonPressed() {
 					sb.edit(element, o);
+					close();
 				}
 			});
 			rows[o] = new ButtonComponent(editStepButton);
