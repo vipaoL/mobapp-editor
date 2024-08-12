@@ -27,6 +27,10 @@ public class Line extends Element {
                 public String getName() {
                     return "Move start point";
                 }
+                
+                public String getCurrentStepInfo() {
+					return "x1=" + x1 + " y1=" + y1;
+				}
             },
             new PlacementStep() {
                 public void place(short pointX, short pointY) {
@@ -36,6 +40,10 @@ public class Line extends Element {
                 public String getName() {
                     return "Move end point";
                 }
+                
+                public String getCurrentStepInfo() {
+					return "x1=" + x1 + " y1=" + y1 + "; x2=" + x2 + " y2=" + y2;
+				}
             }
         };
     }
@@ -85,10 +93,6 @@ public class Line extends Element {
 
     public String getName() {
         return "Line";
-    }
-    
-    public String getInfoStr() {
-        return x1 + " " + y1 + " " + x2 + " " + y2;
     }
     
     public short[] getEndPoint() {

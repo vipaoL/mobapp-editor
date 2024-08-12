@@ -9,6 +9,7 @@ import java.io.IOException;
 import mobileapplication3.utils.FileUtils;
 import java.util.Vector;
 import mobileapplication3.elements.Element;
+import mobileapplication3.elements.Element.PlacementStep;
 import mobileapplication3.elements.EndPoint;
 
 /**
@@ -210,6 +211,14 @@ public class StructureBuilder {
         return l;
     }
     
+    public String getPlacingInfo() {
+    	if (nextPointHandler != null && placingNow != null) {
+    		return nextPointHandler.getCurrentPlacementStep().getCurrentStepInfo();
+    	} else {
+    		return "";
+    	}
+    }
+    
     private class NextPointHandler {
         public int step = 0;
         public boolean showingPreview = false;
@@ -224,13 +233,17 @@ public class StructureBuilder {
         
         void handleNextPoint(short x, short y) {
             try {
-                placingNow.getAllSteps()[step].place(x, y);
+                getCurrentPlacementStep().place(x, y);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
             if (!showingPreview) {
                 step++;
             }
+        }
+        
+        public PlacementStep getCurrentPlacementStep() {
+        	return placingNow.getAllSteps()[step];
         }
         
     }

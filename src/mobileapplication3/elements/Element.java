@@ -105,10 +105,6 @@ public abstract class Element {
         }
     }
     
-    public String getInfoStr() {
-        return "";
-    }
-    
     public int getArgsCount() {
         return getArgs().length;
     }
@@ -161,6 +157,7 @@ public abstract class Element {
     public abstract class PlacementStep {
         public abstract void place(short pointX, short pointY);
         public abstract String getName();
+        public abstract String getCurrentStepInfo();
     }
     
 }

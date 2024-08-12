@@ -47,7 +47,7 @@ public class EditorCanvas extends UIComponent {
         car.drawCar(g, x0, y0);
         if (structurePlacer.placingNow != null) {
             g.setColor(0xaaffaa);
-            g.drawString(structurePlacer.placingNow.getInfoStr(), 0, 0, 0);
+            g.drawString(structurePlacer.getPlacingInfo(), 0, 0, 0);
         }
     }
     

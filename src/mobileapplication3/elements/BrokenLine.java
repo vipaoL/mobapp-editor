@@ -28,6 +28,10 @@ public class BrokenLine extends Line {
                 public String getName() {
                     return "Move start point";
                 }
+                
+                public String getCurrentStepInfo() {
+					return "x1=" + x1 + " y1=" + y1;
+				}
             },
             new PlacementStep() {
                 public void place(short pointX, short pointY) {
@@ -38,6 +42,10 @@ public class BrokenLine extends Line {
                 public String getName() {
                     return "Move end point";
                 }
+                
+                public String getCurrentStepInfo() {
+					return "plL=" + platformLength + " ang=" + ang + "; x1=" + x1 + " y1=" + y1 + "; x2=" + x2 + " y2=" + y2;
+				}
             }
         };
     }
@@ -135,11 +143,6 @@ public class BrokenLine extends Line {
 
     public String getName() {
         return "Broken Line";
-    }
-    
-    public String getInfoStr() {
-        String info = "plL=" + platformLength + " ang=" + ang;
-        return info;
     }
     
     public boolean isBody() {

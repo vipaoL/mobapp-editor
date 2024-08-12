@@ -22,11 +22,16 @@ public class Sine extends AbstractCurve {
             new PlacementStep() {
                 public void place(short pointX, short pointY) {
                     setAnchorPoint(pointX, pointY);
+                    calcStartPoint();
                 }
 
                 public String getName() {
                     return "Move start point";
                 }
+                
+                public String getCurrentStepInfo() {
+					return "x0=" + x0 + " y0=" + y0;
+				}
             },
             new PlacementStep() {
                 public void place(short pointX, short pointY) {
@@ -36,17 +41,28 @@ public class Sine extends AbstractCurve {
                 }
 
                 public String getName() {
-                    return "Move end Point";
+                    return "Change horizontal length";
                 }
+                
+                public String getCurrentStepInfo() {
+					return "l=" + l;
+				}
             },
             new PlacementStep() {
                 public void place(short pointX, short pointY) {
-                    setHalfperiodsNumber((short) Math.max(1, l/(pointX - anchorX)));
+                	int dx = pointX - anchorX;
+                	if (dx * l > 0) {
+                		setHalfperiodsNumber((short) Math.max(1, l/dx));
+                	}
                 }
 
                 public String getName() {
-                    return "Change number of periods";
+                    return "Change number of halfperiods";
                 }
+                
+                public String getCurrentStepInfo() {
+					return "halfperiods=" + halfperiods;
+				}
             }
         };
     }
@@ -141,10 +157,6 @@ public class Sine extends AbstractCurve {
 
     public String getName() {
         return "Sine";
-    }
-    
-    public String getInfoStr() {
-        return "periods/2=" + halfperiods + " amp=" + amp + " off=" + offset;
     }
 
     public short[] getEndPoint() throws Exception {

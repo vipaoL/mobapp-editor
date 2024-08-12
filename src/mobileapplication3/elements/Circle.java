@@ -26,6 +26,10 @@ public class Circle extends AbstractCurve {
                 public String getName() {
                     return "Move";
                 }
+
+				public String getCurrentStepInfo() {
+					return "x=" + x + " y=" + y;
+				}
             },
             new PlacementStep() {
                 public void place(short pointX, short pointY) {
@@ -37,6 +41,10 @@ public class Circle extends AbstractCurve {
                 public String getName() {
                     return "Change radius";
                 }
+                
+                public String getCurrentStepInfo() {
+					return "r=" + r;
+				}
             }
         };
     }
@@ -59,6 +67,10 @@ public class Circle extends AbstractCurve {
                 public String getName() {
                     return "Change angle";
                 }
+                
+                public String getCurrentStepInfo() {
+					return "ang=" + arcAngle;
+				}
             },
             new PlacementStep() {
                 public void place(short x, short y) {
@@ -69,6 +81,10 @@ public class Circle extends AbstractCurve {
                 public String getName() {
                     return "Change start angle";
                 }
+                
+                public String getCurrentStepInfo() {
+					return "startAng=" + startAngle;
+				}
             }
         };
     }
@@ -162,10 +178,6 @@ public class Circle extends AbstractCurve {
 
     public String getName() {
         return "Circle";
-    }
-
-    public String getInfoStr() {
-        return "r=" + r;
     }
     
     public short[] getEndPoint() {
