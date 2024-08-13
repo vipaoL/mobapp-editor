@@ -27,6 +27,10 @@ public abstract class AbstractCurve extends Element {
             genPoints();
         }
         
+        if (pointsCache.getSize() == 0) {
+        	return;
+        }
+        
         short[] startPoint = pointsCache.getPoint(0);
         for (int i = 0; i < pointsCache.getSize() - 1; i++) {
             short[] endPoint = pointsCache.getPoint(i+1);
