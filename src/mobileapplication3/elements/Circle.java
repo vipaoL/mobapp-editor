@@ -192,11 +192,23 @@ public class Circle extends AbstractCurve {
     
     // TODO check if this point is on the curve
     public short[] getStartPoint() {
-        return new short[]{(short) (x - r), y};
+    	if (Mathh.isPointOnArc(180, startAngle, arcAngle)) {
+    		return new short[]{(short) (x - r), y};
+    	} else {
+    		return StartPoint.compareAsStartPoints(getPointOnCircleByAngle(startAngle), getPointOnCircleByAngle(startAngle + arcAngle));
+    	}
     }
     
     public short[] getEndPoint() {
-        return new short[]{(short) (x + r), y};
+        if (Mathh.isPointOnArc(0, startAngle, arcAngle)) {
+        	return new short[]{(short) (x + r), y};
+    	} else {
+    		return EndPoint.compareAsEndPoints(getPointOnCircleByAngle(startAngle), getPointOnCircleByAngle(startAngle + arcAngle));
+    	}
+    }
+    
+    private short[] getPointOnCircleByAngle(int a) {
+    	return new short[] {(short) (x+Mathh.cos(a)*kx*r/100000), (short) (y+Mathh.sin(a)*ky*r/100000)};
     }
     
     protected void genPoints() { //k: 100 = 1.0
@@ -212,11 +224,11 @@ public class Circle extends AbstractCurve {
         int startAngle = this.startAngle;
         
         for(int i = 0; i <= arcAngle; i+=circleSegmentLen) {
-            pointsCache.writePointToCache(x+Mathh.cos(i+startAngle)*kx*r/100000, y+Mathh.sin(i+startAngle)*ky*r/100000);
+            pointsCache.writePointToCache(getPointOnCircleByAngle(startAngle+i));
         }
         
         if (arcAngle % circleSegmentLen != 0) {
-            pointsCache.writePointToCache(x+Mathh.cos(startAngle+arcAngle)*kx*r/100000, y+Mathh.sin(startAngle+arcAngle)*ky*r/100000);
+            pointsCache.writePointToCache(getPointOnCircleByAngle(startAngle+arcAngle));
         }
     }
     

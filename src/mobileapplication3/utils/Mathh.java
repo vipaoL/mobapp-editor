@@ -125,4 +125,32 @@ public class Mathh {
     public static int constrain(int leftBound, int a, int rightBound) {
         return Math.min(Math.max(leftBound, a), rightBound);
     }
+    
+    public static boolean isPointOnArc(int a, int startAngle, int arcAngle) {
+		if (Math.abs(arcAngle) >= 360) {
+			return true;
+		}
+		
+		if (arcAngle < 0) {
+			arcAngle = -arcAngle;
+			startAngle = -startAngle;
+			a = -a;
+		}
+		
+		a = normalizeAngle(a);
+		startAngle = normalizeAngle(startAngle);
+		if (a < startAngle) {
+			a += 360;
+		}
+		
+		return a >= startAngle && a <= startAngle + arcAngle;
+	}
+	
+	public static int normalizeAngle(int a) {
+    	a %= 360;
+		if (a < 0) {
+			a += 360;
+		}
+        return a;
+    }
 }

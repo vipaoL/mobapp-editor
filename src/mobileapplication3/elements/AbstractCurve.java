@@ -51,6 +51,10 @@ public abstract class AbstractCurve extends Element {
         PointsCache(int length) {
             pointsCache = new short[length][2];
         }
+        
+        public void writePointToCache(short[] point) {
+        	writePointToCache(point[0], point[1]);
+        }
 
         public void writePointToCache(int x, int y) {
             pointsCache[cacheCarriage][0] = (short) x;
