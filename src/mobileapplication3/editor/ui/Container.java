@@ -157,9 +157,11 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         drawBg(g, x0, y0, w, h);
         setBounds(x0, y0, w, h);
         for (int i = 0; i < uiComponents.length; i++) {
-            if (uiComponents[i] != null) {
-                uiComponents[i].paint(g);
-            }
+        	try {
+	            if (uiComponents[i] != null) {
+	                uiComponents[i].paint(g);
+	            }
+        	} catch (Exception ex) { }
         }
         
         if (popupWindow != null) {

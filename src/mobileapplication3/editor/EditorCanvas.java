@@ -82,17 +82,19 @@ public class EditorCanvas extends UIComponent {
         }
         Element[] elements = structurePlacer.getElementsAsArray();
         for (int i = 0; i < elements.length; i++) {
-        	Element element = elements[i];
-            if (i == selectedElement) {
-                g.setColor(colSelected);
-            } else {
-            	if (!element.isBody()) {
-            		g.setColor(colLandscape);
-            	} else {
-            		g.setColor(colBody);
-            	}
-            }
-            element.paint(g, zoomOut, x0 + offsetX, y0 + offsetY);
+        	try {
+	        	Element element = elements[i];
+	            if (i == selectedElement) {
+	                g.setColor(colSelected);
+	            } else {
+	            	if (!element.isBody()) {
+	            		g.setColor(colLandscape);
+	            	} else {
+	            		g.setColor(colBody);
+	            	}
+	            }
+	            element.paint(g, zoomOut, x0 + offsetX, y0 + offsetY);
+        	} catch (Exception ex) { }
         }
     }
     
