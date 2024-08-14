@@ -5,6 +5,8 @@
  */
 package mobileapplication3.elements;
 
+import javax.microedition.lcdui.Graphics;
+
 import mobileapplication3.utils.Mathh;
 
 /**
@@ -351,6 +353,17 @@ public class Circle extends AbstractCurve {
         if (arcAngle % circleSegmentLen != 0) {
             pointsCache.writePointToCache(getPointOnCircleByAngle(startAngle+arcAngle));
         }
+    }
+    
+    public void paint(Graphics g, int zoomOut, int offsetX, int offsetY) {
+    	int centerMarkR = 4;
+    	int leftX = xToPX(x - centerMarkR, zoomOut, offsetX);
+    	int rightX = xToPX(x + centerMarkR, zoomOut, offsetX);
+    	int topY = yToPX(y - centerMarkR, zoomOut, offsetY);
+    	int bottomY = yToPX(y + centerMarkR, zoomOut, offsetY);
+    	g.drawLine(leftX, topY, rightX, bottomY);
+    	g.drawLine(rightX, topY, leftX, bottomY);
+    	super.paint(g, zoomOut, offsetX, offsetY);
     }
     
     public void recalcCalculatedArgs() { }
