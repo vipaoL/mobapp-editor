@@ -65,7 +65,7 @@ public class ElementEditUI extends AbstractPopupWindow {
 					sb.edit(element, o);
 					close();
 				}
-			});
+			}).setBgColor(0x201010);
 			rows[o] = new ButtonComponent(editStepButton);
 		}
 		
