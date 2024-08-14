@@ -127,7 +127,6 @@ public class Utils {
     public static void drawArrow(Graphics g, int x1, int y1, int x2, int y2, int thickness, int zoomOut) {
         int dx = x2 - x1;
         int dy = y2 - y1;
-        int l = Mathh.calcDistance(dx, dy);
         int ang = Mathh.arctg(dx, dy);
         int arrowX = (x2*9 + x1) / 10;
         int arrowY = (y2*9 + y1) / 10;
@@ -138,7 +137,7 @@ public class Utils {
     }
     
     public static void drawTriangle(Graphics g, int x1, int y1, int x2, int y2, int x3, int y3, int zoomOut) {
-    	if (zoomOut < EditorCanvas.ZOOMOUT_MACROVIEW_THRESHOLD) {
+    	if (zoomOut < EditorCanvas.zoomoutThresholdMacroMode) {
             g.drawLine(x1, y1, x2, y2);
             g.drawLine(x2, y2, x3, y3);
             g.drawLine(x1, y1, x3, y3);
@@ -158,7 +157,7 @@ public class Utils {
             int dy = y2 - y1;
             int l = (int) Math.sqrt(dx*dx+dy*dy);
             
-            if (l == 0 || zoomOut < EditorCanvas.ZOOMOUT_MACROVIEW_THRESHOLD) {
+            if (l == 0 || zoomOut < EditorCanvas.zoomoutThresholdMacroMode) {
                 g.drawLine(x1, y1, x2, y2);
                 return;
             }

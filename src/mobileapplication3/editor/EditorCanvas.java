@@ -19,7 +19,7 @@ public class EditorCanvas extends UIComponent {
     
     private static final int MIN_ZOOM_OUT = 8;
 	private static final int MAX_ZOOM_OUT = 200000;
-	public static final int ZOOMOUT_MACROVIEW_THRESHOLD = 200;
+	public static int zoomoutThresholdMacroMode = 200;
     private StructureBuilder structurePlacer;
     private Car car = new Car();
     private int colBg = 0x000000;
@@ -52,7 +52,7 @@ public class EditorCanvas extends UIComponent {
     public void drawBg(Graphics g, int x0, int y0, int w, int h, boolean isActive) {
     	g.setColor(colBg);
         g.fillRect(x0, y0, w, h);
-        if (zoomOut < ZOOMOUT_MACROVIEW_THRESHOLD) {
+        if (zoomOut < zoomoutThresholdMacroMode) {
             g.setColor(0x000077);
             int step = 1000/zoomOut;
             int gridOffsetY = x0 + (h/2) % step;
@@ -104,6 +104,7 @@ public class EditorCanvas extends UIComponent {
     }
 
     public void onSetBounds(int x0, int y0, int w, int h) {
+    	zoomoutThresholdMacroMode = Math.min(w, h) / 4;
     	if (!isSizeSet()) {
     		zoomOut = Mathh.constrain(MIN_ZOOM_OUT, 4000000 / w, MAX_ZOOM_OUT);
     	}
@@ -244,6 +245,9 @@ public class EditorCanvas extends UIComponent {
         int carY = 0 - wr / 2 * 3 - 2;
     
         void drawCar(Graphics g, int x0, int y0) {
+        	if (zoomOut < zoomoutThresholdMacroMode) {
+        		return;
+        	}
             g.setColor(0x444444);
             g.drawRect(x0 + xToPX(carX - carbodyLength / 2),
                     y0 + yToPX(carY - carbodyHeight / 2),
