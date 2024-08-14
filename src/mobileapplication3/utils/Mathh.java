@@ -153,4 +153,14 @@ public class Mathh {
 		}
         return a;
     }
+	
+	public static short calcDistance(int dx, int dy) {
+        if (dy == 0) {
+            return (short) dx;
+        } else if (dx == 0) {
+            return (short) dy;
+        } else {
+            return (short) Math.sqrt((double) (dx*dx + dy*dy));
+        }
+    }
 }

@@ -124,6 +124,29 @@ public class Utils {
         return sb.toString();
     }
     
+    public static void drawArrow(Graphics g, int x1, int y1, int x2, int y2, int thickness, int zoomOut) {
+        int dx = x2 - x1;
+        int dy = y2 - y1;
+        int l = Mathh.calcDistance(dx, dy);
+        int ang = Mathh.arctg(dx, dy);
+        int arrowX = (x2*9 + x1) / 10;
+        int arrowY = (y2*9 + y1) / 10;
+        int arrowSideVecX = 2 * thickness * Mathh.cos(ang + 90) / zoomOut;
+        int arrowSideVecY = 2 * thickness * Mathh.sin(ang + 90) / zoomOut;
+        drawLine(g, x1, y1, arrowX, arrowY, thickness, zoomOut, false, false);
+        drawTriangle(g, x2, y2, arrowX + arrowSideVecX, arrowY + arrowSideVecY, arrowX - arrowSideVecX, arrowY - arrowSideVecY, zoomOut);
+    }
+    
+    public static void drawTriangle(Graphics g, int x1, int y1, int x2, int y2, int x3, int y3, int zoomOut) {
+    	if (zoomOut < EditorCanvas.ZOOMOUT_MACROVIEW_THRESHOLD) {
+            g.drawLine(x1, y1, x2, y2);
+            g.drawLine(x2, y2, x3, y3);
+            g.drawLine(x1, y1, x3, y3);
+        } else {
+        	g.fillTriangle(x1, y1, x2, y2, x3, y3);
+        }
+    }
+    
     public static void drawLine(Graphics g, int x1, int y1, int x2, int y2, int thickness, int zoomOut) {
         drawLine(g, x1, y1, x2, y2, thickness, zoomOut, true, true);
     }

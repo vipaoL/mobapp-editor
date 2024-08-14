@@ -268,7 +268,7 @@ public class MainScreenUI extends Container {
             }
         });
         
-        Button[] placementButtons = {btnLine, btnCircle, btnSine, btnBrLine, btnBrCircle.setIsActive(false), btnAccel.setIsActive(false)};
+        Button[] placementButtons = {btnLine, btnCircle, btnSine, btnBrLine, btnBrCircle.setIsActive(false), btnAccel};
         placementButtonPanel = new ButtonPanelHorizontal(placementButtons)
                 .setBtnsInRowCount(BTNS_IN_ROW);
         placementButtonPanel.setIsSelectionEnabled(true);

@@ -7,6 +7,8 @@ package mobileapplication3.elements;
 
 import javax.microedition.lcdui.Graphics;
 
+import mobileapplication3.utils.Mathh;
+
 /**
  *
  * @author vipaol
@@ -55,7 +57,7 @@ public abstract class Element {
             case Element.SINE:
                 return new Sine();
             case Element.ACCELERATOR:
-                return null;
+                return new Accelerator();
             default:
                 System.out.println("Unknown id: " + id);
                 return null;
@@ -96,13 +98,7 @@ public abstract class Element {
     }
     
     public static short calcDistance(short dx, short dy) {
-        if (dy == 0) {
-            return dx;
-        } else if (dx == 0) {
-            return dy;
-        } else {
-            return (short) Math.sqrt((double) (dx*dx + dy*dy));
-        }
+        return Mathh.calcDistance(dx, dy);
     }
     
     public int getArgsCount() {
