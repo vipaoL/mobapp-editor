@@ -147,6 +147,7 @@ public class Sine extends AbstractCurve {
         pointsCache = null;
         offset = (short) Mathh.normalizeAngle(offset);
         this.offset = offset;
+        calcZeroPoint();
     }
     
     public void setAmplitude(short a) {
