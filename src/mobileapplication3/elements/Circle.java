@@ -86,6 +86,21 @@ public class Circle extends AbstractCurve {
                 public String getCurrentStepInfo() {
 					return "startAng=" + startAngle;
 				}
+            },
+            new PlacementStep() {
+                public void place(short pointX, short pointY) {
+                    short dx = (short) (pointX - x);
+                    short dy = (short) (pointY - y);
+                    setScale((short) (Math.abs(dx) * 100 / r), (short) (Math.abs(dy) * 100 / r));
+                }
+
+                public String getName() {
+                    return "Scale";
+                }
+                
+                public String getCurrentStepInfo() {
+					return "kx=" + kx + ", ky=" + ky;
+				}
             }
         };
     }
@@ -145,8 +160,8 @@ public class Circle extends AbstractCurve {
         if (this.kx == scaleX && this.ky == scaleY) {
             return this;
         }
-        this.kx = scaleX;
-        this.ky = scaleY;
+        this.kx = (short) Math.max(Math.abs(scaleX), 1);
+        this.ky = (short) Math.max(Math.abs(scaleY), 1);
         pointsCache = null;
         return this;
     }
@@ -250,7 +265,7 @@ public class Circle extends AbstractCurve {
 						return 360;
 					}
     			},
-    			new Argument("kX") {
+    			new Argument("X-axis scale") {
 					public void setValue(short value) {
 						if (kx != value) {
 							pointsCache = null;
@@ -270,7 +285,7 @@ public class Circle extends AbstractCurve {
 						return 2048;
 					}
     			},
-    			new Argument("kY") {
+    			new Argument("Y-axis scale") {
 					public void setValue(short value) {
 						if (ky != value) {
 							pointsCache = null;
