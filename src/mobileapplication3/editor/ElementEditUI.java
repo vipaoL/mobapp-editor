@@ -1,22 +1,15 @@
 package mobileapplication3.editor;
 
-import javax.microedition.lcdui.Canvas;
-import javax.microedition.lcdui.Graphics;
-
 import mobileapplication3.editor.ui.AbstractPopupWindow;
 import mobileapplication3.editor.ui.Button;
 import mobileapplication3.editor.ui.Button.ButtonFeedback;
 import mobileapplication3.editor.ui.ButtonComponent;
-import mobileapplication3.editor.ui.ButtonRow;
-import mobileapplication3.editor.ui.Container;
 import mobileapplication3.editor.ui.IPopupFeedback;
 import mobileapplication3.editor.ui.IUIComponent;
 import mobileapplication3.editor.ui.List;
-import mobileapplication3.editor.ui.TextComponent;
 import mobileapplication3.elements.Element;
 import mobileapplication3.elements.Element.PlacementStep;
 import mobileapplication3.elements.EndPoint;
-import mobileapplication3.utils.Mathh;
 
 public class ElementEditUI extends AbstractPopupWindow {
 	
@@ -45,8 +38,7 @@ public class ElementEditUI extends AbstractPopupWindow {
 	protected IUIComponent initAndGetPageContent() {
 		PlacementStep[] editSteps = element.getPlacementSteps();
 		PlacementStep[] extraEditSteps = element.getExtraEditingSteps();
-		String[] argsNames = element.getArgsNames();
-		rows = new IUIComponent[editSteps.length + extraEditSteps.length + 2 /*advances edit and delete*/];
+		rows = new IUIComponent[editSteps.length + extraEditSteps.length + 2 /*advanced edit and delete*/];
 		for (int i = 0; i < editSteps.length; i++) {
 			final int o = i;
 			Button editStepButton = new Button(editSteps[i].getName(), new ButtonFeedback() {
