@@ -38,9 +38,7 @@ public class EditorCanvas extends UIComponent {
         this.structurePlacer = structure;
     }
     
-    public void onPaint(Graphics g, int x0, int y0, int w, int h) {
-        g.setColor(colBg);
-        drawBG(g, x0, y0, w, h);
+    public void onPaint(Graphics g, int x0, int y0, int w, int h, boolean forceInactive) {
         drawElements(g, x0, y0);
         drawStartPoint(g, x0, y0);
         drawCursor(g, x0, y0);
@@ -51,7 +49,8 @@ public class EditorCanvas extends UIComponent {
         }
     }
     
-    private void drawBG(Graphics g, int x0, int y0, int w, int h) {
+    public void drawBg(Graphics g, int x0, int y0, int w, int h, boolean isActive) {
+    	g.setColor(colBg);
         g.fillRect(x0, y0, w, h);
         if (zoomOut < ZOOMOUT_MACROVIEW_THRESHOLD) {
             g.setColor(0x000077);

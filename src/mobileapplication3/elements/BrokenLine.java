@@ -6,6 +6,7 @@
 package mobileapplication3.elements;
 
 import javax.microedition.lcdui.Graphics;
+
 import mobileapplication3.utils.Mathh;
 import mobileapplication3.utils.Utils;
 
@@ -15,7 +16,6 @@ import mobileapplication3.utils.Utils;
  */
 public class BrokenLine extends Line {
     
-	private static final String[] ARGS_NAMES = {"X1", "Y1", "X2", "Y2", "Thickness", "Platform length (calculated)", "Spacing", "Length (calculated)", "Angle (calculated)"};
     protected short thickness = 20, platformLength, spacing = 10, l, ang;
     
     public PlacementStep[] getPlacementSteps() {
@@ -125,12 +125,91 @@ public class BrokenLine extends Line {
         return this;
     }
     
-    public short[] getArgs() {
+    public short[] getArgsValues() {
         return new short[]{x1, y1, x2, y2, thickness, platformLength, spacing, l, ang};
     }
     
-    public String[] getArgsNames() {
-    	return ARGS_NAMES;
+    public Argument[] getArgs() {
+    	Argument[] superArgs = super.getArgs();
+    	Argument[] thisArgs = {
+    			new Argument("Thickness") {
+					public void setValue(short value) {
+						thickness = value;
+					}
+
+					public short getValue() {
+						return thickness;
+					}
+					
+					public short getMinValue() {
+						return 0;
+					}
+					
+					public short getMaxValue() {
+						return (short) (platformLength / 2);
+					}
+    			},
+    			new Argument("Platform length", true) {
+					public void setValue(short value) {
+						platformLength = value;
+					}
+
+					public short getValue() {
+						return platformLength;
+					}
+					
+					public short getMinValue() {
+						return 0;
+					}
+    			},
+    			new Argument("Spacing") {
+					public void setValue(short value) {
+						spacing = value;
+					}
+
+					public short getValue() {
+						return spacing;
+					}
+					
+					public short getMinValue() {
+						return 0;
+					}
+    			},
+    			new Argument("Length", true) {
+					public void setValue(short value) {
+						l = value;
+					}
+
+					public short getValue() {
+						return l;
+					}
+					
+					public short getMinValue() {
+						return 0;
+					}
+    			},
+    			new Argument("Angle", true) {
+					public void setValue(short value) {
+						ang = value;
+					}
+
+					public short getValue() {
+						return ang;
+					}
+					
+					public short getMinValue() {
+						return 0;
+					}
+					
+					public short getMaxValue() {
+						return 360;
+					}
+    			}
+    	};
+    	Argument[] args = new Argument[superArgs.length + thisArgs.length];
+    	System.arraycopy(superArgs, 0, args, 0, superArgs.length);
+    	System.arraycopy(thisArgs, 0, args, superArgs.length, thisArgs.length);
+    	return args; 
     }
 
     public short getID() {

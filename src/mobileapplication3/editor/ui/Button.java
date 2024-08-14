@@ -33,9 +33,9 @@ public class Button {
         font = Font.getDefaultFont();
         this.bgPadding = 0;
         this.selectedBgColor = 0x002255;
-        this.fontColorInactive = 0x404040;
-        this.fontColor = 0xffffff;
-        this.bgColorInactive = 0x202020;
+        this.fontColorInactive = IUIComponent.FONT_COLOR_INACTIVE;
+        this.fontColor = IUIComponent.FONT_COLOR;
+        this.bgColorInactive = IUIComponent.BG_COLOR_INACTIVE;
         this.bgColor = IUIComponent.COLOR_ACCENT_MUTED;
         
         this.text = title;
@@ -77,6 +77,15 @@ public class Button {
 
     public Button setBgColor(int bgColor) {
         this.bgColor = bgColor;
+        return this;
+    }
+    
+    public int getBgColorInactive() {
+		return bgColorInactive;
+	}
+    
+    public Button setBgColorInactive(int bgColorInactive) {
+    	this.bgColorInactive = bgColorInactive;
         return this;
     }
     
@@ -124,7 +133,7 @@ public class Button {
         }
     }
     
-    public void paint(Graphics g, int x0, int y0, int w, int h, boolean isSelected, boolean isFocused) {
+    public void paint(Graphics g, int x0, int y0, int w, int h, boolean isSelected, boolean isFocused, boolean drawAsInactive) {
         int prevClipX = g.getClipX();
         int prevClipY = g.getClipY();
         int prevClipW = g.getClipWidth();
@@ -143,22 +152,27 @@ public class Button {
         g.setFont(font);
         
         int r = Math.min(w/5, h/5);
-        if (isActive) {
-            int bgColor = isSelected ? selectedBgColor : this.bgColor;
-            if (bgColor > 0) {
-                g.setColor(bgColor);
-                //g.fillRect(x0, y0, w, h); // TODO add feature to disable rouding
-                g.fillRoundRect(x0, y0, w, h, r, r);
-            }
-            g.setColor(fontColor);
+        
+        int bgColor;
+        int fontColor;
+        if (isActive && !drawAsInactive) {
+        	fontColor = this.fontColor;
+        	if (!isSelected) {
+        		bgColor = this.bgColor;
+        	} else {
+        		bgColor = selectedBgColor;
+        	}
         } else {
-            if (bgColorInactive > 0) {
-                g.setColor(bgColorInactive);
-                //g.fillRect(x0, y0, w, h);
-                g.fillRoundRect(x0, y0, w, h, r, r);
-            }
-            g.setColor(fontColorInactive);
+        	fontColor = fontColorInactive;
+        	bgColor = bgColorInactive;
         }
+        
+        if (bgColor > 0) {
+            g.setColor(bgColor);
+            //g.fillRect(x0, y0, w, h); // TODO add feature to disable rouding
+            g.fillRoundRect(x0, y0, w, h, r, r);
+        }
+        g.setColor(fontColor);
         
         int[][] lineBounds = getLineBounds(text, font, w, h, bgPadding);
         

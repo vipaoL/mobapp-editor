@@ -29,7 +29,7 @@ public class Page1 extends AbstractSetupWizardPage {
 
     protected IUIComponent initAndGetPageContent() {
         logo = new UIComponent() {
-            public void onPaint(Graphics g, int x0, int y0, int w, int h) {
+            public void onPaint(Graphics g, int x0, int y0, int w, int h, boolean forceInactive) {
                 g.setColor(0x0000ff);
                 g.drawArc(x0, y0, w-1, h-1, 0, 360);
                 g.drawString("Here will be", x0 + w/2, y0 + h/2, Graphics.BOTTOM | Graphics.HCENTER);

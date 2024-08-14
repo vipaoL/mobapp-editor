@@ -363,8 +363,7 @@ public class MainScreenUI extends Container {
                 .setPos(x0, y0 + h - bottomButtonPanel.h, BOTTOM | LEFT);
         settingsButton
                 .setSize(ButtonComponent.W_AUTO, ButtonComponent.H_AUTO)
-                .setPos(x0 + w, y0, TOP | RIGHT)
-                .setVisible(true);
+                .setPos(x0 + w, y0, TOP | RIGHT);
         placedElementsList
                 .setSizes(w/3, bottomButtonPanel.getTopY() - y0 - BTN_H / 4, FONT_H * 3)
                 .setPos(x0 + w, y0 + h - bottomButtonPanel.h, RIGHT | BOTTOM);
@@ -376,9 +375,9 @@ public class MainScreenUI extends Container {
         		.setPos(bottomButtonPanel.getLeftX(), bottomButtonPanel.getTopY(), LEFT | BOTTOM);
     }
     
-    public void paint(Graphics g, int x0, int y0, int w, int h) {
+    public void paint(Graphics g, int x0, int y0, int w, int h, boolean forceInactive) {
     	startPointWarning.setVisible(!StartPoint.checkStartPoint(elementsBuffer.getElementsAsArray()));
-    	super.paint(g, x0, y0, w, h);
+    	super.paint(g, x0, y0, w, h, forceInactive);
     }
     
     public void moveToZeros() {

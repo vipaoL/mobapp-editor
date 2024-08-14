@@ -5,6 +5,8 @@
  */
 package mobileapplication3.editor.ui;
 
+import java.util.Random;
+
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
@@ -20,6 +22,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
             anchor = IUIComponent.LEFT | IUIComponent.TOP;
     protected boolean isVisible = true;
     protected boolean isFocused = true;
+    protected boolean isActive = true;
     private boolean dragged = false;
     protected int pressedX, pressedY;
     private int bgColor = 0x000000;
@@ -59,9 +62,52 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     }
     
     public Image getCapture() {
-        Image capture = Image.createImage(w, h);
-        onPaint(capture.getGraphics());
-        return capture;
+    	try {
+	        Image capture = Image.createImage(w, h);
+	        onPaint(capture.getGraphics(), true);
+	        return capture;
+    	} catch (Exception ex) {
+    		ex.printStackTrace();
+    		return null;
+    	}
+    }
+    
+    public Image getBlurredCapture() {
+    	Image img = getCapture();
+        blurImg(img);
+        return img;
+    }
+    
+    protected void blurImg(Image img) {
+    	try {
+	        Graphics g = img.getGraphics();
+	        int x0 = 0, y0 = 0;
+	        int w = img.getWidth();
+	        int h = img.getHeight();
+	        int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+	        int a = 3;
+	        int offset = new Random().nextInt(a);
+	        x0 += offset;
+	        for (int i = -offset; i < (w + h) / a; i++) {
+	            g.setColor(0x110033);
+	            g.drawLine(x1 + x0, y1 + y0, x2 + x0, y2 + y0);
+	            g.drawLine(x1 + x0, h - (y1 + y0), x2 + x0, h - (y2 + y0));
+	            
+	            if (y1 < h) {
+	                y1 += a;
+	            } else {
+	                x1 += a;
+	            }
+	            
+	            if (x2 < w) {
+	                x2 += a;
+	            } else {
+	                y2 += a;
+	            }
+	        }
+    	} catch (Exception ex) {
+    		ex.printStackTrace();
+    	}
     }
 
     protected final Container setComponents(IUIComponent[] components) {
@@ -113,22 +159,34 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     }
     
     public void paint(Graphics g) {
-    	paint(g, x0, y0, w, h);
+    	paint(g, false);
+    }
+    
+    public void paint(Graphics g, boolean forceInactive) {
+    	paint(g, x0, y0, w, h, forceInactive);
     }
     
     public void paint(Graphics g, int x0, int y0, int w, int h) {
+    	paint(g, x0, y0, w, h, false);
+    }
+    
+    public void paint(Graphics g, int x0, int y0, int w, int h, boolean forceInactive) {
         if (!isVisible) {
             return;
         }
         
-        onPaint(g, x0, y0, w, h);
+        onPaint(g, x0, y0, w, h, forceInactive);
     }
     
     private void onPaint(Graphics g) {
-    	onPaint(g, x0, y0, w, h);
+    	onPaint(g, x0, y0, w, h, false);
     }
     
-    private void onPaint(Graphics g, int x0, int y0, int w, int h) {
+    private void onPaint(Graphics g, boolean forceInactive) {
+    	onPaint(g, x0, y0, w, h, forceInactive);
+    }
+    
+    private void onPaint(Graphics g, int x0, int y0, int w, int h, boolean forceInactive) {
     	if (w == 0 || h == 0) {
     		try {
     			throw new Exception("Can't paint: w=" + w + " h=" + h);
@@ -137,6 +195,8 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
 			}
     		return;
     	}
+    	
+    	forceInactive = forceInactive || !isActive;
     	
     	x0 += padding;
         y0 += padding;
@@ -154,26 +214,33 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         int prevClipW = g.getClipWidth();
         int prevClipH = g.getClipHeight();
         g.setClip(x0, y0, w, h);
-        drawBg(g, x0, y0, w, h);
+        drawBg(g, x0, y0, w, h, forceInactive);
         setBounds(x0, y0, w, h);
         for (int i = 0; i < uiComponents.length; i++) {
         	try {
 	            if (uiComponents[i] != null) {
-	                uiComponents[i].paint(g);
+	                uiComponents[i].paint(g, forceInactive);
 	            }
         	} catch (Exception ex) { }
         }
         
         if (popupWindow != null) {
-            popupWindow.paint(g, x0, y0, w, h);
+            popupWindow.paint(g, x0, y0, w, h, forceInactive);
         }
         
         g.setClip(prevClipX, prevClipY, prevClipW, prevClipH);
     }
     
-    protected void drawBg(Graphics g, int x0, int y0, int w, int h) {
+    protected void drawBg(Graphics g, int x0, int y0, int w, int h, boolean forceInactive) {
+    	int bgColor;
+    	if (!forceInactive) {
+			bgColor = this.bgColor;
+		} else {
+			bgColor = BG_COLOR_INACTIVE;
+		}
+    	
     	if (bgColor >= 0) {
-            g.setColor(bgColor);
+    		g.setColor(bgColor);
             if (roundBg) {
 	            int r = Math.min(w/5, h/5);
 	            g.fillRoundRect(x0, y0, w, h, r, r);
@@ -220,16 +287,28 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
             }
         }
     }
+    
+    public IUIComponent setVisible(boolean b) {
+        isVisible = b;
+        return this;
+    }
 
     public IUIComponent setFocused(boolean b) {
         isFocused = b;
         refreshFocusedComponents();
         return this;
     }
-
-    public IUIComponent setVisible(boolean b) {
-        isVisible = b;
-        return this;
+    
+    public IUIComponent setActive(boolean b) {
+    	//System.out.println(getClass().getName() + " setActive: " + b);
+    	isActive = b;
+    	for (int i = 0; i < components.length; i++) {
+    		if (components[i] != null) {
+    			components[i].setActive(b);
+    		}
+			
+		}
+    	return this;
     }
     
     public boolean toggleIsVisible() {
@@ -242,7 +321,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     }
 
     protected boolean checkTouchEvent(int x, int y) {
-        if (!isVisible) {
+        if (!isActive || !isVisible) {
             return false;
         }
         
@@ -370,7 +449,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     }
     
     public boolean keyPressed(int keyCode, int count) {
-        if (!isVisible) {
+        if (!isActive || !isVisible) {
             return false;
         }
         
@@ -399,7 +478,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     }
 
     public boolean keyRepeated(int keyCode, int pressedCount) {
-        if (!isVisible) {
+        if (!isActive || !isVisible) {
             return false;
         }
         
@@ -455,9 +534,11 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     }
 
     public IUIComponent setSize(int w, int h) {
-        this.w = w;
-        this.h = h;
-        
+    	if (this.w == w && this.h == h || w == 0 || h == 0) {
+    		return this;
+    	}
+    	
+    	setBounds(x0, y0, w, h);
         setPos(anchorX0, anchorY0, anchor);
         
         return this;
@@ -475,15 +556,22 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     	if (x0 == prevX0 && y0 == prevY0 && w == prevW && h == prevH) {
     		return;
     	}
-    	
-    	prevW = this.w = w;
-    	prevH = this.h = h;
-        prevX0 = this.x0 = x0;
-        prevY0 = this.y0 = y0;
         
         if (popupWindow != null) {
             popupWindow.setSize(w, h).setPos(x0, y0, LEFT | TOP);
         }
+        
+        if (prevW != 0 && prevH != 0 && w != prevW && h != prevH) {
+	        bg = null;
+	        if (bgColor == COLOR_TRANSPARENT) {
+	        	bgColor = 0;
+	        }
+        }
+        
+        prevW = this.w = w;
+    	prevH = this.h = h;
+        prevX0 = this.x0 = x0;
+        prevY0 = this.y0 = y0;
         
         onSetBounds(x0, y0, w, h);
     }

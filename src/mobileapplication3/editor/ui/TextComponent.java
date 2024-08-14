@@ -17,7 +17,7 @@ public class TextComponent extends UIComponent {
     
     public static final int HEIGHT_AUTO = -1;
     private String text = null;
-    private int fontColor = 0xffffff;
+    private int fontColor;
     private int[][] lineBounds = null;
     private int prevW;
     public Font font;
@@ -32,6 +32,7 @@ public class TextComponent extends UIComponent {
         font = Font.getDefaultFont();
         padding = font.getHeight()/6;
         bgColor = COLOR_ACCENT;
+        fontColor = FONT_COLOR;
     }
     
     public TextComponent(String text) {
@@ -43,7 +44,7 @@ public class TextComponent extends UIComponent {
         return font.getHeight() * (getLineBounds(text, font, w, padding).length) + font.getHeight() / 2;
     }
 
-    public void onPaint(Graphics g, int x0, int y0, int w, int h) {
+    public void onPaint(Graphics g, int x0, int y0, int w, int h, boolean forceSelected) {
         if (text == null) {
             return;
         }
@@ -65,8 +66,11 @@ public class TextComponent extends UIComponent {
         
         boolean hCenter = (textAlignment & HCENTER) != 0;
         
-        
-		g.setColor(fontColor);
+        if (isActive && !forceSelected) {
+        	g.setColor(fontColor);
+		} else {
+			g.setColor(FONT_COLOR_INACTIVE);
+		}
         for (int i = 0; i < lineBounds.length; i++) {
             int[] bounds = lineBounds[i];
             g.drawSubstring(

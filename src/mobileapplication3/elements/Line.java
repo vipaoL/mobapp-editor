@@ -7,7 +7,6 @@ package mobileapplication3.elements;
 
 import javax.microedition.lcdui.Graphics;
 
-import mobileapplication3.utils.Mathh;
 import mobileapplication3.utils.Utils;
 
 /**
@@ -16,7 +15,6 @@ import mobileapplication3.utils.Utils;
  */
 public class Line extends Element {
     
-	private static final String[] ARGS_NAMES = {"X1", "Y1", "X2", "Y2"};
     protected short x1, y1, x2, y2;
     
     public PlacementStep[] getPlacementSteps() {
@@ -76,13 +74,50 @@ public class Line extends Element {
         return this;
     }
 
-    public short[] getArgs() {
+    public short[] getArgsValues() {
         short[] args = {x1, y1, x2, y2};
         return args;
     }
     
-    public String[] getArgsNames() {
-    	return ARGS_NAMES;
+    public Argument[] getArgs() {
+    	return new Argument[] {
+    			new Argument("X1") {
+					public void setValue(short value) {
+						x1 = value;
+					}
+
+					public short getValue() {
+						return x1;
+					}
+    			},
+    			new Argument("Y1") {
+					public void setValue(short value) {
+						y1 = value;
+					}
+
+					public short getValue() {
+						return y1;
+					}
+    			},
+    			new Argument("X2") {
+					public void setValue(short value) {
+						x2 = value;
+					}
+
+					public short getValue() {
+						return x2;
+					}
+    			},
+    			new Argument("Y2") {
+					public void setValue(short value) {
+						y2 = value;
+					}
+
+					public short getValue() {
+						return y2;
+					}
+    			}
+    	};
     }
     
     public short getID() {

@@ -45,10 +45,10 @@ public class ButtonPanelVertical extends UIComponent {
         }
     }
 
-    public void onPaint(Graphics g, int x0, int y0, int w, int h) {
+    public void onPaint(Graphics g, int x0, int y0, int w, int h, boolean forceInactive) {
     	int btnW = w / cols;
         for (int i = 0; i < buttonCols.length; i++) {
-            buttonCols[i].paint(g, x0 + btnW * i, y0, btnW, h);
+            buttonCols[i].paint(g, x0 + btnW * i, y0, btnW, h, forceInactive);
         }
     }
 

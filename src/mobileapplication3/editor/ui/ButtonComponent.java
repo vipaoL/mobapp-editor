@@ -10,6 +10,7 @@ import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 
 import mobileapplication3.editor.Main;
+import mobileapplication3.editor.ui.Button.ButtonFeedback;
 import mobileapplication3.utils.Utils;
 
 /**
@@ -18,6 +19,10 @@ import mobileapplication3.utils.Utils;
  */
 public class ButtonComponent extends AbstractButtonSet {
 
+	public ButtonComponent(String title, ButtonFeedback buttonFeedback) {
+		this.buttons = new Button[] {new Button(title, buttonFeedback)};
+	}
+	
     public ButtonComponent(Button button) {
         this.buttons = new Button[]{button};
     }
@@ -40,8 +45,8 @@ public class ButtonComponent extends AbstractButtonSet {
         }
     }
 
-    public void onPaint(Graphics g, int x0, int y0, int w, int h) {
-        buttons[0].paint(g, x0, y0, w, h, isSelectionVisible, isFocused);
+    public void onPaint(Graphics g, int x0, int y0, int w, int h, boolean forceInactive) {
+        buttons[0].paint(g, x0, y0, w, h, isSelectionVisible, isFocused, forceInactive);
     }
 
     public boolean handlePointerReleased(int x, int y) {

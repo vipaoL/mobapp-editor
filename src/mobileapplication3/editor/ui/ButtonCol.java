@@ -297,7 +297,7 @@ public class ButtonCol extends AbstractButtonSet {
         return this;
     }
     
-    public void onPaint(Graphics g, int x0, int y0, int w, int h) {
+    public void onPaint(Graphics g, int x0, int y0, int w, int h, boolean forceInactive) {
         if (buttons == null || buttons.length == 0) {
             return;
         }
@@ -333,7 +333,7 @@ public class ButtonCol extends AbstractButtonSet {
             }
             
             boolean drawAsSelected = (i == selected && isSelectionVisible);
-            buttons[i].paint(g, btnX, btnY, btnW, btnH, drawAsSelected, isFocused);
+            buttons[i].paint(g, btnX, btnY, btnW, btnH, drawAsSelected, isFocused, forceInactive);
             g.setFont(prevFont);
         }
         

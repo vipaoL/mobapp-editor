@@ -13,8 +13,7 @@ import mobileapplication3.utils.Mathh;
  */
 public class Circle extends AbstractCurve {
     
-	private static final String[] ARGS_NAMES = {"X", "Y", "R", "Arc angle", "Start angle", "kX", "kY"};
-    private short x, y, r, arcAngle = 360, startAngle, kx = 100, ky = 100;
+    private short x, y, r = 1, arcAngle = 360, startAngle, kx = 100, ky = 100;
     
     public PlacementStep[] getPlacementSteps() {
         return new PlacementStep[] {
@@ -102,6 +101,7 @@ public class Circle extends AbstractCurve {
     }
     
     public Element setRadius(short r) {
+        r = (short) Math.max(Math.abs(r), 1);
         if (this.r == r) {
             return this;
         }
@@ -161,13 +161,134 @@ public class Circle extends AbstractCurve {
         return this;
     }
     
-    public short[] getArgs() {
+    public short[] getArgsValues() {
         short[] args = {x, y, r, arcAngle, startAngle, kx, ky};
         return args;
     }
     
-    public String[] getArgsNames() {
-    	return ARGS_NAMES;
+    public Argument[] getArgs() {
+    	return new Argument[] {
+    			new Argument("X") {
+					public void setValue(short value) {
+						if (x != value) {
+							pointsCache = null;
+						}
+						x = value;
+					}
+
+					public short getValue() {
+						return x;
+					}
+    			},
+    			new Argument("Y") {
+					public void setValue(short value) {
+						if (y != value) {
+							pointsCache = null;
+						}
+						y = value;
+					}
+
+					public short getValue() {
+						return y;
+					}
+    			},
+    			new Argument("R") {
+					public void setValue(short value) {
+						if (r != value) {
+							pointsCache = null;
+						}
+						r = value;
+					}
+
+					public short getValue() {
+						return r;
+					}
+					
+					public short getMinValue() {
+						return 1;
+					}
+    			},
+    			new Argument("Arc angle") {
+					public void setValue(short value) {
+						if (arcAngle != value) {
+							pointsCache = null;
+						}
+						arcAngle = value;
+					}
+
+					public short getValue() {
+						return arcAngle;
+					}
+					
+					public short getMinValue() {
+						return 0;
+					}
+					
+					public short getMaxValue() {
+						return 360;
+					}
+    			},
+    			new Argument("Start angle") {
+					public void setValue(short value) {
+						if (startAngle != value) {
+							pointsCache = null;
+						}
+						startAngle = value;
+					}
+
+					public short getValue() {
+						return startAngle;
+					}
+					
+					public short getMinValue() {
+						return 0;
+					}
+					
+					public short getMaxValue() {
+						return 360;
+					}
+    			},
+    			new Argument("kX") {
+					public void setValue(short value) {
+						if (kx != value) {
+							pointsCache = null;
+						}
+						kx = value;
+					}
+
+					public short getValue() {
+						return kx;
+					}
+					
+					public short getMinValue() {
+						return 1;
+					}
+					
+					public short getMaxValue() {
+						return 2048;
+					}
+    			},
+    			new Argument("kY") {
+					public void setValue(short value) {
+						if (ky != value) {
+							pointsCache = null;
+						}
+						ky = value;
+					}
+
+					public short getValue() {
+						return ky;
+					}
+					
+					public short getMinValue() {
+						return 1;
+					}
+					
+					public short getMaxValue() {
+						return 2048;
+					}
+    			}
+    	};
     }
     
     public short getID() {

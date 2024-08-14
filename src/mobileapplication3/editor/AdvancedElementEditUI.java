@@ -14,6 +14,7 @@ import mobileapplication3.editor.ui.IUIComponent;
 import mobileapplication3.editor.ui.List;
 import mobileapplication3.editor.ui.TextComponent;
 import mobileapplication3.elements.Element;
+import mobileapplication3.elements.Element.Argument;
 import mobileapplication3.elements.EndPoint;
 import mobileapplication3.utils.Mathh;
 
@@ -32,14 +33,10 @@ public class AdvancedElementEditUI extends AbstractPopupWindow {
 	}
 
 	protected Button[] getActionButtons() {
+		final short[] argsUnmodified = element.getArgsValues();
         return new Button[] {
             new Button("OK", new Button.ButtonFeedback() {
                 public void buttonPressed() {
-                	short[] args = new short[element.getArgsCount()];
-                	for (int i = 0; i < args.length; i++) {
-            			args[i] = ((ListRow) rows[i]).getValue();
-            		}
-                	element.setArgs(args);
                 	element.recalcCalculatedArgs();
                 	if (element.getID() != Element.END_POINT) {
                 		sb.recalcEndPoint();
@@ -49,6 +46,7 @@ public class AdvancedElementEditUI extends AbstractPopupWindow {
             }),
             new Button("Cancel", new Button.ButtonFeedback() {
                 public void buttonPressed() {
+                	element.setArgs(argsUnmodified);
                     close();
                 }
             })
@@ -56,26 +54,36 @@ public class AdvancedElementEditUI extends AbstractPopupWindow {
     }
 
 	protected IUIComponent initAndGetPageContent() {
-		short[] args = element.getArgs();
-		String[] argsNames = element.getArgsNames();
-		rows = new IUIComponent[args.length];
-		for (int i = 0; i < args.length; i++) {
-			rows[i] = new ListRow(argsNames[i], args[i]);
-		}
-		
 		list = new List() {
 			public final void onSetBounds(int x0, int y0, int w, int h) {
 				setElementsPadding(getElemH()/16);
 				super.onSetBounds(x0, y0, w, h);
 			}
-		}
-				.setElements(rows)
-				.enableScrolling(true, false)
-				.enableAnimations(false)
-                .trimHeight(true)
-                .setIsSelectionEnabled(true)
-                .setIsSelectionVisible(true);
+		};
+		
+		refreshList();
+		
+		list.enableScrolling(true, false)
+			.enableAnimations(false)
+            .trimHeight(true)
+            .setIsSelectionEnabled(true)
+            .setIsSelectionVisible(true);
 		return list;
+	}
+	
+	private void refreshList() {
+		Argument[] args = element.getArgs();
+		rows = new IUIComponent[args.length + 1];
+		for (int i = 0; i < args.length; i++) {
+			rows[i] = new ListRow(args[i]);
+		}
+		rows[args.length] = new ButtonComponent("Refresh this list", new ButtonFeedback() {
+			public void buttonPressed() {
+				element.recalcCalculatedArgs();
+				refreshList();
+			}
+		});
+		list.setElements(rows);
 	}
 	
 	class ListRow extends Container {
@@ -83,25 +91,31 @@ public class AdvancedElementEditUI extends AbstractPopupWindow {
 		private TextComponent title;
 		private TextComponent valueIndicator;
 		private ButtonRow buttonRow;
+		private Argument arg;
 		
+		private short value;
+		private short minValue;
+		private short maxValue;
 		private int prevDraggedX;
 		private long prevDraggedTime = 0;
-		private short minValue = Short.MIN_VALUE;
-		private short maxValue = Short.MAX_VALUE;
-		private short value;
 		
-		public ListRow(String paramName, short value) {
-			this.value = value;
+		public ListRow(Argument arg) {
+			minValue = arg.getMinValue();
+			maxValue = arg.getMaxValue();
 			
-			title = new TextComponent(paramName);
+			this.arg = arg;
+			
+			title = new TextComponent(arg.getName());
 			title.setBgColor(COLOR_TRANSPARENT);
 			
+			value = arg.getValue();
 			valueIndicator = new TextComponent(String.valueOf(value));
 			valueIndicator.setBgColor(COLOR_TRANSPARENT);
 			
 			buttonRow = new ButtonRow();
 			buttonRow.setBgColor(COLOR_TRANSPARENT);
 			buttonRow.setButtonsBgColor(COLOR_TRANSPARENT);
+			buttonRow.setButtonsBgColorInactive(COLOR_TRANSPARENT);
 			buttonRow.setButtons(new Button[] {
 					new Button("-", new ButtonFeedback() {
 						public void buttonPressed() {
@@ -116,11 +130,12 @@ public class AdvancedElementEditUI extends AbstractPopupWindow {
 			});
 			
 			setBgColor(COLOR_ACCENT);
+			setActive(!arg.isCalculated());
 			roundBg(true);
 			setComponents(new IUIComponent[] {title, valueIndicator, buttonRow});
 		}
 		
-		protected void drawBg(Graphics g, int x0, int y0, int w, int h) {
+		protected void drawBg(Graphics g, int x0, int y0, int w, int h, boolean forceInactive) {
 			int prevClipX = g.getClipX();
 	        int prevClipY = g.getClipY();
 	        int prevClipW = g.getClipWidth();
@@ -128,11 +143,20 @@ public class AdvancedElementEditUI extends AbstractPopupWindow {
 	        
 	        int barLeftW = w * (value - minValue) / (maxValue - minValue);
 	        
-	        g.setColor(COLOR_ACCENT);
+	        boolean isActive = this.isActive && !forceInactive;
+	        if (isActive) {
+	        	g.setColor(COLOR_ACCENT);
+	        } else {
+	        	g.setColor(COLOR_ACCENT_MUTED);
+	        }
 	        g.setClip(x0, y0, barLeftW, h);
 			g.fillRect(x0, y0, w, h);
 			
-			g.setColor(COLOR_ACCENT_MUTED);
+			if (isActive) {
+				g.setColor(COLOR_ACCENT_MUTED);
+	        } else {
+	        	g.setColor(BG_COLOR_INACTIVE);
+	        }
 			g.setClip(x0 + barLeftW, y0, w - barLeftW, h);
 			g.fillRect(x0, y0, w, h);
 			
@@ -152,11 +176,12 @@ public class AdvancedElementEditUI extends AbstractPopupWindow {
 		}
 		
 		public short getValue() {
-			return value;
+			return arg.getValue();
 		}
 		
 		public void setValue(int value) {
 			this.value = (short) Mathh.constrain(minValue, value, maxValue);
+			arg.setValue(this.value);
 			valueIndicator.setText(String.valueOf(this.value));
 		}
 		
@@ -183,7 +208,7 @@ public class AdvancedElementEditUI extends AbstractPopupWindow {
 				
 				dx = Mathh.constrain(-200, x - prevDraggedX, 200); // prevent int overflow
 				int prevValue = value;
-				setValue((value + dx * dx * dx * 100 / dt / w));
+				setValue((value + dx * dx * dx / dt / w));
 				
 				if (value != prevValue) {
 					// Do not change prevDraggedX on small movements to allow set more precisely.
@@ -196,6 +221,10 @@ public class AdvancedElementEditUI extends AbstractPopupWindow {
 		}
 		
 		public boolean keyPressed(int keyCode, int count) {
+			if (!isActive || !isVisible) {
+	            return false;
+	        }
+			
 			switch (Main.util.getGameAction(keyCode)) {
 	            case Canvas.RIGHT:
 	            	setValue(value + count * count);
@@ -209,6 +238,10 @@ public class AdvancedElementEditUI extends AbstractPopupWindow {
 		}
 		
 		public boolean keyRepeated(int keyCode, int pressedCount) {
+			if (!isActive || !isVisible) {
+	            return false;
+	        }
+			
 			switch (Main.util.getGameAction(keyCode)) {
 	            case Canvas.RIGHT:
 	            	setValue(value + pressedCount * pressedCount);

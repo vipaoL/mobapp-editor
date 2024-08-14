@@ -17,6 +17,11 @@ public abstract class AbstractPopupWindow extends Page {
 
     public AbstractPopupWindow(String title, IPopupFeedback parent) {
         super(title);
+        try {
+        	setBgImage(((Container) parent).getBlurredCapture());
+        } catch (Exception ex) {
+			ex.printStackTrace();
+		}
         this.feedback = parent;
     }
     

@@ -139,14 +139,14 @@ public class ButtonRow extends AbstractButtonSet {
         return true;
     }
     
-    public void onPaint(Graphics g, int x0, int y0, int w, int h) {
+    public void onPaint(Graphics g, int x0, int y0, int w, int h, boolean forceInactive) {
         if (buttons == null || buttons.length == 0) {
             return;
         }
 
         for (int i = 0; i < buttons.length; i++) {
             boolean drawAsSelected = (i == selected && isSelectionVisible && isSelectionEnabled && isFocused);
-            buttons[i].paint(g, x0 + i*w/buttons.length, y0, w/buttons.length, h, drawAsSelected, isFocused);
+            buttons[i].paint(g, x0 + i*w/buttons.length, y0, w/buttons.length, h, drawAsSelected, isFocused, forceInactive);
         }
     }
 

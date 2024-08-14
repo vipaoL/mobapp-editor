@@ -19,7 +19,6 @@ public abstract class Page extends Container {
     private boolean isInited = false;
 
     public Page(String title) {
-        System.out.println("new TextComponent: " + title);
         this.title = new TextComponent(title);
         this.actionButtons = (ButtonRow) new ButtonRow();
                 //.setButtonsBgColor(0x3333aa)

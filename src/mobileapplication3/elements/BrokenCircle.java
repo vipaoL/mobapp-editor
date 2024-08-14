@@ -26,7 +26,7 @@ public class BrokenCircle extends Circle {
         return this;
     }
 
-    public short[] getArgs() {
+    public short[] getArgsValues() {
         return null;
     }
     

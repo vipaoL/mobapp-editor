@@ -17,6 +17,7 @@ public abstract class AbstractButtonSet extends UIComponent {
     public Button[] buttons = null;
     protected int bgColor = COLOR_TRANSPARENT;
     protected int buttonsBgColor = NOT_SET;
+    protected int buttonsBgColorInactive = BG_COLOR_INACTIVE;
     protected int buttonsSelectedColor = NOT_SET;
     protected int buttonsBgPadding = 0;
     
@@ -29,6 +30,7 @@ public abstract class AbstractButtonSet extends UIComponent {
         this.buttons = buttons;
         
         setButtonsBgColor(buttonsBgColor);
+        setButtonsBgColorInactive(buttonsBgColorInactive);
         setSelectedColor(buttonsSelectedColor);
         setButtonsBgPadding(buttonsBgPadding);
         setIsSelectionEnabled(isSelectionEnabled);
@@ -53,6 +55,22 @@ public abstract class AbstractButtonSet extends UIComponent {
         
         for (int i = 0; i < buttons.length; i++) {
             buttons[i].setBgColor(color);
+        }
+        return this;
+    }
+    
+    public AbstractButtonSet setButtonsBgColorInactive(int color) {
+        if (color == NOT_SET) {
+            return this;
+        }
+        
+        this.buttonsBgColorInactive = color;
+        if (buttons == null) {
+            return this;
+        }
+        
+        for (int i = 0; i < buttons.length; i++) {
+            buttons[i].setBgColorInactive(color);
         }
         return this;
     }

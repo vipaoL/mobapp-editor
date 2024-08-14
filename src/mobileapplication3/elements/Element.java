@@ -65,7 +65,7 @@ public abstract class Element {
     }
     
     public void printDebug() {
-        short[] args = getArgs();
+        short[] args = getArgsValues();
         System.out.print("id="+getID());
         for (int i = 0; i < args.length; i++) {
             System.out.print(" " + args[i]);
@@ -102,7 +102,7 @@ public abstract class Element {
     }
     
     public int getArgsCount() {
-        return getArgs().length;
+        return getArgsValues().length;
     }
     
     public int getDataLengthInShorts() {
@@ -110,10 +110,10 @@ public abstract class Element {
     }
 
     public short[] getAsShortArray() {
-        short[] args = getArgs();
+        short[] args = getArgsValues();
         short[] arr = new short[args.length + 1];
         arr[0] = getID();
-        System.arraycopy(getArgs(), 0, arr, 1, getArgsCount());
+        System.arraycopy(getArgsValues(), 0, arr, 1, getArgsCount());
         return arr;
     }
     
@@ -134,9 +134,9 @@ public abstract class Element {
     
     public abstract Element setArgs(short[] args);
     
-    public abstract short[] getArgs();
+    public abstract short[] getArgsValues();
     
-    public abstract String[] getArgsNames();
+    public abstract Argument[] getArgs();
     
     public abstract short getID();
     
@@ -153,6 +153,44 @@ public abstract class Element {
     public abstract boolean isBody();
     
     public abstract void recalcCalculatedArgs();
+    
+    public abstract class Argument {
+    	private String name;
+    	private boolean isCalculated;
+    	
+    	/**
+    	 *  if it is calculated automatically
+    	 *  the user shouldn't have ability to change it manually
+    	 */
+    	public Argument(String name, boolean isCalculatedAutomatically) {
+    		//System.out.println(name + ", calculated=" + isCalculatedAutomatically);
+    		isCalculated = isCalculatedAutomatically;
+    		if (isCalculated) {
+    			name += " (calculated)";
+    		}
+    		this.name = name;
+		}
+    	
+    	public Argument(String name) {
+    		this(name, false);
+		}
+    	
+    	public abstract void setValue(short value);
+    	public abstract short getValue();
+    	public final String getName() {
+    		return name;
+    	};
+    	public short getMaxValue() {
+    		return Short.MAX_VALUE;
+    	}
+    	public short getMinValue() {
+    		return Short.MIN_VALUE;
+    	}
+    	
+    	public final boolean isCalculated() {
+			return isCalculated;
+		}
+    }
     
     public abstract class PlacementStep {
         public abstract void place(short pointX, short pointY);

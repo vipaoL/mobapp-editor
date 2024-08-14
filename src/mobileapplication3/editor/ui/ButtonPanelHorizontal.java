@@ -82,10 +82,10 @@ public class ButtonPanelHorizontal extends AbstractButtonSet {
         return super.setSize(this.w, this.h);
     }
 
-    public void onPaint(Graphics g, int x0, int y0, int w, int h) {
+    public void onPaint(Graphics g, int x0, int y0, int w, int h, boolean forceInactive) {
     	int btnH = h / rows;
         for (int i = 0; i < rows; i++) {
-            buttonRows[i].paint(g, x0, y0 + btnH*i, w, btnH);
+            buttonRows[i].paint(g, x0, y0 + btnH*i, w, btnH, forceInactive);
         }
     }
 

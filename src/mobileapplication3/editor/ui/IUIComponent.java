@@ -24,7 +24,10 @@ public interface IUIComponent {
             KEYCODE_LEFT_SOFT = -6,
             KEYCODE_RIGHT_SOFT = -7,
             COLOR_ACCENT = 0x000055,
-            COLOR_ACCENT_MUTED = 0x101020;
+            COLOR_ACCENT_MUTED = 0x101020,
+    		BG_COLOR_INACTIVE = 0x202025,
+			FONT_COLOR_INACTIVE = 0x404040,
+			FONT_COLOR = 0xffffff;
     
     
     public IUIComponent setParent(IContainer parent);
@@ -32,12 +35,15 @@ public interface IUIComponent {
     public IUIComponent setSize(int w, int h);
     public IUIComponent setVisible(boolean b);
     public IUIComponent setFocused(boolean b);
+    public IUIComponent setActive(boolean b);
     public IUIComponent setBgColor(int color);
     public IUIComponent setPadding(int padding);
     public IUIComponent roundBg(boolean b);
     public boolean getIsVisible();
     public void paint(Graphics g);
     public void paint(Graphics g, int x0, int y0, int w, int h);
+    public void paint(Graphics g, boolean forceInactive);
+    public void paint(Graphics g, int x0, int y0, int w, int h, boolean forceInactive);
     public boolean canBeFocused();
     public boolean pointerReleased(int x, int y);
     public boolean pointerDragged(int x, int y);

@@ -313,7 +313,7 @@ public class List extends UIComponent {
         return this;
     }
     
-    public void onPaint(Graphics g, int x0, int y0, int w, int h) {
+    public void onPaint(Graphics g, int x0, int y0, int w, int h, boolean forceInactive) {
         if (elements == null || elements.length == 0) {
             return;
         }
@@ -348,7 +348,7 @@ public class List extends UIComponent {
                 elemY = elemBottomY - elemH;
             }
             
-            elements[i].paint(g, elemX, elemY, elemW, elemH);
+            elements[i].paint(g, elemX, elemY, elemW, elemH, forceInactive);
             g.setFont(prevFont);
             
             boolean drawAsSelected = (i == selected && isSelectionVisible);
@@ -362,7 +362,7 @@ public class List extends UIComponent {
             }
         }
         
-        if (isSelectionEnabled && h < getTotalElemsH()) {
+        if (isSelectionEnabled && !forceInactive && h < getTotalElemsH()) {
             g.setColor(0xffffff);
             int selectionMarkY0 = h * scrollOffset / getTotalElemsH();
             int selectionMarkY1 = h * (scrollOffset + h) / getTotalElemsH();

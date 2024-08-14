@@ -13,7 +13,6 @@ import javax.microedition.lcdui.Graphics;
  */
 public class EndPoint extends Element {
     
-	private static final String[] ARGS_NAMES = {"X", "Y"};
     private short x, y;
     
     public PlacementStep[] getPlacementSteps() {
@@ -53,13 +52,32 @@ public class EndPoint extends Element {
         return this;
     }
     
-    public short[] getArgs() {
+    public short[] getArgsValues() {
         short[] args = {x, y};
         return args;
     }
     
-    public String[] getArgsNames() {
-    	return ARGS_NAMES;
+    public Argument[] getArgs() {
+    	return new Argument[] {
+    			new Argument("X") {
+					public void setValue(short value) {
+						x = value;
+					}
+
+					public short getValue() {
+						return x;
+					}
+    			},
+    			new Argument("Y") {
+					public void setValue(short value) {
+						y = value;
+					}
+
+					public short getValue() {
+						return y;
+					}
+    			}
+    	};
     }
 
     public short getID() {

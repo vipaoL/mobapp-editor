@@ -171,8 +171,7 @@ public class PathPicker extends Container {
                     .setIsSelectionEnabled(true)
                     .setIsSelectionVisible(!Main.hasPointerEvents)
                     .setButtonsBgPadding(3)
-                    .setButtonsBgColor(0x555555)
-                    .setBgColor(COLOR_TRANSPARENT);
+                    .setButtonsBgColor(0x555555);
         }
         
         okBtn = new Button("OK", new Button.ButtonFeedback() {
@@ -194,9 +193,8 @@ public class PathPicker extends Container {
         
         actionButtons = new Button[]{okBtn, cancelBtn};
         actionButtonPanel = (ButtonRow) new ButtonRow(actionButtons)
-        		.setIsSelectionEnabled(false)
-                .setButtonsBgColor(COLOR_TRANSPARENT)
-                .setBgColor(COLOR_TRANSPARENT);
+        		.setIsSelectionEnabled(false);
+                //.setButtonsBgColor(COLOR_TRANSPARENT);
         actionButtonPanel.bindToSoftButtons(0, actionButtonPanel.getButtonCount() - 1);
         
         question = (TextComponent) new TextComponent()
@@ -209,32 +207,6 @@ public class PathPicker extends Container {
     public Container setBgImage(Image bg) {
         blurImg(bg);
         return super.setBgImage(bg);
-    }
-    
-    private void blurImg(Image img) {
-        Graphics g = img.getGraphics();
-        int x0 = 0, y0 = 0;
-        int w = img.getWidth();
-        int h = img.getHeight();
-        int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
-        int a = 3;
-        for (int i = 0; i < (w + h) / a; i++) {
-            g.setColor(0x110033);
-            g.drawLine(x1 + x0, y1 + y0, x2 + x0, y2 + y0);
-            g.drawLine(x1 + x0, h - (y1 + y0), x2 + x0, h - (y2 + y0));
-            
-            if (y1 < h) {
-                y1 += a;
-            } else {
-                x1 += a;
-            }
-            
-            if (x2 < w) {
-                x2 += a;
-            } else {
-                y2 += a;
-            }
-        }
     }
     
     public PathPicker setSizes(int w, int h, int btnH) {

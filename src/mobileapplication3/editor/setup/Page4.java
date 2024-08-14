@@ -170,7 +170,7 @@ public class Page4 extends AbstractSetupWizardPage {
                     return false;
                 }
 
-                public void onPaint(Graphics g, int x0, int y0, int w, int h) {
+                public void onPaint(Graphics g, int x0, int y0, int w, int h, boolean forceInactive) {
                     System.out.println("drawing");
                     g.setColor(0xffffff);
                     int side = Math.min(w, h);

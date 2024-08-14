@@ -11,7 +11,6 @@ public class Accelerator extends Element {
 	// #     @     #	"@" - (x;y)
 	// #############
 	
-	private static final String[] ARGS_NAMES = {"X", "Y", "L", "Thickness", "Angle", "Speed direction offset", "Speed multiplier", "Effect duration (ticks)"};
 	private short x, y, l, thickness = 20, angle, directionOffset, m = 150, effectDuration = 30;
 	private short anchorX, anchorY;
 
@@ -97,12 +96,18 @@ public class Accelerator extends Element {
 	}
 	
 	private void setCenterPoint(short x, short y) {
+		if (x == this.x && y == this.y) {
+			return;
+		}
 		this.x = x;
 		this.y = y;
 		calcAnchorPoint();
 	}
 	
 	private void setAnchorPoint(short x, short y) {
+		if (x == anchorX && y == anchorY) {
+			return;
+		}
 		anchorX = x;
 		anchorY = y;
 		calcCenterPoint();
@@ -132,16 +137,133 @@ public class Accelerator extends Element {
 		return this;
 	}
 
-	public short[] getArgs() {
+	public short[] getArgsValues() {
 		short[] zeros = getZeros();
 		short x = zeros[0];
 		short y = zeros[1];
 		return new short[] {x, y, l, thickness, angle, directionOffset, m, effectDuration};
 	}
 
-	public String[] getArgsNames() {
-		return ARGS_NAMES;
-	}
+	public Argument[] getArgs() {
+    	return new Argument[] {
+    			new Argument("X") {
+					public void setValue(short value) {
+						x = value;
+					}
+
+					public short getValue() {
+						return x;
+					}
+    			},
+    			new Argument("Y") {
+					public void setValue(short value) {
+						y = value;
+					}
+
+					public short getValue() {
+						return y;
+					}
+    			},
+    			new Argument("L") {
+					public void setValue(short value) {
+						l = value;
+					}
+
+					public short getValue() {
+						return l;
+					}
+					
+					public short getMinValue() {
+						return 0;
+					}
+    			},
+    			new Argument("Thickness") {
+					public void setValue(short value) {
+						thickness = value;
+					}
+
+					public short getValue() {
+						return thickness;
+					}
+					
+					public short getMinValue() {
+						return 0;
+					}
+					
+					public short getMaxValue() {
+						return (short) (l/2);
+					}
+    			},
+    			new Argument("Angle", true) {
+					public void setValue(short value) {
+						angle = value;
+					}
+
+					public short getValue() {
+						return angle;
+					}
+					
+					public short getMinValue() {
+						return 0;
+					}
+					
+					public short getMaxValue() {
+						return 360;
+					}
+    			},
+    			new Argument("Speed direction offset") {
+					public void setValue(short value) {
+						directionOffset = value;
+					}
+
+					public short getValue() {
+						return directionOffset;
+					}
+					
+					public short getMinValue() {
+						return 0;
+					}
+					
+					public short getMaxValue() {
+						return 360;
+					}
+    			},
+    			new Argument("Speed multiplier") {
+					public void setValue(short value) {
+						m = value;
+					}
+
+					public short getValue() {
+						return m;
+					}
+					
+					public short getMinValue() {
+						return (short) -getMaxValue();
+					}
+					
+					public short getMaxValue() {
+						return 2048;
+					}
+    			},
+    			new Argument("Effect duration (ticks)") {
+					public void setValue(short value) {
+						effectDuration = value;
+					}
+
+					public short getValue() {
+						return effectDuration;
+					}
+					
+					public short getMinValue() {
+						return 0;
+					};
+					
+					public short getMaxValue() {
+						return 1200;
+					}
+    			}
+    	};
+    }
 
 	public short getID() {
 		return ACCELERATOR;

@@ -20,7 +20,6 @@ public class Sine extends AbstractCurve {
 	//	@		"@" - (anchorX;anchorY)
     
 	private final static int STEP = 30;
-	private static final String[] ARGS_NAMES = {"X0", "Y0", "Length", "Halfperiods", "Phase shift", "Amplitude"};
     private short x0, y0, l, halfperiods = 1, offset = 270, amp;
     private short anchorX, anchorY;
     
@@ -47,7 +46,6 @@ public class Sine extends AbstractCurve {
                     if (sinoffset != 0) {
                     	amp = amp * 1000 / sinoffset;
                     }
-                    int endPointDeg = halfperiods*180 - offset;
                     setAmplitude((short) (amp/2));
                     calcZeroPoint();
                 }
@@ -120,9 +118,7 @@ public class Sine extends AbstractCurve {
         if (x0 == x && y0 == y) {
             return;
         }
-        if (pointsCache != null) {
-        	pointsCache.movePoints((short) (x - x0), (short) (y - y0));
-        }
+        pointsCache = null;
         x0 = x;
         y0 = y;
         calcAnchorPoint();
@@ -172,12 +168,98 @@ public class Sine extends AbstractCurve {
         return this;
     }
     
-    public short[] getArgs() {
+    public short[] getArgsValues() {
         return new short[]{x0, y0, l, halfperiods, (short) Mathh.normalizeAngle(-offset), amp};
     }
     
-    public String[] getArgsNames() {
-    	return ARGS_NAMES;
+    public Argument[] getArgs() {
+    	return new Argument[] {
+    			new Argument("X0") {
+					public void setValue(short value) {
+						if (x0 != value) {
+							pointsCache = null;
+						}
+						x0 = value;
+						calcAnchorPoint();
+					}
+
+					public short getValue() {
+						return x0;
+					}
+    			},
+    			new Argument("Y0") {
+					public void setValue(short value) {
+						if (y0 != value) {
+							pointsCache = null;
+						}
+						y0 = value;
+					}
+
+					public short getValue() {
+						return y0;
+					}
+    			},
+    			new Argument("Length") {
+					public void setValue(short value) {
+						setLength(value);
+					}
+
+					public short getValue() {
+						return l;
+					}
+					
+					public short getMinValue() {
+						return (short) -x0;
+					}
+					
+					public short getMaxValue() {
+						return (short) (Short.MAX_VALUE - x0);
+					}
+    			},
+    			new Argument("Halfperiods") {
+					public void setValue(short value) {
+						setHalfperiodsNumber(value);
+					}
+
+					public short getValue() {
+						return halfperiods;
+					}
+					
+					public short getMinValue() {
+						return 1;
+					}
+					
+					public short getMaxValue() {
+						return (short) (l / 64);
+					}
+    			},
+    			new Argument("Phase shift") {
+					public void setValue(short value) {
+						setOffset(value);
+					}
+
+					public short getValue() {
+						return offset;
+					}
+					
+					public short getMaxValue() {
+						return 360;
+					}
+					
+					public short getMinValue() {
+						return 0;
+					}
+    			},
+    			new Argument("Amplitude") {
+					public void setValue(short value) {
+						setAmplitude(value);
+					}
+
+					public short getValue() {
+						return amp;
+					}
+    			}
+    	};
     }
     
     public short getID() {

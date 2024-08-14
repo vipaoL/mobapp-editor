@@ -15,20 +15,29 @@ public abstract class UIComponent implements IUIComponent {
     
     protected boolean isVisible = true;
     protected boolean isFocused = true;
+    protected boolean isActive = true;
     public int x0, y0, w, h, prevX0, prevY0, prevW, prevH,
             anchorX0, anchorY0,
             anchor = IUIComponent.LEFT | IUIComponent.TOP;
     private boolean isSizeSet = false;
-    protected int bgColor;
+    protected int bgColor = COLOR_TRANSPARENT;
     private boolean roundBg = true;
     private int padding;
     private IContainer parent = null;
     
     public final void paint(Graphics g) {
-    	paint(g, x0, y0, w, h);
+    	paint(g, false);
+    }
+    
+    public final void paint(Graphics g, boolean forceInactive) {
+    	paint(g, x0, y0, w, h, forceInactive);
     }
     
     public final void paint(Graphics g, int x0, int y0, int w, int h) {
+    	paint(g, x0, y0, w, h, false);
+    }
+    
+    public final void paint(Graphics g, int x0, int y0, int w, int h, boolean forceInactive) {
         if (isVisible) {
             int prevClipX = g.getClipX();
             int prevClipY = g.getClipY();
@@ -48,16 +57,23 @@ public abstract class UIComponent implements IUIComponent {
             
             setBounds(x0, y0, w, h);
             
-            drawBg(g, x0, y0, w, h);
-            onPaint(g, x0, y0, w, h);
+            drawBg(g, x0, y0, w, h, isActive && !forceInactive);
+            onPaint(g, x0, y0, w, h, forceInactive);
             
             g.setClip(prevClipX, prevClipY, prevClipW, prevClipH);
         }
     }
     
-    public void drawBg(Graphics g, int x0, int y0, int w, int h) {
+    public void drawBg(Graphics g, int x0, int y0, int w, int h, boolean IsActive) {
+    	int bgColor;
+    	if (isActive) {
+			bgColor = this.bgColor;
+		} else {
+			bgColor = BG_COLOR_INACTIVE;
+		}
+    	
         if (bgColor >= 0) {
-            g.setColor(bgColor);
+        	g.setColor(bgColor);
             if (roundBg) {
 	            int r = Math.min(w/5, h/5);
 	            g.fillRoundRect(x0, y0, w, h, r, r);
@@ -68,7 +84,7 @@ public abstract class UIComponent implements IUIComponent {
     }
     
     protected boolean checkTouchEvent(int x, int y) {
-        if (!isVisible) {
+        if (!isActive || !isVisible) {
             return false;
         }
         
@@ -83,14 +99,19 @@ public abstract class UIComponent implements IUIComponent {
         return true;
     }
     
+    public IUIComponent setVisible(boolean b) {
+        isVisible = b;
+        return this;
+    }
+    
     public IUIComponent setFocused(boolean b) {
         isFocused = b;
         return this;
     }
     
-    public IUIComponent setVisible(boolean b) {
-        isVisible = b;
-        return this;
+    public IUIComponent setActive(boolean b) {
+    	isActive = b;
+    	return this;
     }
     
     public boolean getIsVisible() {
@@ -254,14 +275,14 @@ public abstract class UIComponent implements IUIComponent {
     }
     
     public boolean keyPressed(int keyCode, int count) {
-        if (!isVisible) {
+        if (!isActive || !isVisible) {
             return false;
         }
         return handleKeyPressed(keyCode, count);
     }
     
     public boolean keyRepeated(int keyCode, int pressedCount) {
-        if (!isVisible) {
+        if (!isActive || !isVisible) {
             return false;
         }
         return handleKeyRepeated(keyCode, pressedCount);
@@ -281,6 +302,6 @@ public abstract class UIComponent implements IUIComponent {
     
     protected abstract boolean handlePointerReleased(int x, int y);
     protected abstract boolean handleKeyPressed(int keyCode, int count);
-    protected abstract void onPaint(Graphics g, int x0, int y0, int w, int h);
+    protected abstract void onPaint(Graphics g, int x0, int y0, int w, int h, boolean forceInactive);
     
 }
