@@ -38,7 +38,7 @@ public class ElementEditUI extends AbstractPopupWindow {
 	protected IUIComponent initAndGetPageContent() {
 		PlacementStep[] editSteps = element.getPlacementSteps();
 		PlacementStep[] extraEditSteps = element.getExtraEditingSteps();
-		rows = new IUIComponent[editSteps.length + extraEditSteps.length + 2 /*advanced edit and delete*/];
+		rows = new IUIComponent[editSteps.length + extraEditSteps.length + 3 /*clone, advanced edit and delete*/];
 		for (int i = 0; i < editSteps.length; i++) {
 			final int o = i;
 			Button editStepButton = new Button(editSteps[i].getName(), new ButtonFeedback() {
@@ -61,6 +61,15 @@ public class ElementEditUI extends AbstractPopupWindow {
 			rows[o] = new ButtonComponent(editStepButton);
 		}
 		
+		Button cloneButton = new Button("Clone", new ButtonFeedback() {
+			public void buttonPressed() {
+				Element clone = element.clone();
+				sb.add(clone);
+				sb.edit(clone, 0);
+				close();
+			}
+		});
+		
 		final IPopupFeedback fb = this;
 		Button advancedEditButton = new Button("AdvancedEdit", new ButtonFeedback() {
 			public void buttonPressed() {
@@ -79,9 +88,11 @@ public class ElementEditUI extends AbstractPopupWindow {
 		deleteButton.setBgColor(0x550000);
 		
 		if (element instanceof EndPoint) {
+			cloneButton.setIsActive(false);
 			deleteButton.setIsActive(false);
 		}
 		
+		rows[rows.length - 3] = new ButtonComponent(cloneButton);
 		rows[rows.length - 2] = new ButtonComponent(advancedEditButton);
 		rows[rows.length - 1] = new ButtonComponent(deleteButton);
 		

@@ -117,13 +117,23 @@ public abstract class Element {
         return arr;
     }
     
-    public PlacementStep[] getAllSteps() {
+    public final PlacementStep[] getAllSteps() {
     	PlacementStep[] placementSteps = getPlacementSteps();
     	PlacementStep[] editSteps = getExtraEditingSteps();
     	PlacementStep[] allSteps = new PlacementStep[placementSteps.length + editSteps.length];
     	System.arraycopy(placementSteps, 0, allSteps, 0, placementSteps.length);
     	System.arraycopy(editSteps, 0, allSteps, placementSteps.length, editSteps.length);
     	return allSteps;
+    }
+    
+    public Element clone() {
+    	if (getID() == END_POINT) {
+    		return null;
+    	}
+    	
+    	Element clone = Element.createTypedInstance(getID());
+    	clone.setArgs(getArgsValues());
+    	return clone;
     }
     
     public abstract PlacementStep[] getPlacementSteps();

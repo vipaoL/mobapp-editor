@@ -7,6 +7,7 @@ package mobileapplication3.elements;
 
 import javax.microedition.lcdui.Graphics;
 
+import mobileapplication3.elements.Element.PlacementStep;
 import mobileapplication3.utils.Mathh;
 import mobileapplication3.utils.Utils;
 
@@ -20,13 +21,16 @@ public class BrokenLine extends Line {
     
     public PlacementStep[] getPlacementSteps() {
         return new PlacementStep[] {
-            new PlacementStep() {
+    		new PlacementStep() {
                 public void place(short pointX, short pointY) {
+                	int dx = pointX - x1;
+                	int dy = pointY - y1;
                     setStartPoint(pointX, pointY);
+                    setEndPoint((short) (x2 + dx), (short) (y2 + dy));
                 }
 
                 public String getName() {
-                    return "Move start point";
+                    return "Move";
                 }
                 
                 public String getCurrentStepInfo() {
@@ -85,7 +89,7 @@ public class BrokenLine extends Line {
     }
 
     public PlacementStep[] getExtraEditingSteps() {
-        return new PlacementStep[0];
+        return super.getExtraEditingSteps();
     }
     
     public void paint(Graphics g, int zoomOut, int offsetX, int offsetY) {

@@ -21,11 +21,14 @@ public class Line extends Element {
         return new PlacementStep[] {
             new PlacementStep() {
                 public void place(short pointX, short pointY) {
+                	int dx = pointX - x1;
+                	int dy = pointY - y1;
                     setStartPoint(pointX, pointY);
+                    setEndPoint((short) (x2 + dx), (short) (y2 + dy));
                 }
 
                 public String getName() {
-                    return "Move start point";
+                    return "Move";
                 }
                 
                 public String getCurrentStepInfo() {
@@ -49,7 +52,21 @@ public class Line extends Element {
     }
 
     public PlacementStep[] getExtraEditingSteps() {
-        return new PlacementStep[0];
+        return new PlacementStep[] {
+        		new PlacementStep() {
+                    public void place(short pointX, short pointY) {
+                        setStartPoint(pointX, pointY);
+                    }
+
+                    public String getName() {
+                        return "Move start point";
+                    }
+                    
+                    public String getCurrentStepInfo() {
+    					return "x1=" + x1 + " y1=" + y1;
+    				}
+                }
+        };
     }
     
     public void setStartPoint(short x, short y) {
