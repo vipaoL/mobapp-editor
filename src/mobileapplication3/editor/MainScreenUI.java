@@ -23,6 +23,7 @@ import javax.microedition.lcdui.Graphics;
 
 import mobileapplication3.editor.ui.ButtonComponent;
 import mobileapplication3.editor.ui.IUIComponent;
+import mobileapplication3.editor.ui.RootContainer;
 import mobileapplication3.editor.ui.TextComponent;
 
 /**
@@ -68,11 +69,15 @@ public class MainScreenUI extends Container {
 
             initPathPicker();
             
-            setComponents(new IUIComponent[]{editorCanvas, bottomButtonPanel, startPointWarning, zoomPanel, placementButtonPanel, settingsButton, placedElementsList, pathPicker});
+            setComponents();
         } catch(Exception ex) {
             ex.printStackTrace();
             Main.setCurrent(new Alert(ex.toString()));
         }
+    }
+    
+    private void setComponents() {
+    	setComponents(new IUIComponent[]{editorCanvas, bottomButtonPanel, startPointWarning, zoomPanel, placementButtonPanel, settingsButton, placedElementsList, pathPicker});
     }
     
     private SettingsUI getSettingsUIObject() {
@@ -95,7 +100,7 @@ public class MainScreenUI extends Container {
             }
         });
         
-        btnLoad = new Button("Open" + (Main.hasPointerEvents ? "" : " (8)"), new Button.ButtonFeedback() {
+        btnLoad = new Button("Open" + (RootContainer.displayKbHints ? " (8)" : ""), new Button.ButtonFeedback() {
             public void buttonPressed() {
                 pathPicker.pickFile(Settings.getMgstructsFolderPath(), "Open " + PathPicker.QUESTION_REPLACE_WITH_PATH + " ?", new PathPicker.Feedback() {
                     public void onComplete(final String path) {
@@ -122,7 +127,7 @@ public class MainScreenUI extends Container {
             }
         });
         
-        btnSave = new Button("Save" + (Main.hasPointerEvents ? "" : " (9)"), new Button.ButtonFeedback() {
+        btnSave = new Button("Save" + (RootContainer.displayKbHints ? " (9)" : ""), new Button.ButtonFeedback() {
             public void buttonPressed() {
                 pathPicker.pickFolder(Settings.getMgstructsFolderPath(), "Save as " + PathPicker.QUESTION_REPLACE_WITH_PATH + " ?", new PathPicker.Feedback() {
                     public void onComplete(final String path) {
@@ -194,13 +199,13 @@ public class MainScreenUI extends Container {
     }
     
     private void initZoomPanel() {
-        zoomIn = new Button("+" + (Main.hasPointerEvents ? "" : " (*)"), new Button.ButtonFeedback() {
+        zoomIn = new Button("+" + (RootContainer.displayKbHints ? " (*)" : ""), new Button.ButtonFeedback() {
             public void buttonPressed() {
                 editorCanvas.zoomIn();
             }
         });
         
-        zoomOut = new Button("-" + (Main.hasPointerEvents ? "" : " (#)"), new Button.ButtonFeedback() {
+        zoomOut = new Button("-" + (RootContainer.displayKbHints ? " (#)" : ""), new Button.ButtonFeedback() {
             public void buttonPressed() {
                 editorCanvas.zoomOut();
             }
@@ -273,11 +278,11 @@ public class MainScreenUI extends Container {
                 .setBtnsInRowCount(BTNS_IN_ROW);
         placementButtonPanel.setIsSelectionEnabled(true);
         placementButtonPanel.setVisible(false);
-        placementButtonPanel.setIsSelectionVisible(!Main.hasPointerEvents);
+        placementButtonPanel.setIsSelectionVisible(RootContainer.displayKbHints);
     }
     
     private void initSettingsButton() {
-    	settingsButton = new ButtonComponent(new Button("Settings" + (Main.hasPointerEvents ? "" : " (0)"), new Button.ButtonFeedback() {
+    	settingsButton = new ButtonComponent(new Button("Settings" + (RootContainer.displayKbHints ? " (0)" : ""), new Button.ButtonFeedback() {
             public void buttonPressed() {
                 showPopup(getSettingsUIObject());
             }
@@ -380,6 +385,25 @@ public class MainScreenUI extends Container {
     	super.paint(g, x0, y0, w, h, forceInactive);
     }
     
+    public boolean keyPressed(int keyCode, int count) {
+    	if (!RootContainer.displayKbHints) {
+    		RootContainer.displayKbHints = true;
+	        
+            initBottomPanel();
+            
+            initStartPointWarning();
+
+            initZoomPanel();
+
+            initSettingsButton();
+
+            initPathPicker();
+            
+            setComponents();
+    	}
+    	return super.keyPressed(keyCode, count);
+    }
+    
     public void moveToZeros() {
     	StartPoint.moveToZeros(elementsBuffer.getElementsAsArray());
     }
@@ -393,7 +417,7 @@ public class MainScreenUI extends Container {
     		message = new TextComponent("Warn: start point of the structure should be on (x,y) 0 0");
     		message.setBgColor(COLOR_TRANSPARENT);
     		message.setFontColor(0xffff00);
-    		Button button = new Button("Move to 0 0" + (Main.hasPointerEvents ? "" : " (7)"), new Button.ButtonFeedback() {
+    		Button button = new Button("Move to 0 0" + (RootContainer.displayKbHints ? " (7)" : ""), new Button.ButtonFeedback() {
 				public void buttonPressed() {
 					moveToZeros();
 				}

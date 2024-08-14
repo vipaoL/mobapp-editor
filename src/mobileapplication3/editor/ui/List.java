@@ -247,7 +247,7 @@ public class List extends UIComponent {
    private boolean handleKeyPressedScrollOnly(int keyCode, int count) {
 	   switch (keyCode) {
        default:
-           switch (Main.util.getGameAction(keyCode)) {
+           switch (RootContainer.getGameActionn(keyCode)) {
                case Canvas.UP:
                    if (selected > 0) {
                        setSelected(selected-1);

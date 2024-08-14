@@ -26,8 +26,6 @@ import mobileapplication3.editor.ui.RootContainer;
 public class Main extends MIDlet {
     
     private static Display display;
-    public static Canvas util = new Canvas() {protected void paint(Graphics g) {}};
-    public static boolean hasPointerEvents = true;
     private static boolean isStarted = false;
 
     protected void startApp() throws MIDletStateChangeException {
@@ -35,8 +33,6 @@ public class Main extends MIDlet {
             return;
         }
         isStarted = true;
-        
-        hasPointerEvents = util.hasPointerEvents();
         display = Display.getDisplay(this);
         try {
             if (Settings.isSetupWizardCompleted()) {

@@ -12,6 +12,7 @@ import mobileapplication3.editor.ui.Container;
 import mobileapplication3.editor.ui.IPopupFeedback;
 import mobileapplication3.editor.ui.IUIComponent;
 import mobileapplication3.editor.ui.List;
+import mobileapplication3.editor.ui.RootContainer;
 import mobileapplication3.editor.ui.TextComponent;
 import mobileapplication3.elements.Element;
 import mobileapplication3.elements.Element.Argument;
@@ -225,7 +226,7 @@ public class AdvancedElementEditUI extends AbstractPopupWindow {
 	            return false;
 	        }
 			
-			switch (Main.util.getGameAction(keyCode)) {
+			switch (RootContainer.getGameActionn(keyCode)) {
 	            case Canvas.RIGHT:
 	            	setValue(value + count * count);
 	                return true;
@@ -242,7 +243,7 @@ public class AdvancedElementEditUI extends AbstractPopupWindow {
 	            return false;
 	        }
 			
-			switch (Main.util.getGameAction(keyCode)) {
+			switch (RootContainer.getGameActionn(keyCode)) {
 	            case Canvas.RIGHT:
 	            	setValue(value + pressedCount * pressedCount);
 	                return true;

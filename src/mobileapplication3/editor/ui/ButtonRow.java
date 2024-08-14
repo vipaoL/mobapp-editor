@@ -98,7 +98,7 @@ public class ButtonRow extends AbstractButtonSet {
             	if (!isSelectionEnabled) {
             		return false;
             	}
-                switch (Main.util.getGameAction(keyCode)) {
+                switch (RootContainer.getGameActionn(keyCode)) {
                     case Canvas.LEFT:
                     	if (selected > 0) {
                             setSelected(selected-1);

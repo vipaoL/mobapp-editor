@@ -5,6 +5,7 @@
  */
 package mobileapplication3.editor;
 
+import mobileapplication3.editor.ui.RootContainer;
 import mobileapplication3.editor.ui.UIComponent;
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Graphics;
@@ -138,7 +139,7 @@ public class EditorCanvas extends UIComponent {
         }
         
         int minStep = count * count;
-        switch (Main.util.getGameAction(keyCode)) {
+        switch (RootContainer.getGameActionn(keyCode)) {
             case Canvas.UP:
                 cursorY -= Math.max(minStep, zoomOut / 1000);
                 break;
@@ -187,7 +188,7 @@ public class EditorCanvas extends UIComponent {
         int a = keyRepeats;
         System.out.println(a);
         int step = (minStep + a*8) * pressedCount;
-        switch (Main.util.getGameAction(keyCode)) {
+        switch (RootContainer.getGameActionn(keyCode)) {
             case Canvas.UP:
                 cursorY -= step;
                 break;

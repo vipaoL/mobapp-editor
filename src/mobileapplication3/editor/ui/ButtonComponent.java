@@ -58,7 +58,7 @@ public class ButtonComponent extends AbstractButtonSet {
     }
 
     public boolean handleKeyPressed(int keyCode, int count) {
-        if (isFocused && Main.util.getGameAction(keyCode) == Canvas.FIRE) {
+        if (isFocused && RootContainer.getGameActionn(keyCode) == Canvas.FIRE) {
             buttons[0].invokePressed(true, true);
             return true;
         } else {

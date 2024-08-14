@@ -21,16 +21,20 @@ public class RootContainer extends Canvas implements IContainer {
     private boolean isKeyRepeaterRunning = false;
     private int keyRepeaterDelay;
     private KeyboardHelper kbHelper;
+    public static boolean displayKbHints = false;
     private int bgColor = 0x000000;
     public int w, h;
+    private static RootContainer inst = null;
 
     public RootContainer(IUIComponent rootUIComponent) {
         setFullScreenMode(true);
+        inst = this;
         currentlyPressedKeys = new int[3];
 //        for (int i = 0; i < currentlyPressedKeys.length; i++) {
 //            currentlyPressedKeys[i] = Integer.MIN_VALUE;
 //        }
         kbHelper = new KeyboardHelper();
+        displayKbHints = !hasPointerEvents();
         setRootUIComponent(rootUIComponent);
     }
 
@@ -59,6 +63,10 @@ public class RootContainer extends Canvas implements IContainer {
     public void setBgColor(int bgColor) {
 		this.bgColor = bgColor;
 	}
+    
+    public static int getGameActionn(int keyCode) {
+    	return inst.getGameAction(keyCode);
+    }
     
 //    private void startKeyRepeatedThread() {
 //        if (isKeyRepeaterRunning) {
@@ -138,7 +146,7 @@ public class RootContainer extends Canvas implements IContainer {
     }
     
     protected void handleKeyRepeated(int keyCode, int pressedCount) {
-        if (Main.util.getGameAction(keyCode) == Canvas.FIRE) {
+        if (getGameAction(keyCode) == Canvas.FIRE) {
             return;
         }
         if (rootUIComponent != null) {

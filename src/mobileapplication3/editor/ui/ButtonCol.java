@@ -222,7 +222,7 @@ public class ButtonCol extends AbstractButtonSet {
         
         switch (keyCode) {
             default:
-                switch (Main.util.getGameAction(keyCode)) {
+                switch (RootContainer.getGameActionn(keyCode)) {
                     case Canvas.UP:
                         do {
                             if (selected > 0) {

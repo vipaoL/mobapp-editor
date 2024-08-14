@@ -122,7 +122,7 @@ public class ButtonPanelHorizontal extends AbstractButtonSet {
         setIsSelectionVisible(true);
         switch (keyCode) {
             default:
-                switch (Main.util.getGameAction(keyCode)) {
+                switch (RootContainer.getGameActionn(keyCode)) {
                     case Canvas.LEFT:
                         if (selected > 0) {
                             selected--;

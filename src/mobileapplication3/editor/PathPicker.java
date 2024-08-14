@@ -17,6 +17,7 @@ import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 import mobileapplication3.editor.ui.Container;
 import mobileapplication3.editor.ui.IUIComponent;
+import mobileapplication3.editor.ui.RootContainer;
 import mobileapplication3.editor.ui.TextComponent;
 
 /**
@@ -169,7 +170,7 @@ public class PathPicker extends Container {
             list = (ButtonCol) new ButtonCol()
                     .enableScrolling(true, true)
                     .setIsSelectionEnabled(true)
-                    .setIsSelectionVisible(!Main.hasPointerEvents)
+                    .setIsSelectionVisible(RootContainer.displayKbHints)
                     .setButtonsBgPadding(3)
                     .setButtonsBgColor(0x555555);
         }
