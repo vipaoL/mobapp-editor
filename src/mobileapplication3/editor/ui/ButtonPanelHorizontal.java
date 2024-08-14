@@ -9,6 +9,7 @@ import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import mobileapplication3.editor.Main;
+import mobileapplication3.utils.Mathh;
 
 /**
  *
@@ -158,8 +159,9 @@ public class ButtonPanelHorizontal extends AbstractButtonSet {
                 }
         }
         
+        selected = Mathh.constrain(0, selected, buttons.length - 1); // TODO fix this mess
         buttonRows[selectedRow].setIsSelectionVisible(false);
-        selectedRow = selected / btnsInRow;
+        selectedRow = Mathh.constrain(0, selected / btnsInRow, rows - 1);
         buttonRows[selectedRow].setIsSelectionVisible(true);
         buttonRows[selectedRow].setSelected(selected % btnsInRow);
         
