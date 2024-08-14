@@ -12,6 +12,12 @@ import mobileapplication3.utils.Mathh;
  * @author vipaol
  */
 public class Sine extends AbstractCurve {
+	
+	//	      #
+	//	    #
+	//	.  #	"." - (x0;y0)
+	//	  #
+	//	@		"@" - (anchorX;anchorY)
     
 	private static final String[] ARGS_NAMES = {"X0", "Y0", "Length", "Halfperiods", "Phase shift", "Amplitude"};
     private short x0, y0, l, halfperiods = 1, offset = 90, amp;
@@ -22,7 +28,6 @@ public class Sine extends AbstractCurve {
             new PlacementStep() {
                 public void place(short pointX, short pointY) {
                     setAnchorPoint(pointX, pointY);
-                    calcStartPoint();
                 }
 
                 public String getName() {
@@ -36,12 +41,18 @@ public class Sine extends AbstractCurve {
             new PlacementStep() {
                 public void place(short pointX, short pointY) {
                     setLength((short) (pointX - x0));
-                    setAmplitude((short) (-1000*(pointY - anchorY)/(1000+Mathh.sin(offset))));
-                    calcStartPoint();
+                    int sinoffset = Mathh.sin(offset);
+                    int amp = (anchorY - pointY);
+                    if (sinoffset != 0) {
+                    	amp = amp * 1000 / Mathh.sin(offset);
+                    }
+                    int endPointDeg = offset + halfperiods*180;
+                    setAmplitude((short) (amp/2));
+                    calcZeroPoint();
                 }
 
                 public String getName() {
-                    return "Change horizontal length";
+                    return "Change length and amplitude";
                 }
                 
                 public String getCurrentStepInfo() {
@@ -75,19 +86,21 @@ public class Sine extends AbstractCurve {
         if (anchorX == x && anchorY == y) {
             return;
         }
-        if (pointsCache != null) {
-        	pointsCache.movePoints((short) (x - x0), (short) (y - y0));
-        }
         pointsCache = null;
         anchorX = x;
         anchorY = y;
+        calcZeroPoint();
     }
     
-    public void calcStartPoint() {
-        setStartPoint(anchorX, (short) (anchorY - amp*Mathh.sin(offset)/1000));
+    public void calcZeroPoint() {
+        setZeroPoint(anchorX, (short) (anchorY - amp*Mathh.sin(offset)/1000));
     }
     
-    public void setStartPoint(short x, short y) {
+    public void calcAnchorPoint() {
+    	setAnchorPoint(x0, (short) (y0 + amp*Mathh.sin(offset)/1000));
+    }
+    
+    public void setZeroPoint(short x, short y) {
         if (x0 == x && y0 == y) {
             return;
         }
@@ -96,6 +109,7 @@ public class Sine extends AbstractCurve {
         }
         x0 = x;
         y0 = y;
+        calcAnchorPoint();
     }
     
     public void setLength(short l) {
@@ -141,6 +155,7 @@ public class Sine extends AbstractCurve {
         offset = args[4];
         amp = args[5];
         pointsCache = null;
+        recalcCalculatedArgs();
         return this;
     }
     
@@ -220,6 +235,8 @@ public class Sine extends AbstractCurve {
         }
     }
     
-    public void recalcCalculatedArgs() { }
+    public void recalcCalculatedArgs() {
+    	calcAnchorPoint();
+    }
     
 }
