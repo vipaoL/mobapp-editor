@@ -209,7 +209,7 @@ public class RootContainer extends Canvas implements IContainer {
 
         public void show() {
             pressState = false;
-            pressCount = 0;
+            pressCount = 1;
             lastKey = 0;
             pressedAgainInDelay = false;
             
@@ -237,7 +237,7 @@ public class RootContainer extends Canvas implements IContainer {
                                 Thread.sleep(100);
                             }
                             
-                            pressCount = 0;
+                            pressCount = 1;
                         }
                     } catch (InterruptedException e) { }
                 }
@@ -252,7 +252,7 @@ public class RootContainer extends Canvas implements IContainer {
         }
 
         public void keyPressed(int k) {
-            if (!isLastEventOld()) {
+            if (!isLastEventOld() && k == lastKey) {
                 pressCount++;
             } else {
                 pressCount = 1;
