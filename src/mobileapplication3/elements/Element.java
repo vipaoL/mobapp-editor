@@ -28,6 +28,8 @@ public abstract class Element {
     public static final int[] ARGS_NUMBER = {0, /*1*/2, /*2*/4, /*3*/7, /*4*/9, /*5*/10, /*6*/5, /*7*/8, /*7         */8};
     public static final int[] stepsToPlace = {0, /*1*/1, /*2*/2, /*3*/2, /*4*/2, /*5*/2, /*6*/3, /*7*/2, /*8*/2};
     
+    public static final int LINE_THICKNESS = 24;
+    
     protected Element() {}
 
     public Element createTypedInstance(short id, short[] args) throws IllegalArgumentException {

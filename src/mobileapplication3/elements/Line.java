@@ -80,7 +80,7 @@ public class Line extends Element {
     }
     
     public void paint(Graphics g, int zoomOut, int offsetX, int offsetY) {
-        Utils.drawLine(g, xToPX(x1, zoomOut, offsetX), yToPX(y1, zoomOut, offsetY), xToPX(x2, zoomOut, offsetX), yToPX(y2, zoomOut, offsetY), 24, zoomOut);
+        Utils.drawLine(g, xToPX(x1, zoomOut, offsetX), yToPX(y1, zoomOut, offsetY), xToPX(x2, zoomOut, offsetX), yToPX(y2, zoomOut, offsetY), LINE_THICKNESS, zoomOut);
     }
     
     public Element setArgs(short[] args) {

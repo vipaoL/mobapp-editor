@@ -34,7 +34,7 @@ public abstract class AbstractCurve extends Element {
         short[] startPoint = pointsCache.getPoint(0);
         for (int i = 0; i < pointsCache.getSize() - 1; i++) {
             short[] endPoint = pointsCache.getPoint(i+1);
-            Utils.drawLine(g, xToPX(startPoint[0], zoomOut, offsetX), yToPX(startPoint[1], zoomOut, offsetY), xToPX(endPoint[0], zoomOut, offsetX), yToPX(endPoint[1], zoomOut, offsetY), 24, zoomOut);
+            Utils.drawLine(g, xToPX(startPoint[0], zoomOut, offsetX), yToPX(startPoint[1], zoomOut, offsetY), xToPX(endPoint[0], zoomOut, offsetX), yToPX(endPoint[1], zoomOut, offsetY), LINE_THICKNESS, zoomOut);
             startPoint = endPoint;
         }
     }

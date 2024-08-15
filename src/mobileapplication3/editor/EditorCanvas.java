@@ -53,7 +53,7 @@ public class EditorCanvas extends UIComponent {
     public void drawBg(Graphics g, int x0, int y0, int w, int h, boolean isActive) {
     	g.setColor(colBg);
         g.fillRect(x0, y0, w, h);
-        if (zoomOut < zoomoutThresholdMacroMode) {
+        if (zoomOut < 200) {
             g.setColor(0x000077);
             int step = 1000/zoomOut;
             int gridOffsetY = x0 + (h/2) % step;
@@ -105,7 +105,11 @@ public class EditorCanvas extends UIComponent {
     }
 
     public void onSetBounds(int x0, int y0, int w, int h) {
-    	zoomoutThresholdMacroMode = Math.min(w, h) / 4;
+    	// enable macro if line thickness is greater than 1/16 of the smaller side of the screen
+    	// thickness * 1000 / zoomOut >= minSide/16
+    	// thickness * 16000 / minSide >= zoomOut
+    	// threshold = thickness * 16000 / minSide
+    	zoomoutThresholdMacroMode = Element.LINE_THICKNESS * 16000 / Math.min(w, h);
     	if (!isSizeSet()) {
     		zoomOut = Mathh.constrain(MIN_ZOOM_OUT, 4000000 / w, MAX_ZOOM_OUT);
     	}
