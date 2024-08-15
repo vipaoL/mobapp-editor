@@ -156,9 +156,9 @@ public class Mathh {
 	
 	public static short calcDistance(int dx, int dy) {
         if (dy == 0) {
-            return (short) dx;
+            return (short) Math.abs(dx);
         } else if (dx == 0) {
-            return (short) dy;
+            return (short) Math.abs(dy);
         } else {
             return (short) Math.sqrt((double) (dx*dx + dy*dy));
         }
