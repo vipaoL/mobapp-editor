@@ -21,6 +21,7 @@ public class TextComponent extends UIComponent {
     private int[][] lineBounds = null;
     private int prevW;
     public Font font;
+    private Font prevGetLineBoundsFont;
     public int padding;
     private Thread scrollAnimThread = null;
     private boolean isHorizontalScrollingEnabled = false;
@@ -29,7 +30,9 @@ public class TextComponent extends UIComponent {
     int textAlignment = HCENTER | VCENTER;
     
     public TextComponent() {
-        font = Font.getDefaultFont();
+    	setFont(Font.getDefaultFont());
+    	setFont(Font.getFont(font.getFace(), font.getStyle(), Font.SIZE_LARGE));
+    	prevGetLineBoundsFont = font;
         padding = font.getHeight()/6;
         bgColor = COLOR_ACCENT;
         fontColor = FONT_COLOR;
@@ -52,6 +55,16 @@ public class TextComponent extends UIComponent {
         Font prevFont = g.getFont();
         
         int[][] lineBounds = getLineBounds(text, font, w, padding);
+        if (h / lineBounds.length < font.getHeight()) {
+        	setFont(Font.getFont(font.getFace(), font.getStyle(), Font.SIZE_MEDIUM));
+        	lineBounds = getLineBounds(text, font, w, padding);
+        	if (h / lineBounds.length < font.getHeight()) {
+            	setFont(Font.getFont(font.getFace(), font.getStyle(), Font.SIZE_SMALL));
+            	lineBounds = getLineBounds(text, font, w, padding);
+            }
+        }
+        
+        setFont(font, g);
         
         int step = font.getHeight() * 3 / 2;
         if (step * lineBounds.length > h - padding * 2) {
@@ -64,14 +77,6 @@ public class TextComponent extends UIComponent {
         int offset = padding;
         if ((textAlignment & VCENTER) != 0) {
             offset = -step * (lineBounds.length - 1) / 2 + h/2 - font.getHeight() / 2;
-        }
-        
-        if (h / lineBounds.length < g.getFont().getHeight()) {
-        	g.setFont(Font.getFont(font.getFace(), font.getStyle(), Font.SIZE_MEDIUM));
-        }
-
-        if (h / lineBounds.length < g.getFont().getHeight()) {
-        	g.setFont(Font.getFont(font.getFace(), font.getStyle(), Font.SIZE_SMALL));
         }
         
         boolean hCenter = (textAlignment & HCENTER) != 0;
@@ -98,13 +103,14 @@ public class TextComponent extends UIComponent {
             return new int[][]{{0, text.length()}};
         }
         
-        if (lineBounds != null && w == prevW) {
+        if (lineBounds != null && w == prevW && font.getSize() == prevGetLineBoundsFont.getSize()) {
             return lineBounds;
         }
         
         prevW = w;
         
         lineBounds = Utils.getLineBounds(text, font, w, padding);
+        prevGetLineBoundsFont = font;
         return lineBounds;
     }
     
@@ -133,6 +139,16 @@ public class TextComponent extends UIComponent {
         }
         return this;
     }
+    
+    public void setFont(Font font, Graphics g) {
+    	setFont(font);
+    	g.setFont(font);
+	}
+    
+    public void setFont(Font font) {
+    	System.out.println("setFont " + font);
+		this.font = font;
+	}
     
     public TextComponent setTextAlignment(int a) {
         textAlignment = a;
