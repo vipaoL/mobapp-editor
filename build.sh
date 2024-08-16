@@ -20,7 +20,7 @@ WTK_HOME="${PROJ_HOME}"/bin/j2me_compiler/WTK2.5.2
 ######## CONFIG ########
 ########
 YOUR_LIBS="${PROJ_HOME}"/lib       # YOUR LIBRARIES
-RES="${PROJ_HOME}"/rsc
+RES="${PROJ_HOME}"/res
 APP="${PROJ_HOME}"/bin/mobapp-editor.jar   # Output jar name
 MANIFEST="${PROJ_HOME}"'/Application Descriptor'
 ########
