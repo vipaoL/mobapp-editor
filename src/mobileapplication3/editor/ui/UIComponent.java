@@ -83,7 +83,7 @@ public abstract class UIComponent implements IUIComponent {
         }
     }
     
-    protected boolean checkTouchEvent(int x, int y) {
+    public boolean checkTouchEvent(int x, int y) {
         if (!isActive || !isVisible) {
             return false;
         }

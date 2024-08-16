@@ -85,7 +85,7 @@ public class SetupWizard extends Container {
     
     private void finishSetup() {
         pages = null;
-        finishSetup.startEditor();
+        finishSetup.onFinish();
         Settings.setIsSetupWizardCompleted(true);
     }
 
@@ -104,6 +104,6 @@ public class SetupWizard extends Container {
 //    }
     
     public interface FinishSetup {
-        void startEditor();
+        void onFinish();
     }
 }

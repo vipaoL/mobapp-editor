@@ -29,7 +29,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     private boolean roundBg = false;
     private int padding;
     protected Image bg = null;
-    private AbstractPopupWindow popupWindow = null;
+    private IUIComponent popupWindow = null;
     protected IContainer parent = null;
     
     public Container() {
@@ -145,7 +145,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         return components;
     }
     
-    public void showPopup(AbstractPopupWindow w) {
+    public void showPopup(IUIComponent w) {
         popupWindow = w;
         popupWindow.setParent(this);
         refreshSizes();
@@ -320,7 +320,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         return isVisible;
     }
 
-    protected boolean checkTouchEvent(int x, int y) {
+    public boolean checkTouchEvent(int x, int y) {
         if (!isActive || !isVisible) {
             return false;
         }

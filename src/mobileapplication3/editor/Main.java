@@ -39,7 +39,7 @@ public class Main extends MIDlet {
                 setCurrent(new RootContainer(new MainScreenUI()));
             } else {
                 setCurrent(new RootContainer(new SetupWizard(new SetupWizard.FinishSetup() {
-                    public void startEditor() {
+                    public void onFinish() {
                         setCurrent(new RootContainer(new MainScreenUI()));
                     }
                 })));
@@ -65,9 +65,14 @@ public class Main extends MIDlet {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-            display.setCurrent((Alert) d, display.getCurrent());
+            try {
+            	display.setCurrent((Alert) d, display.getCurrent());
+            } catch (Exception ex) {
+				display.setCurrent(d);
+			}
+        } else {
+        	display.setCurrent(d);
         }
-        display.setCurrent(d);
     }
     
     public static void vibrate(int duration) {

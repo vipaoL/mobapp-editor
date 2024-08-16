@@ -50,4 +50,5 @@ public interface IUIComponent {
     public boolean pointerPressed(int x, int y);
     public boolean keyPressed(int keyCode, int count);
     public boolean keyRepeated(int keyCode, int pressedCount);
+	public boolean checkTouchEvent(int x, int y);
 }

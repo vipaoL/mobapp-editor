@@ -6,6 +6,7 @@
 package mobileapplication3.editor;
 
 import mobileapplication3.utils.Settings;
+import mobileapplication3.editor.setup.SetupWizard;
 import mobileapplication3.editor.ui.AbstractPopupWindow;
 import mobileapplication3.editor.ui.Button;
 import mobileapplication3.editor.ui.ButtonCol;
@@ -20,9 +21,6 @@ public class SettingsUI extends AbstractPopupWindow {
 
     public SettingsUI(IPopupFeedback parent) {
         super("Settings", parent);
-        
-        System.out.println("feedback: " + parent);
-        
         initPage();
     }
 
@@ -49,22 +47,7 @@ public class SettingsUI extends AbstractPopupWindow {
     protected IUIComponent initAndGetPageContent() {
         final SettingsUI thiss = this;
         Button[] settingsButtons = new Button[]{
-            new Button("Click here to change MGStructs folder: " + Settings.getMgstructsFolderPath(), new Button.ButtonFeedback() {
-                public void buttonPressed() {
-                    
-                }
-            }).setIsActive(false),
             new Button("Change font size", new Button.ButtonFeedback() {
-                public void buttonPressed() {
-                    
-                }
-            }).setIsActive(false),
-            new Button("There will be something else later", new Button.ButtonFeedback() {
-                public void buttonPressed() {
-                    
-                }
-            }).setIsActive(false),
-            new Button("Not implemented yet", new Button.ButtonFeedback() {
                 public void buttonPressed() {
                     
                 }
@@ -78,6 +61,15 @@ public class SettingsUI extends AbstractPopupWindow {
                     return "Animations: " + (Settings.getBool(Settings.ANIMS) ? "enabled" : "disabled");
                 }
             }.setIsActive(false),
+            new Button("Show guide and setup wizard again. Current MGStructs folder: " + Settings.getMgstructsFolderPath(), new Button.ButtonFeedback() {
+                public void buttonPressed() {
+                    showPopup(new SetupWizard(new SetupWizard.FinishSetup() {
+						public void onFinish() {
+							closePopup();
+						}
+					}));
+                }
+            }),
             new Button("Debug menu", new Button.ButtonFeedback() {
                 public void buttonPressed() {
                     showPopup(new PageRMSTest(thiss));
