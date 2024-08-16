@@ -67,11 +67,11 @@ public class TextComponent extends UIComponent {
         }
         
         if (h / lineBounds.length < g.getFont().getHeight()) {
-        	g.setFont(Font.getFont(Font.SIZE_MEDIUM));
+        	g.setFont(Font.getFont(font.getFace(), font.getStyle(), Font.SIZE_MEDIUM));
         }
 
         if (h / lineBounds.length < g.getFont().getHeight()) {
-        	g.setFont(Font.getFont(Font.SIZE_SMALL));
+        	g.setFont(Font.getFont(font.getFace(), font.getStyle(), Font.SIZE_SMALL));
         }
         
         boolean hCenter = (textAlignment & HCENTER) != 0;
