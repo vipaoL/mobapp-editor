@@ -49,6 +49,8 @@ public class TextComponent extends UIComponent {
             return;
         }
         
+        Font prevFont = g.getFont();
+        
         int[][] lineBounds = getLineBounds(text, font, w, padding);
         
         int step = font.getHeight() * 3 / 2;
@@ -62,6 +64,14 @@ public class TextComponent extends UIComponent {
         int offset = padding;
         if ((textAlignment & VCENTER) != 0) {
             offset = -step * (lineBounds.length - 1) / 2 + h/2 - font.getHeight() / 2;
+        }
+        
+        if (h / lineBounds.length < g.getFont().getHeight()) {
+        	g.setFont(Font.getFont(Font.SIZE_MEDIUM));
+        }
+
+        if (h / lineBounds.length < g.getFont().getHeight()) {
+        	g.setFont(Font.getFont(Font.SIZE_SMALL));
         }
         
         boolean hCenter = (textAlignment & HCENTER) != 0;
@@ -80,8 +90,7 @@ public class TextComponent extends UIComponent {
             		(hCenter ? Graphics.HCENTER : Graphics.LEFT) | Graphics.TOP);
             offset += step;
         }
-        
-        //g.drawString(text, x0 + padding, y0 + padding, Graphics.TOP | Graphics.LEFT);
+        g.setFont(prevFont);
     }
     
     private int[][] getLineBounds(String text, Font font, int w, int padding) {
