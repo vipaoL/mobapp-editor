@@ -179,10 +179,7 @@ public abstract class Button {
         int offset = 0;
         int step = font.getHeight() * 3 / 2;
         if (step * lineBounds.length > h - bgPadding * 2) {
-            //step = (h - bgPadding * 2) / (lineBounds.length + 1);
-            if (step * lineBounds.length > h - bgPadding * 2) {
-                step = h / (lineBounds.length);
-            }
+        	step = h / (lineBounds.length);
         }
         
         offset += (h-step*(lineBounds.length - 1) - font.getHeight())/2;

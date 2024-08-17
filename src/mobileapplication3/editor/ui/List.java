@@ -8,7 +8,7 @@ import javax.microedition.lcdui.Graphics;
  *
  * @author vipaol
  */
-public class List extends UIComponent {
+public class List extends UIComponent implements IContainer {
     
     
     //public static final int W_AUTO = -1;
@@ -34,11 +34,17 @@ public class List extends UIComponent {
     protected int pointerPressedX, pointerPressedY, scrollOffsetWhenPressed;
     private boolean startFromBottom;
     private boolean enableAnimations = true;
+    private boolean isInited = false;
     
     public List() { }
 
     public List(IUIComponent[] elements) {
-        this.elements = elements;
+    	this.elements = elements;
+    }
+    
+    public void init() {
+    	isInited = true;
+    	setElements(elements);
     }
 
     public void recalcSize() {
@@ -380,6 +386,14 @@ public class List extends UIComponent {
     
     public List setElements(IUIComponent[] elements) {
         this.elements = elements;
+        if (!isInited || elements == null) {
+        	return this;
+        }
+        
+        for (int i = 0; i < elements.length; i++) {
+			elements[i].setParent(this);
+			elements[i].init();
+		}
         
 //        setElementsBgColor(elementsBgColor);
 //        setSelectedColor(elementsSelectedColor);
@@ -423,19 +437,6 @@ public class List extends UIComponent {
     
     public List setIsSelectionEnabled(boolean selectionEnabled) {
         this.isSelectionEnabled = selectionEnabled;
-        if (elements == null) {
-            return this;
-        }
-        
-//        prevSelected = selected;
-////        do {
-////            selected++;
-////            if (selected >= elements.length) {
-////                selected = 0;
-////            }
-////        } while (false && !elements[selected].isActive() && prevSelected != selected);
-//        prevSelected = selected;
-        
         return this;
     }
 

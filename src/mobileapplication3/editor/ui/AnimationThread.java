@@ -27,12 +27,10 @@ public class AnimationThread implements Runnable {
     }
     
     public void animate(int currX, int currY, int targetX, int targetY, int durationMillis) {
-        System.out.println("from " + currY + " to " + targetY);
         if (currY == targetY && currX == targetX) {
             return;
         }
         framesCount = FPS * durationMillis / 1000;
-        System.out.println("framesCount=" + framesCount);
         
         x = currX * FP_MATH_MULTIPLIER;
         y = currY * FP_MATH_MULTIPLIER;
@@ -41,15 +39,12 @@ public class AnimationThread implements Runnable {
         
         int sX = this.targetX - x;
         int sY = this.targetY - y;
-        System.out.println("sY=" + sY);
         
         vX = 2*sX/(framesCount);
         vY = 2*sY/(framesCount);
-        System.out.println("vY=" + vY);
         
         aX = 2*sX/(framesCount*framesCount);
         aY = 2*sY/(framesCount*framesCount);
-        System.out.println("aY=" + aY);
         
         if (!isRunning) {
             thread = new Thread(this);

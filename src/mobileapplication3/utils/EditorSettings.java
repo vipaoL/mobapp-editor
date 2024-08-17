@@ -16,7 +16,8 @@ public class EditorSettings {
             IS_SETUP_WIZARD_COMPLETED = "wizardCompleted",
             MGSTRUCTS_FOLDER_PATH = "mgPath",
             ANIMS = "anims",
-            LISTS_KEY_REPEATS = "listKRepeats";
+            LISTS_KEY_REPEATS = "listKRepeats",
+            AUTO_SAVE = "autoSave";
     
     private static String mgstructsFolderPath = null;
     

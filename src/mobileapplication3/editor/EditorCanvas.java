@@ -190,9 +190,7 @@ public class EditorCanvas extends UIComponent {
     public boolean handleKeyRepeated(int keyCode, int pressedCount) {
         // TODO: rewrite to cursormove
         int minStep = Math.max(zoomOut / 100, 1);
-        //minStep *= minStep;
         int a = keyRepeats;
-        System.out.println(a);
         int step = (minStep + a) * pressedCount;
         switch (RootContainer.getGameActionn(keyCode)) {
             case Canvas.UP:

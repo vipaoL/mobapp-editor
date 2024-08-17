@@ -130,6 +130,9 @@ public class AdvancedElementEditUI extends AbstractPopupWindow {
 			setBgColor(COLOR_ACCENT);
 			setActive(!arg.isCalculated());
 			roundBg(true);
+		}
+		
+		public void init() {
 			setComponents(new IUIComponent[] {title, valueIndicator, buttonRow});
 		}
 		

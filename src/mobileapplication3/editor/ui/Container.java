@@ -112,7 +112,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         if (this.components != null) {
             for (int i = 0; i < this.components.length; i++) {
                 if (this.components[i] != null) {
-                    //this.components[i].setParent(null);
+                    this.components[i].setParent(null);
                 }
             }
         }
@@ -356,8 +356,6 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
             repaint();
             if (isTarget) {
                 return true;
-            } else {
-                System.out.println("oj");
             }
         }
         

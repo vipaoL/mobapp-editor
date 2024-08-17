@@ -39,12 +39,6 @@ public abstract class Page extends Container {
     }
 
     public boolean keyPressed(int keyCode, int count) {
-//        String title = "<null>";
-//        if (this.title != null) {
-//            title = this.title.getText();
-//        }
-//        System.out.println(title + ": keyPressed: " + keyCode);
-        
         return super.keyPressed(keyCode, count);
     }
 

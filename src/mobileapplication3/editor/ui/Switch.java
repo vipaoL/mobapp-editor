@@ -50,11 +50,6 @@ public abstract class Switch extends Button {
 		g.fillArc(x, switchY0 + (switchH - d) / 2, d, d, 0, 360);
 	}
 	
-//	protected void drawSelectionMark(Graphics g, int x0, int y0, int w, int h, boolean isSelected, boolean isFocused, boolean forceInactive) {
-//		//g.drawRect(switchX0 - padding, y0, switchW + padding*2, h);
-//		super.drawSelectionMark(g, switchX0 - padding, y0, switchW + padding*2, h, isSelected, isFocused, forceInactive);
-//	}
-	
 	public void buttonPressed() {
 		value = !value;
 		setValue(value);

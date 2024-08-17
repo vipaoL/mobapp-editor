@@ -26,9 +26,6 @@ public class RootContainer extends Canvas implements IContainer {
         setFullScreenMode(true);
         this.uiSettings = uiSettings;
         inst = this;
-        //        for (int i = 0; i < currentlyPressedKeys.length; i++) {
-//            currentlyPressedKeys[i] = Integer.MIN_VALUE;
-//        }
         kbHelper = new KeyboardHelper();
         displayKbHints = !hasPointerEvents();
         setRootUIComponent(rootUIComponent);
@@ -77,57 +74,8 @@ public class RootContainer extends Canvas implements IContainer {
     	return inst.getGameAction(keyCode);
     }
     
-//    private void startKeyRepeatedThread() {
-//        if (isKeyRepeaterRunning) {
-//            return;
-//        }
-//        
-//        System.out.println("starting thread");
-//        
-//        keyRepeater = new Thread(new Runnable() {
-//            public void run() {
-//                isKeyRepeaterRunning = true;
-//                while(isShown()) {
-//                    try {
-//                        Thread.sleep(keyRepeaterDelay);
-//                        long start = System.currentTimeMillis();
-//                        keyRepeaterDelay = 0;
-//                        for (int i = 0; i < currentlyPressedKeys.length; i++) {
-//                            if (currentlyPressedKeys[i] != Integer.MIN_VALUE) {
-//                                handleKeyRepeated(currentlyPressedKeys[i]);
-//                            }
-//                        }
-//
-//                        long dt = System.currentTimeMillis() - start;
-//                        Thread.sleep(Math.max(0, 100 - dt));
-//                    } catch (Exception ex) {
-//                        ex.printStackTrace();
-//                    }
-//                }
-//                isKeyRepeaterRunning = false;
-//            }
-//        }, "Key repeater");
-//        keyRepeater.start();
-//    }
-    
     protected void keyPressed(int keyCode) {
         kbHelper.keyPressed(keyCode);
-        
-        //        for (int i = 0; i < currentlyPressedKeys.length; i++) {
-//            if (currentlyPressedKeys[i] == keyCode) {
-//                return;
-//            }
-//        }
-//        
-//        for (int i = 0; i < currentlyPressedKeys.length; i++) {
-//            if (currentlyPressedKeys[i] == Integer.MIN_VALUE) {
-//                currentlyPressedKeys[i] = keyCode;
-//                break;
-//            }
-//        }
-//        
-//        keyRepeaterDelay = 100;
-//        startKeyRepeatedThread();
     }
     
     private void handleKeyPressed(int keyCode, int count) {
@@ -141,11 +89,6 @@ public class RootContainer extends Canvas implements IContainer {
 
     protected void keyReleased(int keyCode) {
         kbHelper.keyReleased(keyCode);
-//        for (int i = 0; i < currentlyPressedKeys.length; i++) {
-//            if (currentlyPressedKeys[i] == keyCode) {
-//                currentlyPressedKeys[i] = Integer.MIN_VALUE;
-//            }
-//        }
     }
     
     protected void handleKeyRepeated(int keyCode, int pressedCount) {

@@ -29,11 +29,8 @@ public abstract class AbstractButtonSet extends UIComponent {
     
     public void init() {
     	try {
-    		System.out.println(getUISettings());
     		ignoreKeyRepeated = !getUISettings().getKeyRepeatedInListsEnabled();
-    	} catch (Exception ex) {
-    		//ex.printStackTrace();
-    	}
+    	} catch (Exception ex) { }
     }
 
     public AbstractButtonSet setButtons(Button[] buttons) {
@@ -118,15 +115,6 @@ public abstract class AbstractButtonSet extends UIComponent {
         if (buttons == null) {
             return this;
         }
-        
-//        prevSelected = selected;
-////        do {
-////            selected++;
-////            if (selected >= buttons.length) {
-////                selected = 0;
-////            }
-////        } while (false && !buttons[selected].isActive() && prevSelected != selected);
-//        prevSelected = selected;
         
         return this;
     }
