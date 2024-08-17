@@ -18,8 +18,7 @@ import javax.microedition.rms.RecordStoreNotFoundException;
  * @author vipaol
  */
 public class RecordStores {
-    public static final String RECORD_STORE_NAME_SETTINGS = "settings";
-    
+
     public static boolean writeBytesToStore(byte[] data, String recordStoreName) {
         RecordStore rs = null;
         boolean ret = true;
@@ -65,6 +64,7 @@ public class RecordStores {
             if (data != null && data.length != 0) {
                 ret = new String(data, "UTF-8");
             }
+        } catch (RecordStoreNotFoundException ex) {
         } catch (Exception e) {
             e.printStackTrace();
         }

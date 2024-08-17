@@ -38,6 +38,7 @@ public class MainScreenUI extends Container {
     private final static int BTNS_IN_ROW = 4;
     public final static int FONT_H = Font.getDefaultFont().getHeight();
     public final static int BTN_H = FONT_H*2;
+
     private Button btnLoad, btnSave, btnPlace, btnList, zoomIn, zoomOut;;
     private EditorCanvas editorCanvas = null;
     private ButtonRow bottomButtonPanel = null, zoomPanel = null;

@@ -15,6 +15,7 @@ import mobileapplication3.editor.Main;
  */
 public class Settings {
     public static final String
+    		RECORD_STORE_SETTINGS = "settings",
             TRUE = "1",
             FALSE = "0",
             IS_SETUP_WIZARD_COMPLETED = "wizardCompleted",
@@ -51,9 +52,14 @@ public class Settings {
     }
     
     public static void saveToRMS() {
-        if (!RecordStores.writeStringToStore(getCurrentSettingsAsStr(), RecordStores.RECORD_STORE_NAME_SETTINGS)) {
+        if (!RecordStores.writeStringToStore(getCurrentSettingsAsStr(), RECORD_STORE_SETTINGS)) {
             Main.setCurrent(new Alert("Error!", "Can't save settings to RMS", null, AlertType.ERROR));
         }
+    }
+    
+    public static void resetSettings() {
+    	RecordStores.deleteStore(RECORD_STORE_SETTINGS);
+    	loadDefaults();
     }
     
     public static void loadDefaults() {
@@ -67,7 +73,7 @@ public class Settings {
     }
     
     public static void loadFromRMS() {
-        loadFromString(RecordStores.readStringFromStore(RecordStores.RECORD_STORE_NAME_SETTINGS));
+        loadFromString(RecordStores.readStringFromStore(RECORD_STORE_SETTINGS));
     }
     
     public static void loadFromString(String str) {

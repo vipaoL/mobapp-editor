@@ -45,7 +45,6 @@ public class SettingsUI extends AbstractPopupWindow {
     }
 
     protected IUIComponent initAndGetPageContent() {
-        final SettingsUI thiss = this;
         Button[] settingsButtons = new Button[]{
             new Button("Change font size", new Button.ButtonFeedback() {
                 public void buttonPressed() {
@@ -70,15 +69,9 @@ public class SettingsUI extends AbstractPopupWindow {
 					}));
                 }
             }),
-            new Button("Debug menu", new Button.ButtonFeedback() {
-                public void buttonPressed() {
-                    showPopup(new PageRMSTest(thiss));
-                }
-            }),
             new Button("Reset settings (will reset MGStructs folder as well)", new Button.ButtonFeedback() {
                 public void buttonPressed() {
-                    Settings.loadDefaults();
-                    Settings.saveToRMS();
+                    Settings.resetSettings();
                 }
             }).setBgColor(0x550000)
         };
