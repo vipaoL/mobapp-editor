@@ -13,7 +13,7 @@ public abstract class Switch extends Button {
 	
 	public void paint(Graphics g, int x0, int y0, int w, int h, boolean isSelected, boolean isFocused, boolean drawAsInactive) {
 		int padding = h/10;
-		int switchW = h * 3 / 2;
+		int switchW = Math.min(h * 3 / 2, w / 8);
 		super.paint(g, x0, y0, w - switchW, h, isSelected, isFocused, drawAsInactive);
 		int switchX0 = x0 + w - switchW + padding;
 		switchW -= padding * 2;
