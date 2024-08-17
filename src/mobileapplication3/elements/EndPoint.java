@@ -125,6 +125,22 @@ public class EndPoint extends Element {
 			return a;
 		}
 	}
+    
+    public static short[] findEndPoint(Element[] elements) {
+    	short[] endPoint = {0, 0};
+        short[] mayBeEndPoint = endPoint;
+        for (int i = 1; i < elements.length; i++) {
+            try {
+                mayBeEndPoint = elements[i].getEndPoint();
+                if (EndPoint.compare(endPoint, mayBeEndPoint)) {
+                    endPoint = mayBeEndPoint;
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return endPoint;
+    }
 
 	public boolean isBody() {
 		return false;

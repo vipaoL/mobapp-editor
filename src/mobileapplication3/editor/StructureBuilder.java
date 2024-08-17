@@ -92,8 +92,8 @@ public class StructureBuilder {
         feedback.onUpdate();
     }
     
-    public void saveToFile(String path) throws IOException, SecurityException {
-        int carriage = 0;
+    public short[] asShortArray() {
+    	int carriage = 0;
         // {file format version, count of elements, ...data..., eof mark}
         short[] data = new short[1 + 1 + getDataLengthInShorts() + 1];
         
@@ -115,7 +115,12 @@ public class StructureBuilder {
         data[carriage] = 0;
         
         System.out.println(carriage + " " + data.length);
-        FileUtils.saveShortArrayToFile(data, path);
+        
+        return data;
+    }
+    
+    public void saveToFile(String path) throws IOException, SecurityException {
+        FileUtils.saveShortArrayToFile(asShortArray(), path);
     }
     
     public void loadFile(String path) {
@@ -137,6 +142,17 @@ public class StructureBuilder {
         } catch(Exception ex) {
             ex.printStackTrace();
         }
+    }
+    
+    public void setElements(Element[] elements) {
+    	for (int i = 0; i < elements.length; i++) {
+            if (elements[i] != null) {
+                buffer.addElement(elements[i]);
+            } else {
+                System.out.println("elements["+i+"] is null. skipping");
+            }
+        }
+        feedback.onUpdate();
     }
     
     public void remove(int i) {
@@ -171,20 +187,9 @@ public class StructureBuilder {
     }
     
     public void recalcEndPoint() {
-        EndPoint endPointObj = (EndPoint) buffer.elementAt(0);
-        short[] endPoint = {0, 0};
-        short[] newEndPoint = endPoint;
-        for (int i = 1; i < buffer.size(); i++) {
-            try {
-                newEndPoint = ((Element) buffer.elementAt(i)).getEndPoint();
-                if (EndPoint.compare(endPoint, newEndPoint)) {
-                    endPoint = newEndPoint;
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-        endPointObj.setArgs(endPoint);
+    	Element[] elements = getElementsAsArray();
+        EndPoint endPoint = (EndPoint) elements[0];
+        endPoint.setArgs(EndPoint.findEndPoint(elements));
     }
     
     public Vector getElements() {

@@ -5,9 +5,12 @@
  */
 package mobileapplication3.editor;
 
+import mobileapplication3.utils.FileUtils;
+import mobileapplication3.utils.RecordStores;
 import mobileapplication3.utils.Settings;
 import mobileapplication3.editor.ui.AbstractButtonSet;
 import mobileapplication3.editor.ui.Button;
+import mobileapplication3.editor.ui.Button.ButtonFeedback;
 import mobileapplication3.editor.ui.ButtonPanelHorizontal;
 import mobileapplication3.editor.ui.ButtonRow;
 import mobileapplication3.editor.ui.ButtonCol;
@@ -32,6 +35,7 @@ import mobileapplication3.editor.ui.TextComponent;
  */
 public class MainScreenUI extends Container {
     
+	private final static String RECORD_STORE_AUTOSAVE = "AutoSave";
     private final static int BTNS_IN_ROW = 4;
     public final static int FONT_H = Font.getDefaultFont().getHeight();
     public final static int BTN_H = FONT_H*2;
@@ -44,12 +48,14 @@ public class MainScreenUI extends Container {
     private PathPicker pathPicker = null;
     private StartPointWarning startPointWarning = null;
     private StructureBuilder elementsBuffer;
+    private boolean postInitDone = false;
     
     public MainScreenUI() {
         try {
             elementsBuffer = new StructureBuilder(new StructureBuilder.Feedback() {
                 public void onUpdate() {
                     initListPanel();
+                    saveToRMS();
                 }
             });
 
@@ -70,11 +76,43 @@ public class MainScreenUI extends Container {
             initPathPicker();
             
             setComponents();
+            
         } catch(Exception ex) {
             ex.printStackTrace();
             Main.setCurrent(new Alert(ex.toString()));
         }
     }
+    
+    private void checkAutoSaveStorage() {
+    	final Element[] elements = FileUtils.readMGStruct(RecordStores.openDataInputStream(RECORD_STORE_AUTOSAVE));
+    	if (elements != null && elements.length > 2) {
+    		ButtonFeedback onRestore = new ButtonFeedback() {
+				public void buttonPressed() {
+					elementsBuffer.setElements(elements);
+					closePopup();
+				}
+			};
+			
+			ButtonFeedback onDelete = new ButtonFeedback() {
+				public void buttonPressed() {
+					RecordStores.deleteStore(RECORD_STORE_AUTOSAVE);
+					closePopup();
+				}
+			};
+    		
+    		showPopup(new AutoSaveRestorer(this, elements, onRestore, onDelete));
+    	}
+    }
+    
+    private void saveToRMS() {
+    	if (elementsBuffer != null) {
+    		new Thread(new Runnable() {
+				public void run() {
+					RecordStores.WriteShortArray(elementsBuffer.asShortArray(), RECORD_STORE_AUTOSAVE);
+				}
+			}).start();
+    	}
+	}
     
     private void setComponents() {
     	setComponents(new IUIComponent[]{editorCanvas, bottomButtonPanel, startPointWarning, zoomPanel, placementButtonPanel, settingsButton, placedElementsList, pathPicker});
@@ -378,6 +416,15 @@ public class MainScreenUI extends Container {
         startPointWarning
         		.setSize(startPointWarning.getOptimalW(zoomPanel.getLeftX() - x0), startPointWarning.getOptimalH(bottomButtonPanel.getTopY() - y0))
         		.setPos(bottomButtonPanel.getLeftX(), bottomButtonPanel.getTopY(), LEFT | BOTTOM);
+        
+        if (!postInitDone) {
+        	onPostInit();
+        }
+    }
+    
+    private void onPostInit() {
+    	checkAutoSaveStorage();
+    	postInitDone = true;
     }
     
     public void paint(Graphics g, int x0, int y0, int w, int h, boolean forceInactive) {

@@ -56,15 +56,18 @@ public class FileUtils {
     }
     
     public static Element[] readMGStruct(String path) {
+        return readMGStruct(fileToDataInputStream(path));
+    }
+    
+    public static Element[] readMGStruct(DataInputStream dis) {
         try {
-            DataInputStream is = fileToDataInputStream(path);
-            short fileVer = is.readShort();
+            short fileVer = dis.readShort();
             System.out.println("mgstruct v" + fileVer);
-            short elementsCount = is.readShort();
+            short elementsCount = dis.readShort();
             System.out.println("elements count: " + elementsCount);
             Element[] elements = new Element[elementsCount];
             for (int i = 0; i < elementsCount; i++) {
-                elements[i] = readNextElement(is);
+                elements[i] = readNextElement(dis);
                 if (elements[i] == null) {
                     System.out.println("got null. stopping read");
                     return elements;
@@ -78,7 +81,7 @@ public class FileUtils {
     }
     
     public static Element readNextElement(DataInputStream is) {
-        System.err.println("reading next element...");
+        System.out.println("reading next element...");
         try {
             short id = is.readShort();
             System.out.print("id" + id + " ");
