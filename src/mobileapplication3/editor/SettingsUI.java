@@ -43,6 +43,10 @@ public class SettingsUI extends AbstractPopupWindow {
             }
         };
     }
+    
+    public void init() {
+    	super.init();
+    }
 
     protected IUIComponent initAndGetPageContent() {
         Button[] settingsButtons = new Button[]{

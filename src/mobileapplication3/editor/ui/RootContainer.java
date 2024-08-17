@@ -35,7 +35,9 @@ public class RootContainer extends Canvas implements IContainer {
     }
 
     public void init() {
-    	setRootUIComponent(rootUIComponent);
+    	if (rootUIComponent != null) {
+    		rootUIComponent.init();
+    	}
 	}
 
     public RootContainer setRootUIComponent(IUIComponent rootUIComponent) {

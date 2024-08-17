@@ -49,7 +49,7 @@ public class MainScreenUI extends Container {
     private StructureBuilder elementsBuffer;
     private boolean postInitDone = false;
     
-    public void init() {
+    public MainScreenUI() {
     	try {
             elementsBuffer = new StructureBuilder(new StructureBuilder.Feedback() {
                 public void onUpdate() {
@@ -74,12 +74,14 @@ public class MainScreenUI extends Container {
 
             initPathPicker();
             
-            setComponents();
-            
         } catch(Exception ex) {
             ex.printStackTrace();
             Main.setCurrent(new Alert(ex.toString()));
         }
+    }
+    
+    public void init() {
+    	setComponents();
     }
     
     private void checkAutoSaveStorage() {

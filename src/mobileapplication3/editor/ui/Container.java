@@ -120,11 +120,16 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         if (components != null) {
             for (int i = 0; i < components.length; i++) {
                 if (components[i] != null) {
-                	System.out.println(getClass().getName() + " set as parent for " + components[i].getClass().getName());
+                	//System.out.println(getClass().getName() + " set as parent for " + components[i].getClass().getName());
                     components[i].setParent(this);
                     components[i].init();
                 }
             }
+        }
+        
+        if (popupWindow != null) {
+        	popupWindow.setParent(this);
+        	popupWindow.init();
         }
         
         this.components = components;
@@ -577,7 +582,6 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
 
     public IUIComponent setParent(IContainer parent) {
         this.parent = parent;
-        init();
         return this;
     }
     
