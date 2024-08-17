@@ -32,7 +32,7 @@ public class AutoSaveRestorer extends AbstractPopupWindow {
 				public void buttonPressed() {
 					onDelete.buttonPressed();
 				}
-			})
+			}).setBgColor(0x550000)
 		};
 	}
 

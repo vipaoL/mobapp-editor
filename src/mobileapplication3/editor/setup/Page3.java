@@ -21,6 +21,7 @@ public class Page3 extends AbstractSetupWizardPage {
     public Page3(Button[] buttons, SetupWizard.Feedback feedback) {
         super("Let's get started", buttons, feedback);
         initPage();
+        actionButtons.setSelected(actionButtons.getButtonCount() - 1);
     }
 
     public void initOnFirstShow() {

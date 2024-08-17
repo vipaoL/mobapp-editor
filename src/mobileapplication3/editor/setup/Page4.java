@@ -50,6 +50,7 @@ public class Page4 extends AbstractSetupWizardPage {
 //            }
 //        });
         initPage();
+        actionButtons.setSelected(actionButtons.getButtonCount() - 1);
     }
     
     public void initOnFirstShow() {
