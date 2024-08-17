@@ -33,6 +33,9 @@ public class StructureBuilder {
     }
     
     public void place(short id, short x, short y) throws IllegalArgumentException {
+    	if (placingNow != null) {
+    		feedback.onUpdate();
+    	}
     	isEditing = false;
         placingNow = Element.createTypedInstance(id);
         System.out.println("Placing " + id);
@@ -75,6 +78,7 @@ public class StructureBuilder {
             	}
                 placingNow = null;
                 nextPointHandler = null;
+                feedback.onUpdate();
             }
         }
     }
@@ -89,7 +93,6 @@ public class StructureBuilder {
         }
         
         buffer.addElement(element);
-        feedback.onUpdate();
     }
     
     public short[] asShortArray() {
