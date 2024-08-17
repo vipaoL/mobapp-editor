@@ -31,7 +31,7 @@ public class TextComponent extends UIComponent {
     
     public TextComponent() {
     	setFont(Font.getDefaultFont());
-    	setFont(Font.getFont(font.getFace(), font.getStyle(), Font.SIZE_LARGE));
+    	//setFont(Font.getFont(font.getFace(), font.getStyle(), Font.SIZE_LARGE));
     	prevGetLineBoundsFont = font;
         padding = font.getHeight()/6;
         bgColor = COLOR_ACCENT;
@@ -140,7 +140,7 @@ public class TextComponent extends UIComponent {
         return this;
     }
     
-    public void setFont(Font font, Graphics g) {
+    protected void setFont(Font font, Graphics g) {
     	setFont(font);
     	g.setFont(font);
 	}

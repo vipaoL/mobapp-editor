@@ -25,11 +25,12 @@ public abstract class Button {
     private int bgPadding;
     
     private int[][] lineBounds = null;
-    private int prevW, prevH;
+    private int prevW;
     public Font font;
+    private Font prevGetLineBoundsFont;
     
     public Button(String title) {
-        font = Font.getDefaultFont();
+        setFont(Font.getDefaultFont());
         this.bgPadding = 0;
         this.selectedBgColor = 0x002255;
         this.fontColorInactive = IUIComponent.FONT_COLOR_INACTIVE;
@@ -54,6 +55,15 @@ public abstract class Button {
         
         return false;
     }
+    
+    protected void setFont(Font font, Graphics g) {
+    	setFont(font);
+    	g.setFont(font);
+	}
+    
+    public void setFont(Font font) {
+		this.font = font;
+	}
     
     public Button setIsActive(boolean b) {
         isActive = b;
@@ -131,7 +141,20 @@ public abstract class Button {
         g.setClip(x0, y0, w, h);
         
         Font prevFont = g.getFont();
-        g.setFont(font);
+        
+        setFont(Font.getDefaultFont());
+        
+        int[][] lineBounds = getLineBounds(text, font, w, bgPadding);
+        if (h / lineBounds.length < font.getHeight()) {
+        	setFont(Font.getFont(font.getFace(), font.getStyle(), Font.SIZE_MEDIUM));
+        	lineBounds = getLineBounds(text, font, w, bgPadding);
+        	if (h / lineBounds.length < font.getHeight()) {
+            	setFont(Font.getFont(font.getFace(), font.getStyle(), Font.SIZE_SMALL));
+            	lineBounds = getLineBounds(text, font, w, bgPadding);
+            }
+        }
+        
+        setFont(font, g);
         
         int r = Math.min(w/5, h/5);
         
@@ -155,8 +178,6 @@ public abstract class Button {
             g.fillRoundRect(x0, y0, w, h, r, r);
         }
         g.setColor(fontColor);
-        
-        int[][] lineBounds = getLineBounds(text, font, w, h, bgPadding);
         
         int offset = 0;
         int step = font.getHeight() * 3 / 2;
@@ -188,15 +209,16 @@ public abstract class Button {
         g.setFont(prevFont);
     }
     
-    private int[][] getLineBounds(String text, Font font, int w, int h, int padding) {
-        if (lineBounds != null && w == prevW && h == prevH) {
+    private int[][] getLineBounds(String text, Font font, int w, int padding) {
+        if (lineBounds != null && w == prevW && font.getSize() == prevGetLineBoundsFont.getSize()) {
             return lineBounds;
         }
         
         prevW = w;
-        prevH = h;
         
-        return Utils.getLineBounds(text, font, w, padding);
+        lineBounds = Utils.getLineBounds(text, font, w, padding);
+        prevGetLineBoundsFont = font;
+        return lineBounds;
     }
     
     public int getMinPossibleWidth() {
