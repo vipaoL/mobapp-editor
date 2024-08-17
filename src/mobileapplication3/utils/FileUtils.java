@@ -15,9 +15,6 @@ import java.util.Vector;
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 import javax.microedition.io.file.FileSystemRegistry;
-import javax.microedition.lcdui.Alert;
-import javax.microedition.lcdui.AlertType;
-import mobileapplication3.editor.Main;
 import mobileapplication3.elements.Element;
 
 /**

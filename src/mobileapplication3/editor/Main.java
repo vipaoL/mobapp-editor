@@ -5,19 +5,18 @@
  */
 package mobileapplication3.editor;
 
-import mobileapplication3.utils.Settings;
-import mobileapplication3.editor.setup.SetupWizard;
 import javax.microedition.lcdui.Alert;
-import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Displayable;
-import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.TextBox;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
+
+import mobileapplication3.editor.setup.SetupWizard;
 import mobileapplication3.editor.ui.RootContainer;
+import mobileapplication3.utils.Settings;
 
 /**
  *

@@ -16,7 +16,6 @@ import mobileapplication3.editor.ui.RootContainer;
 import mobileapplication3.editor.ui.TextComponent;
 import mobileapplication3.elements.Element;
 import mobileapplication3.elements.Element.Argument;
-import mobileapplication3.elements.EndPoint;
 import mobileapplication3.utils.Mathh;
 
 public class AdvancedElementEditUI extends AbstractPopupWindow {

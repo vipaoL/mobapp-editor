@@ -5,10 +5,6 @@
  */
 package mobileapplication3.editor.ui;
 
-import java.io.IOException;
-import mobileapplication3.utils.FileUtils;
-import mobileapplication3.utils.Utils;
-
 /**
  *
  * @author vipaol

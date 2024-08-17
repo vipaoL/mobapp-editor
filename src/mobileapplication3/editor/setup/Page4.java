@@ -25,10 +25,8 @@ import mobileapplication3.utils.FileUtils;
  */
 public class Page4 extends AbstractSetupWizardPage {
     
-    //PathPicker folderPicker;
     private ButtonCol list;
     private Button[] listButtons;
-    private AbstractPopupWindow popupLoadingScreen;
 
     public Page4(Button[] buttons, SetupWizard.Feedback feedback) {
         super("Let's pick a folder", buttons, feedback);
@@ -141,14 +139,6 @@ public class Page4 extends AbstractSetupWizardPage {
                     }
                 }
             }, "loading anim").start();
-        }
-        
-        protected boolean handlePointerReleased(int x, int y) {
-            return true;
-        }
-
-        protected boolean handleKeyPressed(int keyCode, int count) {
-            return true;
         }
 
         public boolean canBeFocused() {

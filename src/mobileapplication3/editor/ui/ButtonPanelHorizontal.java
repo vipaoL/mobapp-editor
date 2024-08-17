@@ -8,7 +8,7 @@ package mobileapplication3.editor.ui;
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
-import mobileapplication3.editor.Main;
+
 import mobileapplication3.utils.Mathh;
 
 /**
@@ -21,7 +21,7 @@ public class ButtonPanelHorizontal extends AbstractButtonSet {
     private int rows, btnH;
     private ButtonRow[] buttonRows = new ButtonRow[0];
     private int btnsInRow;
-    private int selectedRow, selectedBtnInRow;
+    private int selectedRow;
 
     public ButtonPanelHorizontal(Button[] buttons) {
         setButtons(buttons);

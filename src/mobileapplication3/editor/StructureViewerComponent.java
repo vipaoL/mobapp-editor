@@ -4,7 +4,6 @@ import javax.microedition.lcdui.Graphics;
 
 import mobileapplication3.editor.ui.UIComponent;
 import mobileapplication3.elements.Element;
-import mobileapplication3.elements.EndPoint;
 import mobileapplication3.elements.StartPoint;
 import mobileapplication3.utils.Mathh;
 

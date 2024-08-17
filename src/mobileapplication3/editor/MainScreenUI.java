@@ -5,31 +5,28 @@
  */
 package mobileapplication3.editor;
 
-import mobileapplication3.utils.FileUtils;
-import mobileapplication3.utils.RecordStores;
-import mobileapplication3.utils.Settings;
-import mobileapplication3.editor.ui.AbstractButtonSet;
-import mobileapplication3.editor.ui.Button;
-import mobileapplication3.editor.ui.Button.ButtonFeedback;
-import mobileapplication3.editor.ui.ButtonPanelHorizontal;
-import mobileapplication3.editor.ui.ButtonRow;
-import mobileapplication3.editor.ui.ButtonCol;
-import mobileapplication3.editor.ui.Container;
-import mobileapplication3.editor.ui.IContainer;
-
 import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.AlertType;
-import mobileapplication3.elements.Element;
-import mobileapplication3.elements.StartPoint;
-
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 
+import mobileapplication3.editor.ui.AbstractButtonSet;
+import mobileapplication3.editor.ui.Button;
+import mobileapplication3.editor.ui.Button.ButtonFeedback;
+import mobileapplication3.editor.ui.ButtonCol;
 import mobileapplication3.editor.ui.ButtonComponent;
+import mobileapplication3.editor.ui.ButtonPanelHorizontal;
+import mobileapplication3.editor.ui.ButtonRow;
+import mobileapplication3.editor.ui.Container;
 import mobileapplication3.editor.ui.IUIComponent;
 import mobileapplication3.editor.ui.RootContainer;
 import mobileapplication3.editor.ui.TextComponent;
+import mobileapplication3.elements.Element;
+import mobileapplication3.elements.StartPoint;
+import mobileapplication3.utils.FileUtils;
+import mobileapplication3.utils.RecordStores;
+import mobileapplication3.utils.Settings;
 
 /**
  *
@@ -51,7 +48,6 @@ public class MainScreenUI extends Container {
     private StartPointWarning startPointWarning = null;
     private StructureBuilder elementsBuffer;
     private boolean postInitDone = false;
-    private boolean isInited = false;
     
     public void init() {
     	try {

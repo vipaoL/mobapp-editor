@@ -8,7 +8,7 @@ package mobileapplication3.editor.ui;
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
-import mobileapplication3.editor.Main;
+
 import mobileapplication3.utils.Utils;
 
 /**

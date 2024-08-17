@@ -8,7 +8,7 @@ package mobileapplication3.editor.ui;
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
-import mobileapplication3.editor.Main;
+
 import mobileapplication3.utils.Utils;
 
 /**
@@ -24,7 +24,7 @@ public class ButtonCol extends AbstractButtonSet {
     private boolean trimHeight = false;
     private int hUntilTrim, prevTotalBtnsH;
     private int scrollOffset = 0;
-    private int pointerPressedX, pointerPressedY, scrollOffsetWhenPressed;
+    private int pointerPressedY, scrollOffsetWhenPressed;
     private boolean startFromBottom;
     private boolean enableAnimations = true;
     
@@ -164,11 +164,10 @@ public class ButtonCol extends AbstractButtonSet {
         }
         
         if (!checkTouchEvent(x, y)) {
-            pointerPressedX = pointerPressedY = -1;
+            pointerPressedY = -1;
             return false;
         }
         
-        pointerPressedX = x;
         pointerPressedY = y;
         scrollOffsetWhenPressed = scrollOffset;
         
@@ -224,22 +223,18 @@ public class ButtonCol extends AbstractButtonSet {
             default:
                 switch (RootContainer.getGameActionn(keyCode)) {
                     case Canvas.UP:
-                        do {
-                            if (selected > 0) {
-                                setSelected(selected-1);
-                            } else {
-                            	setSelected(buttons.length - 1);
-                            }
-                        } while(false && !buttons[selected].isActive());
+                        if (selected > 0) {
+                            setSelected(selected-1);
+                        } else {
+                        	setSelected(buttons.length - 1);
+                        }
                         break;
                     case Canvas.DOWN:
-                        do {
-                            if (selected < buttons.length - 1) {
-                            	setSelected(selected+1);
-                            } else {
-                            	setSelected(0);
-                            }
-                        } while(false && !buttons[selected].isActive());
+                        if (selected < buttons.length - 1) {
+                        	setSelected(selected+1);
+                        } else {
+                        	setSelected(0);
+                        }
                         break;
                     case Canvas.FIRE:
                         if (isSelectionEnabled) {

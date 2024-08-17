@@ -7,7 +7,6 @@ package mobileapplication3.editor.ui;
 
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Graphics;
-import mobileapplication3.editor.Main;
 
 /**
  *
@@ -16,10 +15,6 @@ import mobileapplication3.editor.Main;
 public class RootContainer extends Canvas implements IContainer {
     
     private IUIComponent rootUIComponent = null;
-    private int[] currentlyPressedKeys;
-    //private Thread keyRepeater = null;
-    private boolean isKeyRepeaterRunning = false;
-    private int keyRepeaterDelay;
     private KeyboardHelper kbHelper;
     public static boolean displayKbHints = false;
     private int bgColor = 0x000000;
@@ -29,8 +24,7 @@ public class RootContainer extends Canvas implements IContainer {
     public RootContainer(IUIComponent rootUIComponent) {
         setFullScreenMode(true);
         inst = this;
-        currentlyPressedKeys = new int[3];
-//        for (int i = 0; i < currentlyPressedKeys.length; i++) {
+        //        for (int i = 0; i < currentlyPressedKeys.length; i++) {
 //            currentlyPressedKeys[i] = Integer.MIN_VALUE;
 //        }
         kbHelper = new KeyboardHelper();
@@ -139,12 +133,6 @@ public class RootContainer extends Canvas implements IContainer {
 //        }
     }
     
-    protected void keyRepeated(int keyCode) {
-        if (false) {
-            handleKeyRepeated(keyCode, 1);
-        }
-    }
-    
     protected void handleKeyRepeated(int keyCode, int pressedCount) {
         if (getGameAction(keyCode) == Canvas.FIRE) {
             return;
@@ -211,7 +199,6 @@ public class RootContainer extends Canvas implements IContainer {
         private Object tillPressed = new Object();
         private int lastKey, pressCount;
         private boolean pressState;
-        private boolean pressedAgainInDelay;
         private Thread repeatThread;
         private long lastEvent;
 
@@ -219,8 +206,6 @@ public class RootContainer extends Canvas implements IContainer {
             pressState = false;
             pressCount = 1;
             lastKey = 0;
-            pressedAgainInDelay = false;
-            
             repeatThread = new Thread() {
                 public void run() {
                     try {
@@ -232,11 +217,8 @@ public class RootContainer extends Canvas implements IContainer {
                             }
                             
                             int k = lastKey;
-                            pressedAgainInDelay = false;
-                            
                             Thread.sleep(200);
                             while (!isLastEventOld()) {
-                                pressedAgainInDelay = false;
                                 Thread.sleep(200);
                             }
                             
@@ -277,7 +259,6 @@ public class RootContainer extends Canvas implements IContainer {
 
         public void keyReleased(int k) {
             updateLastEventTime();
-            pressedAgainInDelay = true;
             if(lastKey == k) {
                 pressState = false;
             } else {

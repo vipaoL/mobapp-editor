@@ -95,14 +95,14 @@ public class Accelerator extends Element {
 		this.y = (short) (y + l * Mathh.sin(angle) / 2000);
 	}
 	
-	private void setCenterPoint(short x, short y) {
-		if (x == this.x && y == this.y) {
-			return;
-		}
-		this.x = x;
-		this.y = y;
-		calcAnchorPoint();
-	}
+//	private void setCenterPoint(short x, short y) {
+//		if (x == this.x && y == this.y) {
+//			return;
+//		}
+//		this.x = x;
+//		this.y = y;
+//		calcAnchorPoint();
+//	}
 	
 	private void setAnchorPoint(short x, short y) {
 		if (x == anchorX && y == anchorY) {

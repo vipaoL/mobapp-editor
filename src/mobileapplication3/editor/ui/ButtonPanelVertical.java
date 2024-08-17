@@ -15,15 +15,10 @@ import javax.microedition.lcdui.Graphics;
 public class ButtonPanelVertical extends UIComponent {
     public static final int TOP = ButtonRow.TOP;
     public static final int BOTTOM = ButtonRow.BOTTOM;
-    private int cols, x0, y0, w, btnH;
+    private int cols;
     private ButtonCol[] buttonCols;
 
-    public ButtonPanelVertical(int x0, int y0, int w, Button[] buttons, int anchor, int btnH, int btnsInCol) {
-        this.x0 = x0;
-        this.y0 = y0;
-        this.w = w;
-        this.btnH = btnH;
-
+    public ButtonPanelVertical(Button[] buttons, int anchor, int btnH, int btnsInCol) {
         int buttonsNumber = buttons.length;
 
         if (buttonsNumber % btnsInCol > 0) {
@@ -33,7 +28,6 @@ public class ButtonPanelVertical extends UIComponent {
         }
 
         if (anchor == BOTTOM) {
-            this.y0 -= btnH*cols;
         }
 
         buttonCols = new ButtonCol[cols];

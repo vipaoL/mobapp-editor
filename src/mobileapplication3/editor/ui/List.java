@@ -3,8 +3,6 @@ package mobileapplication3.editor.ui;
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
-import mobileapplication3.editor.Main;
-import mobileapplication3.utils.Utils;
 
 /**
  *
@@ -33,7 +31,7 @@ public class List extends UIComponent {
     private boolean trimHeight = false;
     private int hUntilTrim, prevTotalelemsH;
     private int scrollOffset = 0;
-    private int pointerPressedX, pointerPressedY, scrollOffsetWhenPressed;
+    protected int pointerPressedX, pointerPressedY, scrollOffsetWhenPressed;
     private boolean startFromBottom;
     private boolean enableAnimations = true;
     
@@ -153,7 +151,6 @@ public class List extends UIComponent {
             return false;
         }
         
-        boolean wasSelected = (selected == prevSelected && isSelectionEnabled);
         prevSelected = selected;
         
         return elements[selected].pointerReleased(x, y);

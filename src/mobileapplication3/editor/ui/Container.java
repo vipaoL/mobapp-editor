@@ -177,10 +177,6 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         onPaint(g, x0, y0, w, h, forceInactive);
     }
     
-    private void onPaint(Graphics g) {
-    	onPaint(g, x0, y0, w, h, false);
-    }
-    
     private void onPaint(Graphics g, boolean forceInactive) {
     	onPaint(g, x0, y0, w, h, forceInactive);
     }
