@@ -24,16 +24,6 @@ public class SettingsUI extends AbstractPopupWindow {
         super("Settings", parent);
     }
 
-//    public void onSetBounds(int x0, int y0, int w, int h) {
-//        super.onSetBounds(x0, y0, w, h);
-//        settingsList
-//                .setButtonsBgPadding(h/64)
-//                .setButtonsBgColor(0x333388);
-//        settingsList
-//                .setSizes(w, actionButtons.y0 - title.getBottomY(), ButtonCol.H_AUTO, true)
-//                .setPos(x0 + w/2, actionButtons.y0, ButtonCol.BOTTOM | ButtonCol.HCENTER);
-//    }
-
     protected Button[] getActionButtons() {
         return new Button[] {
             new Button("OK") {
@@ -62,7 +52,7 @@ public class SettingsUI extends AbstractPopupWindow {
             },
             new Switch("Enable keyRepeated events in lists") {
 				public boolean getValue() {
-					return EditorSettings.getKeyRepeatedInListsEnabled(false);
+					return EditorSettings.getKeyRepeatedInListsEnabled();
 				}
 
 				public void setValue(boolean value) {
@@ -70,7 +60,17 @@ public class SettingsUI extends AbstractPopupWindow {
 					getUISettings().onChange();
 				}
             },
-            new Button("Show guide and setup wizard again. Current MGStructs folder: " + EditorSettings.getMgstructsFolderPath()) {
+            new Switch("Auto-save to RMS") {
+            	public boolean getValue() {
+					return EditorSettings.getAutoSaveEnabled();
+				}
+
+				public void setValue(boolean value) {
+					EditorSettings.setAutoSaveEnabled(value);
+					getUISettings().onChange();
+				}
+            },
+            new Button("Show setup wizard again\n(Current MGStructs folder: " + EditorSettings.getMgstructsFolderPath() + ")") {
                 public void buttonPressed() {
                     showPopup(new SetupWizard(new SetupWizard.FinishSetup() {
 						public void onFinish() {

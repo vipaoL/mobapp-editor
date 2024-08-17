@@ -34,10 +34,29 @@ public class EditorSettings {
     	            MGSTRUCTS_FOLDER_PATH,
     	            ANIMS,
     	            LISTS_KEY_REPEATS,
+    	            AUTO_SAVE
     	        }, RECORD_STORE_SETTINGS);
     	}
     	return settingsInst;
     }
+    
+    public static boolean getAutoSaveEnabled() {
+        return getSettingsInst().getBool(AUTO_SAVE);
+    }
+    
+    public static boolean getAutoSaveEnabled(boolean defaultValue) {
+        return getSettingsInst().getBool(AUTO_SAVE, defaultValue);
+    }
+    
+    public static void setAutoSaveEnabled(boolean b) {
+    	getSettingsInst().set(AUTO_SAVE, b);
+    }
+    
+    public static boolean toggleAutoSaveEnabled() {
+    	return getSettingsInst().toggleBool(AUTO_SAVE);
+    }
+    
+    ///
     
     public static boolean getKeyRepeatedInListsEnabled() {
         return getSettingsInst().getBool(LISTS_KEY_REPEATS);

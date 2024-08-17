@@ -48,6 +48,7 @@ public class MainScreenUI extends Container {
     private StartPointWarning startPointWarning = null;
     private StructureBuilder elementsBuffer;
     private boolean postInitDone = false;
+    private boolean isAutoSaveEnabled = true;
     
     public MainScreenUI() {
     	try {
@@ -81,10 +82,15 @@ public class MainScreenUI extends Container {
     }
     
     public void init() {
+    	isAutoSaveEnabled = EditorSettings.getAutoSaveEnabled(true);
     	setComponents();
     }
     
     private void checkAutoSaveStorage() {
+    	if (!isAutoSaveEnabled) {
+    		return;
+    	}
+    	
     	final Element[] elements = FileUtils.readMGStruct(RecordStores.openDataInputStream(RECORD_STORE_AUTOSAVE));
     	if (elements != null && elements.length > 2) {
     		showPopup(new AutoSaveRestorer(this, elements) {
@@ -102,7 +108,7 @@ public class MainScreenUI extends Container {
     }
     
     private void saveToRMS() {
-    	if (elementsBuffer != null) {
+    	if (isAutoSaveEnabled && elementsBuffer != null) {
     		new Thread(new Runnable() {
 				public void run() {
 					RecordStores.WriteShortArray(elementsBuffer.asShortArray(), RECORD_STORE_AUTOSAVE);
