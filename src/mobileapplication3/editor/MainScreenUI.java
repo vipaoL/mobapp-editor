@@ -176,6 +176,7 @@ public class MainScreenUI extends Container {
                                     elementsBuffer.saveToFile(path);
                                     System.out.println("Saved!");
                                     setIsPathPickerVisible(false);
+                                    RecordStores.deleteStore(RECORD_STORE_AUTOSAVE);
                                 } catch (Exception ex) {
                                     ex.printStackTrace();
                                     Main.setCurrent(new Alert(ex.toString(), ex.toString(), null, AlertType.ERROR));
