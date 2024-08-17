@@ -146,7 +146,6 @@ public class TextComponent extends UIComponent {
 	}
     
     public void setFont(Font font) {
-    	System.out.println("setFont " + font);
 		this.font = font;
 	}
     
