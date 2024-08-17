@@ -2,42 +2,38 @@ package mobileapplication3.editor;
 
 import mobileapplication3.editor.ui.AbstractPopupWindow;
 import mobileapplication3.editor.ui.Button;
-import mobileapplication3.editor.ui.Button.ButtonFeedback;
 import mobileapplication3.editor.ui.IPopupFeedback;
 import mobileapplication3.editor.ui.IUIComponent;
 import mobileapplication3.elements.Element;
 
-public class AutoSaveRestorer extends AbstractPopupWindow {
-	
-	private ButtonFeedback onRestore;
-	private ButtonFeedback onDelete;
+public abstract class AutoSaveRestorer extends AbstractPopupWindow {
 	private Element[] elements;
 	
-	public AutoSaveRestorer(IPopupFeedback parent, Element[] elements, ButtonFeedback onRestore, ButtonFeedback onDelete) {
+	public AutoSaveRestorer(IPopupFeedback parent, Element[] elements) {
 		super("Some unsaved data can be recovered", parent);
-		this.onRestore = onRestore;
-		this.onDelete = onDelete;
 		this.elements = elements;
-		initPage();
 	}
 
 	protected Button[] getActionButtons() {
 		return new Button[] {
-			new Button("Restore", new Button.ButtonFeedback() {
+			new Button("Restore") {
 				public void buttonPressed() {
-					onRestore.buttonPressed();
+					onRestore();
 				}
-			}),
-			new Button("Delete", new Button.ButtonFeedback() {
+			},
+			new Button("Delete") {
 				public void buttonPressed() {
-					onDelete.buttonPressed();
+					onDelete();
 				}
-			}).setBgColor(0x550000)
+			}.setBgColor(0x550000)
 		};
 	}
 
 	protected IUIComponent initAndGetPageContent() {
 		return new StructureViewerComponent(elements);
 	}
+	
+	public abstract void onRestore();
+	public abstract void onDelete();
 
 }

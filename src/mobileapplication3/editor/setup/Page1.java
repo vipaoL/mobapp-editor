@@ -22,7 +22,6 @@ public class Page1 extends AbstractSetupWizardPage {
     
     public Page1(Button[] buttons, SetupWizard.Feedback feedback) {
         super("Welcome to the structure editor for mobapp-game", buttons, feedback);
-        initPage();
     }
     
     public void initOnFirstShow() {

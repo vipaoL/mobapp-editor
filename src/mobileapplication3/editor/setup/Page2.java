@@ -19,8 +19,11 @@ public class Page2 extends AbstractSetupWizardPage {
     
     public Page2(Button[] buttons, SetupWizard.Feedback feedback) {
         super("What are structures?", buttons, feedback);
-        initPage();
-        actionButtons.setSelected(actionButtons.getButtonCount() - 1);
+    }
+    
+    public void init() {
+    	super.init();
+    	actionButtons.setSelected(actionButtons.getButtonCount() - 1);
     }
 
     public void initOnFirstShow() {

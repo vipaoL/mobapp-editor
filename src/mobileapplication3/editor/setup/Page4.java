@@ -10,7 +10,7 @@ import javax.microedition.lcdui.AlertType;
 import javax.microedition.lcdui.Graphics;
 import mobileapplication3.editor.Main;
 import mobileapplication3.utils.Paths;
-import mobileapplication3.utils.Settings;
+import mobileapplication3.utils.EditorSettings;
 import mobileapplication3.editor.ui.AbstractPopupWindow;
 import mobileapplication3.editor.ui.Button;
 import mobileapplication3.editor.ui.ButtonCol;
@@ -47,19 +47,15 @@ public class Page4 extends AbstractSetupWizardPage {
 //                feedback.needRepaint();
 //            }
 //        });
-        initPage();
-        actionButtons.setSelected(actionButtons.getButtonCount() - 1);
+    }
+    
+    public void init() {
+    	super.init();
+    	actionButtons.setSelected(actionButtons.getButtonCount() - 1);
     }
     
     public void initOnFirstShow() {
         fillList();
-        
-        actionButtons.buttons[1].setFeedback(new Button.ButtonFeedback() {
-            public void buttonPressed() {
-                String path = list.buttons[list.getSelected()].getTitle();
-                saveFolderChoise(path);
-            }
-        });
         
         list.enableScrolling(true, true)
                 .setIsSelectionVisible(true)
@@ -73,7 +69,11 @@ public class Page4 extends AbstractSetupWizardPage {
                 String[] folders = Paths.getAllMGStructsFolders();
                 listButtons = new Button[folders.length];
                 for (int i = 0; i < folders.length; i++) {
-                    listButtons[i] = new Button(folders[i], null);
+                    listButtons[i] = new Button(folders[i]) {
+                    	public void buttonPressed() {
+                            saveFolderChoise(getTitle());
+                        }
+                    };
                 }
                 list.setButtons(listButtons);
                 list.setSelected(list.buttons.length - 1);
@@ -97,7 +97,7 @@ public class Page4 extends AbstractSetupWizardPage {
                 
                 try {
                     FileUtils.checkFolder(path);
-                    Settings.setMgstructsFolderPath(path);
+                    EditorSettings.setMgstructsFolderPath(path);
                     feedback.nextPage();
                 } catch (Exception ex) {
                     closePopup();
@@ -125,7 +125,6 @@ public class Page4 extends AbstractSetupWizardPage {
 
         public LoadingPopup(String title, IPopupFeedback parent) {
             super(title, parent);
-            initPage();
             new Thread(new Runnable() {
                 public void run() {
                     while (hasParent()) {                        
@@ -147,7 +146,7 @@ public class Page4 extends AbstractSetupWizardPage {
 
         protected Button[] getActionButtons() {
             return new Button[] {
-                new Button("Cancel", null).setIsActive(false)
+                new Button("Cancel") { public void buttonPressed() { } }.setIsActive(false)
             };
         }
 

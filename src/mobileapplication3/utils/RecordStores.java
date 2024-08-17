@@ -87,6 +87,7 @@ public class RecordStores {
             if (data != null && data.length != 0) {
                 ret = new DataInputStream(new ByteArrayInputStream(data));
             }
+    	} catch (RecordStoreNotFoundException ex) {
         } catch (Exception e) {
             e.printStackTrace();
         }

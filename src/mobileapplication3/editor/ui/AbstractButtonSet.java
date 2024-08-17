@@ -25,6 +25,16 @@ public abstract class AbstractButtonSet extends UIComponent {
     protected int prevSelected = 0;
     protected boolean isSelectionEnabled = false;
     protected boolean isSelectionVisible = false;
+    protected boolean ignoreKeyRepeated = true;
+    
+    public void init() {
+    	try {
+    		System.out.println(getUISettings());
+    		ignoreKeyRepeated = !getUISettings().getKeyRepeatedInListsEnabled();
+    	} catch (Exception ex) {
+    		//ex.printStackTrace();
+    	}
+    }
 
     public AbstractButtonSet setButtons(Button[] buttons) {
         this.buttons = buttons;
@@ -160,6 +170,10 @@ public abstract class AbstractButtonSet extends UIComponent {
     }
     
     public boolean handleKeyRepeated(int keyCode, int pressedCount) {
+    	if (ignoreKeyRepeated) {
+    		return true;
+    	}
+    	
         return handleKeyPressed(keyCode, 1);
     }
     

@@ -236,10 +236,29 @@ public abstract class UIComponent implements IUIComponent {
         return isSizeSet;
     }
     
+    public void init() { }
+    
     public IUIComponent setParent(IContainer parent) {
         this.parent = parent;
         return this;
     }
+    
+    public boolean hasParent() {
+        return parent != null;
+    }
+    
+    public UISettings getUISettings() {
+		if (hasParent()) {
+			return parent.getUISettings();
+		} else {
+			try {
+	    		throw new IllegalStateException(getClass().getName() + " has no parent and can't get UI settings");
+	    	} catch (IllegalStateException ex) {
+				ex.printStackTrace();
+			}
+			return null;
+		}
+	}
     
     public void repaint() {
         if (parent != null) {

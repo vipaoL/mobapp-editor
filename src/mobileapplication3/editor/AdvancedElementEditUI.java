@@ -5,7 +5,6 @@ import javax.microedition.lcdui.Graphics;
 
 import mobileapplication3.editor.ui.AbstractPopupWindow;
 import mobileapplication3.editor.ui.Button;
-import mobileapplication3.editor.ui.Button.ButtonFeedback;
 import mobileapplication3.editor.ui.ButtonComponent;
 import mobileapplication3.editor.ui.ButtonRow;
 import mobileapplication3.editor.ui.Container;
@@ -29,13 +28,12 @@ public class AdvancedElementEditUI extends AbstractPopupWindow {
 		super("Advanced edit: " + element.getName(), parent);
 		this.element = element;
 		this.sb = sb;
-		initPage();
 	}
 
 	protected Button[] getActionButtons() {
 		final short[] argsUnmodified = element.getArgsValues();
         return new Button[] {
-            new Button("OK", new Button.ButtonFeedback() {
+            new Button("OK") {
                 public void buttonPressed() {
                 	element.recalcCalculatedArgs();
                 	if (element.getID() != Element.END_POINT) {
@@ -43,13 +41,13 @@ public class AdvancedElementEditUI extends AbstractPopupWindow {
                 	}
                     close();
                 }
-            }),
-            new Button("Cancel", new Button.ButtonFeedback() {
+            },
+            new Button("Cancel") {
                 public void buttonPressed() {
                 	element.setArgs(argsUnmodified);
                     close();
                 }
-            })
+            }
         };
     }
 
@@ -77,7 +75,7 @@ public class AdvancedElementEditUI extends AbstractPopupWindow {
 		for (int i = 0; i < args.length; i++) {
 			rows[i] = new ListRow(args[i]);
 		}
-		rows[args.length] = new ButtonComponent("Refresh this list", new ButtonFeedback() {
+		rows[args.length] = new ButtonComponent(new Button ("Refresh this list") {
 			public void buttonPressed() {
 				element.recalcCalculatedArgs();
 				refreshList();
@@ -117,16 +115,16 @@ public class AdvancedElementEditUI extends AbstractPopupWindow {
 			buttonRow.setButtonsBgColor(COLOR_TRANSPARENT);
 			buttonRow.setButtonsBgColorInactive(COLOR_TRANSPARENT);
 			buttonRow.setButtons(new Button[] {
-					new Button("-", new ButtonFeedback() {
+					new Button("-") {
 						public void buttonPressed() {
 							setValue((short) (getValue() - 1));
 						}
-					}),
-					new Button("+", new ButtonFeedback() {
+					},
+					new Button("+") {
 						public void buttonPressed() {
 							setValue((short) (getValue() + 1));
 						}
-					})
+					}
 			});
 			
 			setBgColor(COLOR_ACCENT);

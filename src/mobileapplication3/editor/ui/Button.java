@@ -13,23 +13,22 @@ import mobileapplication3.utils.Utils;
  *
  * @author vipaol
  */
-public class Button {
+public abstract class Button {
 
     private String text;
     private boolean isActive = true;
-    private ButtonFeedback buttonFeedback;
-    private int bgColor;
-    private int bgColorInactive;
-    private int fontColor;
-    private int fontColorInactive;
-    private int selectedBgColor;
+    protected int bgColor;
+    protected int bgColorInactive;
+    protected int fontColor;
+    protected int fontColorInactive;
+    protected int selectedBgColor;
     private int bgPadding;
     
     private int[][] lineBounds = null;
     private int prevW, prevH;
     public Font font;
     
-    public Button(String title, ButtonFeedback buttonFeedback) {
+    public Button(String title) {
         font = Font.getDefaultFont();
         this.bgPadding = 0;
         this.selectedBgColor = 0x002255;
@@ -40,20 +39,14 @@ public class Button {
         
         this.text = title;
         setTitle(getTitle());
-        setFeedback(buttonFeedback);
     }
     
     public boolean invokePressed(boolean isSelected, boolean isFocused) {
-        if (buttonFeedback == null) {
-            System.out.println(text + isFocused);
-            return isFocused;
-        }
-        
         if (isActive) {
             if (!isSelected) {
-                buttonFeedback.buttonPressed();
+                buttonPressed();
             } else {
-                buttonFeedback.buttonPressedSelected();
+                buttonPressedSelected();
             }
             setTitle(getTitle());
             return true;
@@ -113,10 +106,6 @@ public class Button {
         }
         text = s;
     }
-
-    public void setFeedback(ButtonFeedback buttonFeedback) {
-        this.buttonFeedback = buttonFeedback;
-    }
     
     public String getTitle() {
         return text;
@@ -124,13 +113,6 @@ public class Button {
     
     public String toString() {
         return text;
-    }
-    
-    public abstract static class ButtonFeedback {
-        public abstract void buttonPressed();
-        public void buttonPressedSelected() {
-            buttonPressed();
-        }
     }
     
     public void paint(Graphics g, int x0, int y0, int w, int h, boolean isSelected, boolean isFocused, boolean drawAsInactive) {
@@ -224,6 +206,11 @@ public class Button {
             w = Math.max(w, font.stringWidth(words[i]));
         }
         return w;
+    }
+    
+    public abstract void buttonPressed();
+    public void buttonPressedSelected() {
+        buttonPressed();
     }
     
 }

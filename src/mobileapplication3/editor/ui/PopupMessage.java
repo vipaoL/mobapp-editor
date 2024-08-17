@@ -20,11 +20,11 @@ public class PopupMessage extends AbstractPopupWindow {
 
     protected Button[] getActionButtons() {
         return new Button[]{
-            new Button("OK", new Button.ButtonFeedback() {
+            new Button("OK") {
                 public void buttonPressed() {
                     feedback.closePopup();
                 }
-            })
+            }
         };
     }
 

@@ -33,6 +33,13 @@ public class ButtonCol extends AbstractButtonSet {
     public ButtonCol(Button[] buttons) {
         this.buttons = buttons;
     }
+    
+    public void init() {
+    	try {
+    		enableAnimations = getUISettings().getAnimsEnabled();
+    	} catch (Exception ex) { }
+    	super.init();
+    }
 
     public void recalcSize() {
         setSizes(w, hUntilTrim, btnH, trimHeight);

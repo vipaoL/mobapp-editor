@@ -2,7 +2,6 @@ package mobileapplication3.editor;
 
 import mobileapplication3.editor.ui.AbstractPopupWindow;
 import mobileapplication3.editor.ui.Button;
-import mobileapplication3.editor.ui.Button.ButtonFeedback;
 import mobileapplication3.editor.ui.ButtonComponent;
 import mobileapplication3.editor.ui.IPopupFeedback;
 import mobileapplication3.editor.ui.IUIComponent;
@@ -22,16 +21,15 @@ public class ElementEditUI extends AbstractPopupWindow {
 		super("Edit " + element.getName(), parent);
 		this.element = element;
 		this.sb = sb;
-		initPage();
 	}
 
 	protected Button[] getActionButtons() {
         return new Button[] {
-            new Button("OK", new Button.ButtonFeedback() {
+            new Button("OK") {
                 public void buttonPressed() {
                     close();
                 }
-            })
+            }
         };
     }
 
@@ -41,48 +39,48 @@ public class ElementEditUI extends AbstractPopupWindow {
 		rows = new IUIComponent[editSteps.length + extraEditSteps.length + 3 /*clone, advanced edit and delete*/];
 		for (int i = 0; i < editSteps.length; i++) {
 			final int o = i;
-			Button editStepButton = new Button(editSteps[i].getName(), new ButtonFeedback() {
+			Button editStepButton = new Button(editSteps[i].getName()) {
 				public void buttonPressed() {
 					sb.edit(element, o);
 					close();
 				}
-			});
+			};
 			rows[o] = new ButtonComponent(editStepButton);
 		}
 		
 		for (int i = 0; i < extraEditSteps.length; i++) {
 			final int o = i + editSteps.length;
-			Button editStepButton = new Button(extraEditSteps[i].getName(), new ButtonFeedback() {
+			Button editStepButton = new Button(extraEditSteps[i].getName()) {
 				public void buttonPressed() {
 					sb.edit(element, o);
 					close();
 				}
-			}).setBgColor(0x201010);
+			}.setBgColor(0x201010);
 			rows[o] = new ButtonComponent(editStepButton);
 		}
 		
-		Button cloneButton = new Button("Clone", new ButtonFeedback() {
+		Button cloneButton = new Button("Clone") {
 			public void buttonPressed() {
 				Element clone = element.clone();
 				sb.add(clone);
 				sb.edit(clone, 0);
 				close();
 			}
-		});
+		};
 		
 		final IPopupFeedback fb = this;
-		Button advancedEditButton = new Button("AdvancedEdit", new ButtonFeedback() {
+		Button advancedEditButton = new Button("AdvancedEdit") {
 			public void buttonPressed() {
 				showPopup(new AdvancedElementEditUI(element, sb, fb));
 			}
-		});
+		};
 		
-		Button deleteButton = new Button("Delete element", new ButtonFeedback() {
+		Button deleteButton = new Button("Delete element") {
 			public void buttonPressed() {
 				sb.remove(element);
 				close();
 			}
-		});
+		};
 		
 		advancedEditButton.setBgColor(0x222200);
 		deleteButton.setBgColor(0x550000);

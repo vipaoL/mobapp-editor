@@ -11,4 +11,5 @@ package mobileapplication3.editor.ui;
  */
 public interface IContainer {
     public void repaint();
+	public UISettings getUISettings();
 }

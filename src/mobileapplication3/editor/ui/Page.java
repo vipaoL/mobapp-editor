@@ -24,6 +24,19 @@ public abstract class Page extends Container {
                 //.setButtonsBgColor(0x3333aa)
                 //.setSelectedColor(0x9999ff);
     }
+    
+    public void init() {
+    	if (!isInited) {
+            isInited = true;
+            pageContent = initAndGetPageContent();
+            actionButtons.setButtons(getActionButtons());
+            actionButtons.bindToSoftButtons(0, actionButtons.getButtonCount() - 1);
+            actionButtons.setIsSelectionEnabled(true);
+            actionButtons.setIsSelectionVisible(RootContainer.displayKbHints);
+            // TODO call onSetBounds if it was called before and failed because initPage had't done
+        }
+    	setComponents(new IUIComponent[]{title, actionButtons, pageContent});
+    }
 
     public boolean keyPressed(int keyCode, int count) {
 //        String title = "<null>";
@@ -34,24 +47,11 @@ public abstract class Page extends Container {
         
         return super.keyPressed(keyCode, count);
     }
-    
-    protected void initPage() {
-        if (!isInited) {
-            isInited = true;
-            pageContent = initAndGetPageContent();
-            actionButtons.setButtons(getActionButtons());
-            actionButtons.bindToSoftButtons(0, actionButtons.getButtonCount() - 1);
-            actionButtons.setIsSelectionEnabled(true);
-            actionButtons.setIsSelectionVisible(RootContainer.displayKbHints);
-            setComponents(new IUIComponent[]{title, actionButtons, pageContent});
-            // TODO call onSetBounds if it was called before and failed because initPage had't done
-        }
-    }
 
     public final void onSetBounds(int x0, int y0, int w, int h) {
         if (!isInited) {
             try {
-                throw new IllegalStateException("Error: call initPage() first!");
+                throw new IllegalStateException("Error: init() hadn't done!");
             } catch (IllegalStateException ex) {
                 ex.printStackTrace();
             }

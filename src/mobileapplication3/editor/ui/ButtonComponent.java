@@ -9,7 +9,6 @@ import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 
-import mobileapplication3.editor.ui.Button.ButtonFeedback;
 import mobileapplication3.utils.Utils;
 
 /**
@@ -17,10 +16,6 @@ import mobileapplication3.utils.Utils;
  * @author vipaol
  */
 public class ButtonComponent extends AbstractButtonSet {
-
-	public ButtonComponent(String title, ButtonFeedback buttonFeedback) {
-		this.buttons = new Button[] {new Button(title, buttonFeedback)};
-	}
 	
     public ButtonComponent(Button button) {
         this.buttons = new Button[]{button};

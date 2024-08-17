@@ -16,7 +16,8 @@ import javax.microedition.midlet.MIDletStateChangeException;
 
 import mobileapplication3.editor.setup.SetupWizard;
 import mobileapplication3.editor.ui.RootContainer;
-import mobileapplication3.utils.Settings;
+import mobileapplication3.editor.ui.UISettings;
+import mobileapplication3.utils.EditorSettings;
 
 /**
  *
@@ -34,14 +35,31 @@ public class Main extends MIDlet {
         isStarted = true;
         display = Display.getDisplay(this);
         try {
-            if (Settings.isSetupWizardCompleted()) {
-                setCurrent(new RootContainer(new MainScreenUI()));
+        	final UISettings uiSettings = new UISettings() {
+				public boolean getKeyRepeatedInListsEnabled() {
+					return EditorSettings.getKeyRepeatedInListsEnabled(false);
+				}
+				
+				public boolean getAnimsEnabled() {
+					return EditorSettings.getAnimsEnabled(true);
+				}
+				
+				public void onChange() {
+					try {
+						((RootContainer) display.getCurrent()).init();
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+				}
+			};
+            if (EditorSettings.isSetupWizardCompleted()) {
+                setCurrent(new RootContainer(new MainScreenUI(), uiSettings));
             } else {
                 setCurrent(new RootContainer(new SetupWizard(new SetupWizard.FinishSetup() {
                     public void onFinish() {
-                        setCurrent(new RootContainer(new MainScreenUI()));
+                        setCurrent(new RootContainer(new MainScreenUI(), uiSettings));
                     }
-                })));
+                }), uiSettings));
             }
         } catch(Exception ex) {
             ex.printStackTrace();
@@ -49,13 +67,9 @@ public class Main extends MIDlet {
         }
     }
 
-    protected void pauseApp() {
-        // TODO: save current work to RMS
-    }
+    protected void pauseApp() { }
 
-    protected void destroyApp(boolean unconditional) throws MIDletStateChangeException {
-        // TODO: save current work to RMS
-    }
+    protected void destroyApp(boolean unconditional) throws MIDletStateChangeException { }
     
     public static void setCurrent(Displayable d) {
         if (d instanceof Alert) {

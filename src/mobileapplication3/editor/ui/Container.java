@@ -36,9 +36,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         components = new IUIComponent[0];
     }
     
-    public void init() {
-        
-    }
+    public void init() { }
 
     public IUIComponent setBgColor(int bgColor) {
         this.bgColor = bgColor;
@@ -124,6 +122,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
                 if (components[i] != null) {
                 	System.out.println(getClass().getName() + " set as parent for " + components[i].getClass().getName());
                     components[i].setParent(this);
+                    components[i].init();
                 }
             }
         }
@@ -147,6 +146,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     public void showPopup(IUIComponent w) {
         popupWindow = w;
         popupWindow.setParent(this);
+        popupWindow.init();
         refreshSizes();
         repaint();
     }
@@ -155,6 +155,10 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         this.popupWindow = null;
         refreshSizes();
         repaint();
+    }
+    
+    public boolean isPopupShown() {
+    	return popupWindow != null;
     }
     
     public void paint(Graphics g) {
@@ -580,6 +584,19 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     public boolean hasParent() {
         return parent != null;
     }
+    
+    public UISettings getUISettings() {
+		if (hasParent()) {
+			return parent.getUISettings();
+		} else {
+	    	try {
+	    		throw new IllegalStateException(getClass().getName() + " has no parent and can't get UI settings");
+	    	} catch (IllegalStateException ex) {
+				ex.printStackTrace();
+			}
+			return null;
+		}
+	}
     
     public void repaint() {
         if (parent != null) {

@@ -5,7 +5,7 @@
  */
 package mobileapplication3.editor.setup;
 
-import mobileapplication3.utils.Settings;
+import mobileapplication3.utils.EditorSettings;
 import mobileapplication3.editor.ui.Button;
 import mobileapplication3.editor.ui.IUIComponent;
 import mobileapplication3.editor.ui.Container;
@@ -49,19 +49,19 @@ public class SetupWizard extends Container {
     }
     
     private Button getNewNextButton() {
-        return new Button("Next", new Button.ButtonFeedback() {
+        return new Button("Next") {
             public void buttonPressed() {
                 pageSwitcher.nextPage();
             }
-        });
+        };
     }
     
     private Button getNewPrevButton() {
-        return new Button("Back", new Button.ButtonFeedback() {
+        return new Button("Back") {
             public void buttonPressed() {
                 pageSwitcher.prevPage();
             }
-        });
+        };
     }
     
     private void setCurrentPage(int i) {
@@ -86,7 +86,7 @@ public class SetupWizard extends Container {
     private void finishSetup() {
         pages = null;
         finishSetup.onFinish();
-        Settings.setIsSetupWizardCompleted(true);
+        EditorSettings.setIsSetupWizardCompleted(true);
     }
 
     public void onSetBounds(int x0, int y0, int w, int h) {

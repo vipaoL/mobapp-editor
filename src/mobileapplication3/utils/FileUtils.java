@@ -15,6 +15,8 @@ import java.util.Vector;
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 import javax.microedition.io.file.FileSystemRegistry;
+import javax.microedition.rms.RecordStoreNotFoundException;
+
 import mobileapplication3.elements.Element;
 
 /**
@@ -71,6 +73,9 @@ public class FileUtils {
                 }
             }
             return elements;
+        } catch (NullPointerException ex) {
+        	System.out.println("readMGStruct: caught NPE. nothing to read");
+        	return null;
         } catch (IOException ex) {
             ex.printStackTrace();
             return null;

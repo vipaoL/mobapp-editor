@@ -132,7 +132,7 @@ public class PathPicker extends Container {
         Button[] listButtons = new Button[paths.length];
         for (int i = 0; i < paths.length; i++) {
             final String name = paths[i];
-            listButtons[i] = new Button(name, new Button.ButtonFeedback() {
+            listButtons[i] = new Button(name) {
                 public void buttonPressed() {
                     // folder or file
                     if (name.endsWith(String.valueOf(FileUtils.SEP))) {
@@ -150,7 +150,7 @@ public class PathPicker extends Container {
                         pickPath(currentFolder + name);
                     }
                 }
-            });
+            };
         }
         setListButtons(listButtons);
     }
@@ -175,21 +175,21 @@ public class PathPicker extends Container {
                     .setButtonsBgColor(0x555555);
         }
         
-        okBtn = new Button("OK", new Button.ButtonFeedback() {
+        okBtn = new Button("OK") {
             public void buttonPressed() {
                 if (currentTarget == TARGET_OPEN && pickedPath.endsWith(String.valueOf(FileUtils.SEP))) {
                     return;
                 }
                 feedback.onComplete(pickedPath);
             }
-        });
+        };
         
-        cancelBtn = new Button("Cancel", new Button.ButtonFeedback() {
+        cancelBtn = new Button("Cancel") {
             public void buttonPressed() {
                 setVisible(false);
                 feedback.onCancel();
             }
-        });
+        };
         
         
         actionButtons = new Button[]{okBtn, cancelBtn};
@@ -201,8 +201,10 @@ public class PathPicker extends Container {
         question = (TextComponent) new TextComponent()
                 .enableHorizontalScrolling(true)
                 .setBgColor(COLOR_TRANSPARENT);
-        
-        setComponents(new IUIComponent[]{actionButtonPanel, list, question, title});
+    }
+    
+    public void init() {
+    	setComponents(new IUIComponent[]{actionButtonPanel, list, question, title});
     }
     
     public Container setBgImage(Image bg) {

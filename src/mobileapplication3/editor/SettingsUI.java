@@ -5,13 +5,14 @@
  */
 package mobileapplication3.editor;
 
-import mobileapplication3.utils.Settings;
+import mobileapplication3.utils.EditorSettings;
 import mobileapplication3.editor.setup.SetupWizard;
 import mobileapplication3.editor.ui.AbstractPopupWindow;
 import mobileapplication3.editor.ui.Button;
 import mobileapplication3.editor.ui.ButtonCol;
 import mobileapplication3.editor.ui.IPopupFeedback;
 import mobileapplication3.editor.ui.IUIComponent;
+import mobileapplication3.editor.ui.Switch;
 
 /**
  *
@@ -21,7 +22,6 @@ public class SettingsUI extends AbstractPopupWindow {
 
     public SettingsUI(IPopupFeedback parent) {
         super("Settings", parent);
-        initPage();
     }
 
 //    public void onSetBounds(int x0, int y0, int w, int h) {
@@ -36,31 +36,37 @@ public class SettingsUI extends AbstractPopupWindow {
 
     protected Button[] getActionButtons() {
         return new Button[] {
-            new Button("OK", new Button.ButtonFeedback() {
+            new Button("OK") {
                 public void buttonPressed() {
                     close();
                 }
-            })
+            }
         };
     }
 
     protected IUIComponent initAndGetPageContent() {
         Button[] settingsButtons = new Button[]{
-            new Button("Change font size", new Button.ButtonFeedback() {
-                public void buttonPressed() {
-                    
-                }
-            }).setIsActive(false),
-            new Button(null, new Button.ButtonFeedback() {
-                public void buttonPressed() {
-                    Settings.toggleBool(Settings.ANIMS);
-                }
-            }) {
-                public String getTitle() {
-                    return "Animations: " + (Settings.getBool(Settings.ANIMS) ? "enabled" : "disabled");
-                }
-            }.setIsActive(false),
-            new Button("Show guide and setup wizard again. Current MGStructs folder: " + Settings.getMgstructsFolderPath(), new Button.ButtonFeedback() {
+            new Switch("Animations") {
+				public boolean getValue() {
+					return EditorSettings.getAnimsEnabled();
+				}
+
+				public void setValue(boolean value) {
+					EditorSettings.setAnimsEnabled(value);
+					getUISettings().onChange();
+				}
+            },
+            new Switch("Enable keyRepeated events in lists") {
+				public boolean getValue() {
+					return EditorSettings.getKeyRepeatedInListsEnabled(false);
+				}
+
+				public void setValue(boolean value) {
+					EditorSettings.setKeyRepeatedInListsEnabled(value);
+					getUISettings().onChange();
+				}
+            },
+            new Button("Show guide and setup wizard again. Current MGStructs folder: " + EditorSettings.getMgstructsFolderPath()) {
                 public void buttonPressed() {
                     showPopup(new SetupWizard(new SetupWizard.FinishSetup() {
 						public void onFinish() {
@@ -68,12 +74,12 @@ public class SettingsUI extends AbstractPopupWindow {
 						}
 					}));
                 }
-            }),
-            new Button("Reset settings (will reset MGStructs folder as well)", new Button.ButtonFeedback() {
+            },
+            new Button("Reset settings (will reset MGStructs folder as well)") {
                 public void buttonPressed() {
-                    Settings.resetSettings();
+                    EditorSettings.resetSettings();
                 }
-            }).setBgColor(0x550000)
+            }.setBgColor(0x550000)
         };
         
         ButtonCol settingsList = (ButtonCol) new ButtonCol()

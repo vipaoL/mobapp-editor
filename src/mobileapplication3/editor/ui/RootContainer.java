@@ -20,9 +20,11 @@ public class RootContainer extends Canvas implements IContainer {
     private int bgColor = 0x000000;
     public int w, h;
     private static RootContainer inst = null;
+    private UISettings uiSettings;
 
-    public RootContainer(IUIComponent rootUIComponent) {
+    public RootContainer(IUIComponent rootUIComponent, UISettings uiSettings) {
         setFullScreenMode(true);
+        this.uiSettings = uiSettings;
         inst = this;
         //        for (int i = 0; i < currentlyPressedKeys.length; i++) {
 //            currentlyPressedKeys[i] = Integer.MIN_VALUE;
@@ -32,14 +34,25 @@ public class RootContainer extends Canvas implements IContainer {
         setRootUIComponent(rootUIComponent);
     }
 
+    public void init() {
+    	setRootUIComponent(rootUIComponent);
+	}
+
     public RootContainer setRootUIComponent(IUIComponent rootUIComponent) {
         if (this.rootUIComponent != null) {
             this.rootUIComponent.setParent(null);
         }
         
-        this.rootUIComponent = rootUIComponent.setParent(this).setFocused(true);
+        if (rootUIComponent != null) {
+		    this.rootUIComponent = rootUIComponent.setParent(this).setFocused(true);
+		    rootUIComponent.init();
+        }
         return this;
     }
+    
+    public UISettings getUISettings() {
+		return uiSettings;
+	}
 
     protected void paint(Graphics g) {
     	if (bgColor >= 0) {
