@@ -59,8 +59,7 @@ public class Page4 extends AbstractSetupWizardPage {
         
         list.enableScrolling(true, true)
                 .setIsSelectionVisible(true)
-                .setButtonsBgPadding(margin/4)
-                .setBgColor(0x111111);
+                .setButtonsBgPadding(margin/4);
     }
     
     private void fillList() {

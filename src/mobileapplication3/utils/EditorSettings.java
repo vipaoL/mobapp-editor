@@ -18,8 +18,6 @@ public class EditorSettings {
             ANIMS = "anims",
             LISTS_KEY_REPEATS = "listKRepeats";
     
-    private static char SEP = '\n';
-    
     private static String mgstructsFolderPath = null;
     
     private static Settings settingsInst = null;
