@@ -24,20 +24,13 @@ public class RecordStores {
         RecordStore rs = null;
         boolean ret = true;
         
-        System.out.println("writing bytes to store: ");
-        for (int i = 0; i < data.length; i++) {
-			byte b = data[i];
-			System.out.print(b + " ");
-		}
-        System.out.println();
-        
         try {
             try {
                 RecordStore.deleteRecordStore(recordStoreName);
             } catch (Exception e) { }
 
             rs = RecordStore.openRecordStore(recordStoreName, true);
-            System.out.println("recordId=" + rs.addRecord(data, 0, data.length));
+            rs.addRecord(data, 0, data.length);
         } catch (Exception e) {
             e.printStackTrace();
             ret = false;
@@ -53,19 +46,16 @@ public class RecordStores {
     }
     
     public static boolean writeStringToStore(String settings, String recordStoreName) {
-    	System.out.println("writing to RMS: " + settings);
     	try {
 			byte[] data = settings.getBytes("UTF-8");
 			return writeBytesToStore(data, recordStoreName);
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     	return false;
     }
     
     public static String readStringFromStore(String recordStoreName) {
-        System.out.println("reading store " + recordStoreName);
         RecordStore rs = null;
         String ret = null;
         
@@ -85,7 +75,6 @@ public class RecordStores {
             
         }
         
-        System.out.println("read from " + recordStoreName + " store: " + ret);
         return ret;
     }
     
@@ -95,7 +84,6 @@ public class RecordStores {
     	try {
             rs = RecordStore.openRecordStore(recordStoreName, false);
             byte[] data = rs.getRecord(1);
-            System.out.println("read record store \"" + recordStoreName + "\". data.length=" + data.length);
             if (data != null && data.length != 0) {
                 ret = new DataInputStream(new ByteArrayInputStream(data));
             }
@@ -113,12 +101,6 @@ public class RecordStores {
     }
     
     public static void WriteShortArray(short[] data, String recordStoreName) {
-    	System.out.println("writing shorts to store: ");
-        for (int i = 0; i < data.length; i++) {
-			short s = data[i];
-			System.out.print(s + " ");
-		}
-        System.out.println();
     	writeBytesToStore(shortsToBytes(data), recordStoreName);
 	}
     
@@ -129,7 +111,6 @@ public class RecordStores {
         	resultData[c++] = (byte) (((data[i]) >>> 8) & 0xFF);
             resultData[c++] = (byte) (((data[i])) & 0xFF);
         }
-        System.out.println("shorts to bytes: shorts.length=" + data.length + " bytes.length=" + resultData.length);
         return resultData;
     }
     
