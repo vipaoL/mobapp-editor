@@ -140,8 +140,27 @@ public abstract class Button {
         }
         g.setClip(x0, y0, w, h);
         
-        Font prevFont = g.getFont();
+        drawBg(g, x0, y0, w, h, isSelected, drawAsInactive);
+        drawText(g, x0, y0, w, h, isSelected, isFocused, drawAsInactive);
+        drawSelectionMark(g, x0, y0, w, h, isSelected, isFocused, drawAsInactive);
         
+        g.setClip(prevClipX, prevClipY, prevClipW, prevClipH);
+    }
+    
+    protected void drawSelectionMark(Graphics g, int x0, int y0, int w, int h, boolean isSelected, boolean isFocused, boolean forceInactive) {
+    	if (isFocused && isSelected) {
+            g.setColor(getCurrentFontColor(forceInactive));
+            int markY0 = h / 3;
+            int markY1 = h - markY0;
+            int markCenterY = (markY0 + markY1) / 2;
+            int markw = (markY1 - markY0) / 2;
+            g.fillTriangle(x0 + 1, y0 + markY0, x0 + 1, y0 + markY1, x0 + markw, y0 + markCenterY);
+            g.fillTriangle(x0 + w - 1, y0 + markY0, x0 + w - 1, y0 + markY1, x0 + w - markw, y0 + markCenterY);
+        }
+	}
+    
+    protected void drawText(Graphics g, int x0, int y0, int w, int h, boolean isSelected, boolean isFocused, boolean forceInactive) {
+    	Font prevFont = g.getFont();
         setFont(Font.getDefaultFont());
         
         int[][] lineBounds = getLineBounds(text, font, w, bgPadding);
@@ -153,31 +172,9 @@ public abstract class Button {
             	lineBounds = getLineBounds(text, font, w, bgPadding);
             }
         }
-        
         setFont(font, g);
-        
-        int r = Math.min(w/5, h/5);
-        
-        int bgColor;
-        int fontColor;
-        if (isActive && !drawAsInactive) {
-        	fontColor = this.fontColor;
-        	if (!isSelected) {
-        		bgColor = this.bgColor;
-        	} else {
-        		bgColor = selectedBgColor;
-        	}
-        } else {
-        	fontColor = fontColorInactive;
-        	bgColor = bgColorInactive;
-        }
-        
-        if (bgColor > 0) {
-            g.setColor(bgColor);
-            //g.fillRect(x0, y0, w, h); // TODO add feature to disable rouding
-            g.fillRoundRect(x0, y0, w, h, r, r);
-        }
-        g.setColor(fontColor);
+
+        g.setColor(getCurrentFontColor(forceInactive));
         
         int offset = 0;
         int step = font.getHeight() * 3 / 2;
@@ -195,18 +192,36 @@ public abstract class Button {
             offset += step;
         }
         
-        if (isFocused && isSelected) {
-            //g.setColor(0xffffff);
-            int markY0 = h / 3;
-            int markY1 = h - markY0;
-            int markCenterY = (markY0 + markY1) / 2;
-            int markw = (markY1 - markY0) / 2;
-            g.fillTriangle(x0 + 1, y0 + markY0, x0 + 1, y0 + markY1, x0 + markw, y0 + markCenterY);
-            g.fillTriangle(x0 + w - 1, y0 + markY0, x0 + w - 1, y0 + markY1, x0 + w - markw, y0 + markCenterY);
+        g.setFont(prevFont);
+	}
+    
+    protected void drawBg(Graphics g, int x0, int y0, int w, int h, boolean isSelected, boolean forceInactive) {
+    	int r = Math.min(w/5, h/5);
+        
+        int bgColor;
+        if (isActive && !forceInactive) {
+        	if (!isSelected) {
+        		bgColor = this.bgColor;
+        	} else {
+        		bgColor = selectedBgColor;
+        	}
+        } else {
+        	bgColor = bgColorInactive;
         }
         
-        g.setClip(prevClipX, prevClipY, prevClipW, prevClipH);
-        g.setFont(prevFont);
+        if (bgColor > 0) {
+            g.setColor(bgColor);
+            //g.fillRect(x0, y0, w, h); // TODO add feature to disable rouding
+            g.fillRoundRect(x0, y0, w, h, r, r);
+        }
+    }
+    
+    protected int getCurrentFontColor(boolean forceInactive) {
+        if (isActive && !forceInactive) {
+        	return this.fontColor;
+        } else {
+        	return fontColorInactive;
+        }
     }
     
     private int[][] getLineBounds(String text, Font font, int w, int padding) {
