@@ -15,6 +15,8 @@ import mobileapplication3.editor.ui.ButtonPanelHorizontal;
 import mobileapplication3.editor.ui.ButtonRow;
 import mobileapplication3.editor.ui.ButtonCol;
 import mobileapplication3.editor.ui.Container;
+import mobileapplication3.editor.ui.IContainer;
+
 import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.AlertType;
 import mobileapplication3.elements.Element;
@@ -49,9 +51,10 @@ public class MainScreenUI extends Container {
     private StartPointWarning startPointWarning = null;
     private StructureBuilder elementsBuffer;
     private boolean postInitDone = false;
+    private boolean isInited = false;
     
-    public MainScreenUI() {
-        try {
+    public void init() {
+    	try {
             elementsBuffer = new StructureBuilder(new StructureBuilder.Feedback() {
                 public void onUpdate() {
                     initListPanel();

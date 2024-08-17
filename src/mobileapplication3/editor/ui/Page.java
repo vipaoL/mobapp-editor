@@ -42,6 +42,7 @@ public abstract class Page extends Container {
             actionButtons.setButtons(getActionButtons());
             actionButtons.bindToSoftButtons(0, actionButtons.getButtonCount() - 1);
             actionButtons.setIsSelectionEnabled(true);
+            actionButtons.setIsSelectionVisible(RootContainer.displayKbHints);
             setComponents(new IUIComponent[]{title, actionButtons, pageContent});
             // TODO call onSetBounds if it was called before and failed because initPage had't done
         }

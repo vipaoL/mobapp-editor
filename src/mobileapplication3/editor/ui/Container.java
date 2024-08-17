@@ -34,7 +34,6 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     
     public Container() {
         components = new IUIComponent[0];
-        init();
     }
     
     public void init() {
@@ -578,6 +577,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
 
     public IUIComponent setParent(IContainer parent) {
         this.parent = parent;
+        init();
         return this;
     }
     
