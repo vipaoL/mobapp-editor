@@ -125,19 +125,12 @@ public class StructureBuilder {
     
     public void loadFile(String path) {
         try {
-            buffer = new Vector();
             Element[] elements = FileUtils.readMGStruct(path);
             if (elements == null) {
                 System.out.println("error: elements array is null");
                 return;
             }
-            for (int i = 0; i < elements.length; i++) {
-                if (elements[i] != null) {
-                    buffer.addElement(elements[i]);
-                } else {
-                    System.out.println("elements["+i+"] is null. skipping");
-                }
-            }
+            setElements(elements);
             feedback.onUpdate();
         } catch(Exception ex) {
             ex.printStackTrace();
@@ -145,6 +138,7 @@ public class StructureBuilder {
     }
     
     public void setElements(Element[] elements) {
+    	buffer = new Vector();
     	for (int i = 0; i < elements.length; i++) {
             if (elements[i] != null) {
                 buffer.addElement(elements[i]);
