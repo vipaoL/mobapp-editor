@@ -78,6 +78,8 @@ public class SettingsUI extends AbstractPopupWindow {
                     showPopup(new SetupWizard(new SetupWizard.FinishSetup() {
 						public void onFinish() {
 							closePopup();
+							isInited = false;
+		                    init();
 						}
 					}));
                 }

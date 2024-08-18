@@ -126,6 +126,11 @@ public class Page4 extends AbstractSetupWizardPage {
         return list;
     }
     
+    protected void refreshFocusedComponents() {
+    	super.refreshFocusedComponents();
+    	list.setFocused(true);
+    }
+    
     private class LoadingPopup extends AbstractPopupWindow {
         int animOffset = 100;
 

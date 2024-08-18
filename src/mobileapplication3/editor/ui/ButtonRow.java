@@ -116,7 +116,6 @@ public class ButtonRow extends AbstractButtonSet {
                     case Canvas.FIRE:
                         return buttons[selected].invokePressed(true, isFocused);
                     default:
-                    	System.out.println(isFocused);
                         return isFocused;
                 }
         }

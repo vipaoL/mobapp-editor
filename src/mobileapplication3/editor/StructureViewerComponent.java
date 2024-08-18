@@ -53,7 +53,6 @@ public class StructureViewerComponent extends UIComponent { // TODO: merge with 
         for (int i = 0; i < elements.length; i++) {
         	try {
 	        	Element element = elements[i];
-	        	System.out.println("drawing " + element.getName());
             	if (!element.isBody()) {
             		g.setColor(colLandscape);
             	} else {
