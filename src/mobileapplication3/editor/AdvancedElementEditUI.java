@@ -62,7 +62,6 @@ public class AdvancedElementEditUI extends AbstractPopupWindow {
 		refreshList();
 		
 		list.enableScrolling(true, false)
-			.enableAnimations(false)
             .trimHeight(true)
             .setIsSelectionEnabled(true)
             .setIsSelectionVisible(true);
