@@ -5,7 +5,10 @@
  */
 package mobileapplication3.elements;
 
+import javax.microedition.lcdui.Graphics;
+
 import mobileapplication3.utils.Mathh;
+import mobileapplication3.utils.Utils;
 
 /**
  *
@@ -332,6 +335,36 @@ public class Sine extends AbstractCurve {
     
     public void recalcCalculatedArgs() {
     	calcAnchorPoint();
+    }
+    
+    public void paint(Graphics g, int zoomOut, int offsetX, int offsetY) {
+        if (pointsCache == null) {
+            genPoints();
+        }
+        
+        if (pointsCache.getSize() == 0) {
+        	return;
+        }
+        
+        short[] startPoint = pointsCache.getPoint(0);
+        for (int i = 0; i < pointsCache.getSize() - 1; i++) {
+            short[] endPoint = pointsCache.getPoint(i+1);
+            int x1 = xToPX(startPoint[0], zoomOut, offsetX);
+            int y1 = yToPX(startPoint[1], zoomOut, offsetY);
+            int x2 = xToPX(endPoint[0], zoomOut, offsetX);
+            int y2 = yToPX(endPoint[1], zoomOut, offsetY);
+            Utils.drawLine(g, x1, y1, x2, y2, LINE_THICKNESS, zoomOut);
+            if (i % 2 == 0) {
+	            int dx = x2 - x1;
+	            int dy = y2 - y1;
+	            int l = Mathh.calcDistance(dx, dy);
+	            int centerX = (x1 + x2) / 2;
+	            int centerY = (y1 + y2) / 2;
+	            int lzoomout = l * zoomOut;
+	            Utils.drawArrow(g, centerX, centerY, centerX + dy * 50000 / lzoomout, centerY - dx * 50000 / lzoomout, LINE_THICKNESS/6, zoomOut);
+            }
+            startPoint = endPoint;
+        }
     }
     
 }

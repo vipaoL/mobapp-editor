@@ -127,11 +127,10 @@ public class Utils {
     public static void drawArrow(Graphics g, int x1, int y1, int x2, int y2, int thickness, int zoomOut) {
         int dx = x2 - x1;
         int dy = y2 - y1;
-        int ang = Mathh.arctg(dx, dy);
-        int arrowX = (x2*9 + x1) / 10;
-        int arrowY = (y2*9 + y1) / 10;
-        int arrowSideVecX = 2 * thickness * Mathh.cos(ang + 90) / zoomOut;
-        int arrowSideVecY = 2 * thickness * Mathh.sin(ang + 90) / zoomOut;
+        int arrowX = (x2*5 + x1) / 6;
+        int arrowY = (y2*5 + y1) / 6;
+        int arrowSideVecX = dy / 8;
+        int arrowSideVecY = -dx / 8;
         drawLine(g, x1, y1, arrowX, arrowY, thickness, zoomOut, false, false);
         drawTriangle(g, x2, y2, arrowX + arrowSideVecX, arrowY + arrowSideVecY, arrowX - arrowSideVecX, arrowY - arrowSideVecY, zoomOut);
     }
