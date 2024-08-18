@@ -11,6 +11,7 @@ import java.io.UnsupportedEncodingException;
 
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
+import javax.microedition.rms.RecordStoreFullException;
 import javax.microedition.rms.RecordStoreNotFoundException;
 
 /**
@@ -19,39 +20,21 @@ import javax.microedition.rms.RecordStoreNotFoundException;
  */
 public class RecordStores {
 
-    public static boolean writeBytesToStore(byte[] data, String recordStoreName) {
-        RecordStore rs = null;
-        boolean ret = true;
-        
+    public static void writeBytesToStore(byte[] data, String recordStoreName) throws RecordStoreException {
         try {
-            try {
-                RecordStore.deleteRecordStore(recordStoreName);
-            } catch (Exception e) { }
+            RecordStore.deleteRecordStore(recordStoreName);
+        } catch (Exception e) { }
 
-            rs = RecordStore.openRecordStore(recordStoreName, true);
-            rs.addRecord(data, 0, data.length);
-        } catch (Exception e) {
-            e.printStackTrace();
-            ret = false;
-        }
+        RecordStore rs = RecordStore.openRecordStore(recordStoreName, true);
+        rs.addRecord(data, 0, data.length);
         
         try {
             rs.closeRecordStore();
-        } catch(Exception e) {
-            
-        }
-        
-        return ret;
+        } catch(Exception e) { }
     }
     
-    public static boolean writeStringToStore(String settings, String recordStoreName) {
-    	try {
-			byte[] data = settings.getBytes("UTF-8");
-			return writeBytesToStore(data, recordStoreName);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-    	return false;
+    public static void writeStringToStore(String settings, String recordStoreName) throws UnsupportedEncodingException, RecordStoreException {
+		writeBytesToStore(settings.getBytes("UTF-8"), recordStoreName);
     }
     
     public static String readStringFromStore(String recordStoreName) {
@@ -101,7 +84,7 @@ public class RecordStores {
         return ret;
     }
     
-    public static void WriteShortArray(short[] data, String recordStoreName) {
+    public static void WriteShortArray(short[] data, String recordStoreName) throws RecordStoreException {
     	writeBytesToStore(shortsToBytes(data), recordStoreName);
 	}
     

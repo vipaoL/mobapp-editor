@@ -56,7 +56,7 @@ public class ButtonCol extends AbstractButtonSet {
     public IUIComponent setSizes(int w, int h, int btnH, boolean trimHeight) {
         if (w == 0 || h == 0 || btnH == 0) {
             try {
-                throw new Exception("Setting zero as a dimension");
+                throw new Exception("Setting zero as a dimension " + getClass().getName());
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

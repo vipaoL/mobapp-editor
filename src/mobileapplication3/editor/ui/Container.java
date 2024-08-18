@@ -140,7 +140,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     protected final IUIComponent[] getComponents() {
     	if (components.length == 0) {
     		try {
-    			throw new IllegalStateException("No components in the container. Did you forgot to call setComponents()?");
+    			throw new IllegalStateException("No components in the container. Did you forgot to call setComponents()? " + getClass().getName());
     		} catch (IllegalStateException ex) {
     			ex.printStackTrace();
     		}
@@ -157,6 +157,9 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     }
     
     public void closePopup() {
+    	if (this.popupWindow != null) {
+    		popupWindow.setParent(null);
+    	}
         this.popupWindow = null;
         refreshSizes();
         repaint();
@@ -193,7 +196,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     private void onPaint(Graphics g, int x0, int y0, int w, int h, boolean forceInactive) {
     	if (w == 0 || h == 0) {
     		try {
-    			throw new Exception("Can't paint: w=" + w + " h=" + h);
+    			throw new Exception("Can't paint: w=" + w + " h=" + h + " " + getClass().getName());
     		} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -551,7 +554,7 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
     private final void setBounds(int x0, int y0, int w, int h) {
     	if (w == 0 || h == 0) {
             try {
-                throw new Exception("Setting zero as a dimension");
+                throw new Exception("Setting zero as a dimension " + getClass().getName());
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

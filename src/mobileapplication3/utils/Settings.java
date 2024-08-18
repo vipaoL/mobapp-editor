@@ -32,8 +32,10 @@ public class Settings {
     }
     
     public void saveToRMS() {
-        if (!RecordStores.writeStringToStore(getCurrentSettingsAsStr(), recordStoreName)) {
-            Main.setCurrent(new Alert("Error!", "Can't save settings to RMS", null, AlertType.ERROR));
+        try {
+        	RecordStores.writeStringToStore(getCurrentSettingsAsStr(), recordStoreName);
+        } catch (Exception ex) {
+            Main.setCurrent(new Alert("Error!", "Can't save settings to RMS: " + ex.toString(), null, AlertType.ERROR));
         }
     }
     

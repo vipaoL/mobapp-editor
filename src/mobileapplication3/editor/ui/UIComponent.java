@@ -163,7 +163,7 @@ public abstract class UIComponent implements IUIComponent {
     public IUIComponent setSize(int w, int h) {
         if (w == 0 || h == 0) {
             try {
-                throw new Exception("Setting zero as a dimension");
+                throw new Exception("Setting zero as a dimension " + getClass().getName());
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -265,7 +265,7 @@ public abstract class UIComponent implements IUIComponent {
             parent.repaint();
         } else {
             try {
-                throw new NullPointerException("Can't call parent's repaint: parent component is not set!");
+                throw new NullPointerException("Can't call parent's repaint: parent component is not set! " + getClass().getName());
             } catch (NullPointerException ex) {
                 ex.printStackTrace();
             }

@@ -44,7 +44,7 @@ public abstract class Page extends Container {
     public final void onSetBounds(int x0, int y0, int w, int h) {
         if (!isInited) {
             try {
-                throw new IllegalStateException("Error: init() hadn't done!");
+                throw new IllegalStateException("Error: init() hadn't done! " + getClass().getName());
             } catch (IllegalStateException ex) {
                 ex.printStackTrace();
             }

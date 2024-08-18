@@ -74,11 +74,6 @@ public class Main extends MIDlet {
     public static void setCurrent(Displayable d) {
         if (d instanceof Alert) {
             try {
-                throw new Exception();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            try {
             	display.setCurrent((Alert) d, display.getCurrent());
             } catch (Exception ex) {
 				display.setCurrent(d);
@@ -92,22 +87,22 @@ public class Main extends MIDlet {
         display.vibrate(duration);
     }
     
-    public static void showTextBox(TextBox textBox) {
-    	//TextBoxCommandListener cl = new TextBoxCommandListener();
-    	//textBox.setCommandListener(new TextBoxCommandListener());
-    }
-    
-    public class TextBoxCommandListener implements CommandListener {
-
-		public void commandAction(Command command, Displayable displayable) {
-			switch (command.getCommandType()) {
-				case Command.OK:
-				case Command.CANCEL:
-					
-					break;
-			}
-		}
-    	
-    }
+//    public static void showTextBox(TextBox textBox) {
+//    	TextBoxCommandListener cl = new TextBoxCommandListener();
+//    	textBox.setCommandListener(new TextBoxCommandListener());
+//    }
+//    
+//    public class TextBoxCommandListener implements CommandListener {
+//
+//		public void commandAction(Command command, Displayable displayable) {
+//			switch (command.getCommandType()) {
+//				case Command.OK:
+//				case Command.CANCEL:
+//					
+//					break;
+//			}
+//		}
+//    	
+//    }
     
 }

@@ -67,7 +67,7 @@ public class List extends UIComponent implements IContainer {
     public IUIComponent setSizes(int w, int h, int elemH, boolean trimHeight) {
         if (w == 0 || h == 0 || elemH == 0) {
             try {
-                throw new Exception("Setting zero as a dimension");
+                throw new Exception("Setting zero as a dimension " + getClass().getName());
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

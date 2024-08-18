@@ -22,7 +22,7 @@ public abstract class AbstractSetupWizardPage extends Page {
         buttons = actionButtons;
         if (buttons == null) {
             try {
-                throw new IllegalArgumentException("buttons is null");
+                throw new IllegalArgumentException("buttons is null " + getClass().getName());
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
