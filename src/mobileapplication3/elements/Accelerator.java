@@ -90,8 +90,8 @@ public class Accelerator extends Element {
 		return new short[] {x, y};
 	}
 	
-	private void setZeros(int x, int y, int l) {
-		this. x = (short) (x + l * Mathh.cos(angle) / 2000);
+	private void setZeros(int x, int y, int l, int angle) {
+		this.x = (short) (x + l * Mathh.cos(angle) / 2000);
 		this.y = (short) (y + l * Mathh.sin(angle) / 2000);
 	}
 	
@@ -126,7 +126,7 @@ public class Accelerator extends Element {
 	public Element setArgs(short[] args) {
 //		x = args[0]; // will be in the next mgstructs file format
 //		y = args[1];
-		setZeros(args[0], args[1], args[2]);
+		setZeros(args[0], args[1], args[2], args[4]);
 		l = args[2];
 		thickness = args[3];
 		angle = args[4];
