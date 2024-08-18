@@ -116,9 +116,6 @@ public class StructureBuilder {
         }
         
         data[carriage] = 0;
-        
-        System.out.println(carriage + " " + data.length);
-        
         return data;
     }
     

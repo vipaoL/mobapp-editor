@@ -115,7 +115,7 @@ public abstract class Element {
         short[] args = getArgsValues();
         short[] arr = new short[args.length + 1];
         arr[0] = getID();
-        System.arraycopy(getArgsValues(), 0, arr, 1, getArgsCount());
+        System.arraycopy(args, 0, arr, 1, args.length);
         return arr;
     }
     
