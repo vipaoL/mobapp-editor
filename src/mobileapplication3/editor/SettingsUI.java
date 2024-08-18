@@ -53,7 +53,7 @@ public class SettingsUI extends AbstractPopupWindow {
 					getUISettings().onChange();
 				}
             },
-            new Switch("Enable keyRepeated events in lists") {
+            new Switch("Key repeats in lists") {
 				public boolean getValue() {
 					return EditorSettings.getKeyRepeatedInListsEnabled(false);
 				}
