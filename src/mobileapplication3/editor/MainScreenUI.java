@@ -10,6 +10,7 @@ import javax.microedition.lcdui.AlertType;
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
+import javax.microedition.rms.RecordStoreException;
 
 import mobileapplication3.editor.ui.AbstractButtonSet;
 import mobileapplication3.editor.ui.Button;
@@ -111,7 +112,12 @@ public class MainScreenUI extends Container {
     	if (isAutoSaveEnabled && elementsBuffer != null) {
     		new Thread(new Runnable() {
 				public void run() {
-					RecordStores.WriteShortArray(elementsBuffer.asShortArray(), RECORD_STORE_AUTOSAVE);
+					try {
+						RecordStores.WriteShortArray(elementsBuffer.asShortArray(), RECORD_STORE_AUTOSAVE);
+					} catch (RecordStoreException ex) {
+						ex.printStackTrace();
+						Main.setCurrent(new Alert(ex.toString()));
+					}
 				}
 			}).start();
     	}
