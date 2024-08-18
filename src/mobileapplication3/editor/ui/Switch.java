@@ -15,8 +15,8 @@ public abstract class Switch extends Button {
 	}
 	
 	protected void drawText(Graphics g, int x0, int y0, int w, int h, boolean isSelected, boolean isFocused, boolean drawAsInactive) {
-		padding = h/3;
-		switchW = h * 2;
+		switchW = Math.min(h * 2, w / 4);
+		padding = switchW / 8;
 		super.drawText(g, x0, y0, w - switchW, h, isSelected, isFocused, drawAsInactive);
 		switchX0 = x0 + w - switchW + padding;
 		switchW -= padding * 2;

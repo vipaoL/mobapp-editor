@@ -40,9 +40,12 @@ public class SettingsUI extends AbstractPopupWindow {
 
     protected IUIComponent initAndGetPageContent() {
         Button[] settingsButtons = new Button[]{
+    		new Button("Current MGStructs folder: " + EditorSettings.getMgstructsFolderPath()) {
+                public void buttonPressed() { }
+            }.setIsActive(false),//.setBgColorInactive(0x223322).setFontColorInactive(0xaaaaaa),
             new Switch("Animations") {
 				public boolean getValue() {
-					return EditorSettings.getAnimsEnabled();
+					return EditorSettings.getAnimsEnabled(true);
 				}
 
 				public void setValue(boolean value) {
@@ -52,7 +55,7 @@ public class SettingsUI extends AbstractPopupWindow {
             },
             new Switch("Enable keyRepeated events in lists") {
 				public boolean getValue() {
-					return EditorSettings.getKeyRepeatedInListsEnabled();
+					return EditorSettings.getKeyRepeatedInListsEnabled(false);
 				}
 
 				public void setValue(boolean value) {
@@ -62,7 +65,7 @@ public class SettingsUI extends AbstractPopupWindow {
             },
             new Switch("Auto-save to RMS") {
             	public boolean getValue() {
-					return EditorSettings.getAutoSaveEnabled();
+					return EditorSettings.getAutoSaveEnabled(true);
 				}
 
 				public void setValue(boolean value) {
@@ -70,7 +73,7 @@ public class SettingsUI extends AbstractPopupWindow {
 					getUISettings().onChange();
 				}
             },
-            new Button("Show setup wizard again\n(Current MGStructs folder: " + EditorSettings.getMgstructsFolderPath() + ")") {
+            new Button("Open setup wizard") {
                 public void buttonPressed() {
                     showPopup(new SetupWizard(new SetupWizard.FinishSetup() {
 						public void onFinish() {
@@ -79,9 +82,11 @@ public class SettingsUI extends AbstractPopupWindow {
 					}));
                 }
             },
-            new Button("Reset settings (will reset MGStructs folder as well)") {
+            new Button("Reset settings") {
                 public void buttonPressed() {
                     EditorSettings.resetSettings();
+                    isInited = false;
+                    init();
                 }
             }.setBgColor(0x550000)
         };

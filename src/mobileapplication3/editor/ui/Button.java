@@ -74,6 +74,24 @@ public abstract class Button {
         return isActive;
     }
     
+    public Button setFontColor(int fontColor) {
+		this.fontColor = fontColor;
+		return this;
+	}
+    
+    public int getFontColor() {
+		return fontColor;
+	}
+    
+    public Button setFontColorInactive(int fontColorInactive) {
+		this.fontColorInactive = fontColorInactive;
+		return this;
+	}
+    
+    public int getFontColorInactive() {
+		return fontColorInactive;
+	}
+    
     public int getBgColor() {
         return bgColor;
     }

@@ -17,7 +17,7 @@ public abstract class AbstractButtonSet extends UIComponent {
     public Button[] buttons = null;
     protected int bgColor = COLOR_TRANSPARENT;
     protected int buttonsBgColor = NOT_SET;
-    protected int buttonsBgColorInactive = BG_COLOR_INACTIVE;
+    protected int buttonsBgColorInactive = NOT_SET;
     protected int buttonsSelectedColor = NOT_SET;
     protected int buttonsBgPadding = 0;
     

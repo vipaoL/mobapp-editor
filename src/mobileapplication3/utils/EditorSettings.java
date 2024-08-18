@@ -104,6 +104,7 @@ public class EditorSettings {
 
     public static void setMgstructsFolderPath(String path) {
     	getSettingsInst().set(MGSTRUCTS_FOLDER_PATH, path);
+    	mgstructsFolderPath = path;
     }
     
     ///
