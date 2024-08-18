@@ -334,7 +334,7 @@ public class ButtonCol extends AbstractButtonSet {
                 btnY = btnBottomY - btnH;
             }
             
-            boolean drawAsSelected = (i == selected && isSelectionVisible);
+            boolean drawAsSelected = (i == selected && isSelectionVisible && isFocused);
             buttons[i].paint(g, btnX, btnY, btnW, btnH, drawAsSelected, isFocused, forceInactive);
             g.setFont(prevFont);
         }

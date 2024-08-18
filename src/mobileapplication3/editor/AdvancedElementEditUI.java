@@ -143,23 +143,24 @@ public class AdvancedElementEditUI extends AbstractPopupWindow {
 	        int prevClipH = g.getClipHeight();
 	        
 	        int barLeftW = w * (value - minValue) / (maxValue - minValue);
+	        int d = Math.min(w/5, h/5);
 	        
 	        boolean isActive = this.isActive && !forceInactive;
+	        if (isActive) {
+				g.setColor(COLOR_ACCENT_MUTED);
+	        } else {
+	        	g.setColor(BG_COLOR_INACTIVE);
+	        }
+			g.setClip(x0, y0, w, h);
+            g.fillRoundRect(x0, y0, w, h, d, d);
+	        
 	        if (isActive) {
 	        	g.setColor(COLOR_ACCENT);
 	        } else {
 	        	g.setColor(COLOR_ACCENT_MUTED);
 	        }
 	        g.setClip(x0, y0, barLeftW, h);
-			g.fillRect(x0, y0, w, h);
-			
-			if (isActive) {
-				g.setColor(COLOR_ACCENT_MUTED);
-	        } else {
-	        	g.setColor(BG_COLOR_INACTIVE);
-	        }
-			g.setClip(x0 + barLeftW, y0, w - barLeftW, h);
-			g.fillRect(x0, y0, w, h);
+            g.fillRoundRect(x0, y0, w, h, d, d);
 			
 			g.setClip(prevClipX, prevClipY, prevClipW, prevClipH);
 		}

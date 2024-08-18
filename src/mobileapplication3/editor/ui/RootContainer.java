@@ -40,11 +40,13 @@ public class RootContainer extends Canvas implements IContainer {
     public RootContainer setRootUIComponent(IUIComponent rootUIComponent) {
         if (this.rootUIComponent != null) {
             this.rootUIComponent.setParent(null);
+            this.rootUIComponent.setFocused(false);
         }
         
         if (rootUIComponent != null) {
 		    this.rootUIComponent = rootUIComponent.setParent(this).setFocused(true);
 		    rootUIComponent.init();
+		    rootUIComponent.setFocused(true);
         }
         return this;
     }

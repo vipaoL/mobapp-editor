@@ -245,14 +245,17 @@ public class List extends UIComponent implements IContainer {
             return false;
         }
         
-        if (handleKeyPressedScrollOnly(keyCode, count)) {
+        if (handleKeyPressedScrollOnly(keyCode, count, false)) {
         	return true;
         } else {
         	return elements[selected].keyPressed(keyCode, count);
         }
     }
     
-   private boolean handleKeyPressedScrollOnly(int keyCode, int count) {
+   private boolean handleKeyPressedScrollOnly(int keyCode, int count, boolean isKeyRepeated) {
+	   if (ignoreKeyRepeated && isKeyRepeated) {
+		   return false;
+	   }
 	   switch (keyCode) {
        default:
            switch (RootContainer.getGameActionn(keyCode)) {
@@ -356,11 +359,12 @@ public class List extends UIComponent implements IContainer {
                 elemY = elemBottomY - elemH;
             }
             
+            boolean drawAsSelected = (i == selected && isSelectionVisible && isFocused);
+            drawBgUnderElement(g, elemX, elemY, elemW, elemH, !forceInactive, drawAsSelected);
             elements[i].paint(g, elemX, elemY, elemW, elemH, forceInactive);
             g.setFont(prevFont);
-            
-            boolean drawAsSelected = (i == selected && isSelectionVisible);
-            if (isFocused && drawAsSelected) {
+
+            if (drawAsSelected) {
                 int markY0 = elemH / 3;
                 int markY1 = elemH - markY0;
                 int markCenterY = (markY0 + markY1) / 2;
@@ -377,6 +381,28 @@ public class List extends UIComponent implements IContainer {
             g.drawLine(x0 + w - 1, y0 + selectionMarkY0, x0 + w - 1, y0 + selectionMarkY1);
         }
     }
+    
+    protected void drawBgUnderElement(Graphics g, int x0, int y0, int w, int h, boolean isActive, boolean isSelected) {
+    	int prevClipX = g.getClipX();
+        int prevClipY = g.getClipY();
+        int prevClipW = g.getClipWidth();
+        int prevClipH = g.getClipHeight();
+        
+		if (isActive) {
+			if (isSelected) {
+				g.setColor(COLOR_ACCENT);
+			} else {
+				g.setColor(COLOR_ACCENT_MUTED);
+			}
+        } else {
+        	g.setColor(BG_COLOR_INACTIVE);
+        }
+		
+		int d = Math.min(w/5, h/5);
+        g.fillRoundRect(x0, y0, w, h, d, d);
+		
+		g.setClip(prevClipX, prevClipY, prevClipW, prevClipH);
+	}
     
     private void initAnimationThread() {
         if (animationThread == null) {
@@ -398,6 +424,7 @@ public class List extends UIComponent implements IContainer {
         for (int i = 0; i < elements.length; i++) {
 			elements[i].setParent(this);
 			elements[i].init();
+			elements[i].setBgColor(COLOR_TRANSPARENT);
 		}
         
 //        setElementsBgColor(elementsBgColor);
@@ -484,14 +511,10 @@ public class List extends UIComponent implements IContainer {
 	}
     
     public boolean handleKeyRepeated(int keyCode, int pressedCount) {
-    	if (ignoreKeyRepeated) {
-    		return isFocused;
-    	}
-    	
-        if (handleKeyPressedScrollOnly(keyCode, 1)) {
+        if (handleKeyPressedScrollOnly(keyCode, 1, true)) {
         	return true;
         } else {
-        	return elements[selected].keyRepeated(keyCode, pressedCount);
+        	return elements[selected].keyRepeated(keyCode, pressedCount) || isFocused;
         }
     }
 }

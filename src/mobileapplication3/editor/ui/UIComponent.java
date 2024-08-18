@@ -14,7 +14,7 @@ import javax.microedition.lcdui.Graphics;
 public abstract class UIComponent implements IUIComponent {
     
     protected boolean isVisible = true;
-    protected boolean isFocused = true;
+    protected boolean isFocused = false;
     protected boolean isActive = true;
     public int x0, y0, w, h, prevX0, prevY0, prevW, prevH,
             anchorX0, anchorY0,
@@ -75,8 +75,8 @@ public abstract class UIComponent implements IUIComponent {
         if (bgColor >= 0) {
         	g.setColor(bgColor);
             if (roundBg) {
-	            int r = Math.min(w/5, h/5);
-	            g.fillRoundRect(x0, y0, w, h, r, r);
+	            int d = Math.min(w/5, h/5);
+	            g.fillRoundRect(x0, y0, w, h, d, d);
             } else {
             	g.fillRect(x0, y0, w, h);
             }

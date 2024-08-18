@@ -20,7 +20,11 @@ public abstract class Page extends Container {
 
     public Page(String title) {
         this.title = new TextComponent(title);
-        actionButtons = (ButtonRow) new ButtonRow();
+        actionButtons = (ButtonRow) new ButtonRow() {
+        	public boolean canBeFocused() {
+        		return false;
+        	}
+        };
                 //.setButtonsBgColor(0x3333aa)
                 //.setSelectedColor(0x9999ff);
     }

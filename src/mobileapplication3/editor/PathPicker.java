@@ -46,10 +46,6 @@ public class PathPicker extends Container {
     private String currentFolder = null, pickedPath, fileName = "";
     private String questionTemplate = "";
     
-    public PathPicker() {
-        initUI();
-    }
-    
     public PathPicker pickFolder(String question, Feedback onComplete) {
         return pickFolder(null, question, onComplete);
     }
@@ -158,6 +154,7 @@ public class PathPicker extends Container {
     private void setListButtons(Button[] buttons) {
         list.setButtons(buttons);
         setSize(w, h);
+        refreshFocusedComponents();
         repaint();
     }
     
@@ -193,7 +190,11 @@ public class PathPicker extends Container {
         
         
         actionButtons = new Button[]{okBtn, cancelBtn};
-        actionButtonPanel = (ButtonRow) new ButtonRow(actionButtons)
+        actionButtonPanel = (ButtonRow) new ButtonRow(actionButtons) {
+        	public boolean canBeFocused() {
+        		return false;
+        	}
+        }
         		.setIsSelectionEnabled(false);
                 //.setButtonsBgColor(COLOR_TRANSPARENT);
         actionButtonPanel.bindToSoftButtons(0, actionButtonPanel.getButtonCount() - 1);
@@ -203,8 +204,13 @@ public class PathPicker extends Container {
                 .setBgColor(COLOR_TRANSPARENT);
     }
     
+    public boolean canBeFocused() {
+    	return isVisible;
+    }
+    
     public void init() {
-    	setComponents(new IUIComponent[]{actionButtonPanel, list, question, title});
+    	initUI();
+    	setComponents(new IUIComponent[]{list, question, title, actionButtonPanel});
     }
     
     public Container setBgImage(Image bg) {

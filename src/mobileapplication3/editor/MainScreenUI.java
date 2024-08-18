@@ -208,7 +208,7 @@ public class MainScreenUI extends Container {
             }
         };
         
-        btnList = new Button("List") {
+        btnList = new Button("Edit") {
             public void buttonPressed() {
                 placementButtonPanel.setVisible(false);
                 placedElementsList.toggleIsVisible();
@@ -218,6 +218,10 @@ public class MainScreenUI extends Container {
         
         Button[] bottomButtons = {btnPlace, btnLoad, btnSave, btnList};
         bottomButtonPanel = (ButtonRow) new ButtonRow(){
+        	public boolean canBeFocused() {
+        		return false;
+        	}
+        	
             public boolean handleKeyPressed(int keyCode, int count) {
                 switch (keyCode) {
                     case -6:
@@ -398,6 +402,7 @@ public class MainScreenUI extends Container {
         bottomButtonPanel.setVisible(!b);
         zoomPanel.setVisible(!b);
         settingsButton.setVisible(!b);
+        refreshFocusedComponents();
     }
 
     public void onSetBounds(int x0, int y0, int w, int h) {

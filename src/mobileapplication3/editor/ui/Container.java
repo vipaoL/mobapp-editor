@@ -152,15 +152,18 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         popupWindow = w;
         popupWindow.setParent(this);
         popupWindow.init();
+        refreshFocusedComponents();
         refreshSizes();
         repaint();
     }
     
     public void closePopup() {
     	if (this.popupWindow != null) {
+    		popupWindow.setVisible(false);
     		popupWindow.setParent(null);
     	}
         this.popupWindow = null;
+        refreshFocusedComponents();
         refreshSizes();
         repaint();
     }
@@ -278,21 +281,28 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
         return false;
     }
     
-    private void refreshFocusedComponents() {
+    protected void refreshFocusedComponents() {
         for (int i = 0; i < components.length; i++) {
             if (components[i] != null) {
                 components[i].setFocused(false);
             }
         }
         
-//        for (int i = components.length - 1; i >= 0; i--) {
-//            if (components[i] != null) {
-//                if (components[i].canBeFocused()) {
-//                    components[i].setFocused(true);
-//                    break;
-//                }
-//            }
-//        }
+        if (popupWindow != null) {
+        	popupWindow.setFocused(true);
+        	return;
+        }
+        
+        if (isFocused) {
+	        for (int i = components.length - 1; i >= 0; i--) {
+	            if (components[i] != null) {
+	                if (components[i].canBeFocused()) {
+	                    components[i].setFocused(true);
+	                    break;
+	                }
+	            }
+	        }
+        }
     }
     
     public IUIComponent setVisible(boolean b) {
@@ -606,6 +616,10 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
 	}
     
     public void repaint() {
+    	if (!isVisible) {
+    		return;
+    	}
+    	
         if (parent != null) {
             parent.repaint();
         } else {
