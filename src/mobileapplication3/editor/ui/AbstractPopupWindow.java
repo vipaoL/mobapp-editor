@@ -10,9 +10,6 @@ package mobileapplication3.editor.ui;
  * @author vipaol
  */
 public abstract class AbstractPopupWindow extends Page {
-    
-    protected TextComponent title = null;
-    protected ButtonRow actionButtons = null;
     protected IPopupFeedback feedback;
 
     public AbstractPopupWindow(String title, IPopupFeedback parent) {

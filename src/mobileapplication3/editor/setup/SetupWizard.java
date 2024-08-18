@@ -48,6 +48,9 @@ public class SetupWizard extends Container {
     }
     
     public void init() {
+    	for (int i = 0; i < pages.length; i++) {
+        	pages[i].setParent(this);
+		}
     	setCurrentPage(currentPageI);
     }
     
@@ -69,6 +72,7 @@ public class SetupWizard extends Container {
     
     private void setCurrentPage(int i) {
         System.out.println("setting page i=" + i);
+        pages[currentPageI].setParent(this);
         pages[currentPageI].setVisible(false);
         if (i < 0) {
             return;

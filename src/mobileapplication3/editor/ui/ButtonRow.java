@@ -116,7 +116,8 @@ public class ButtonRow extends AbstractButtonSet {
                     case Canvas.FIRE:
                         return buttons[selected].invokePressed(true, isFocused);
                     default:
-                        return false;
+                    	System.out.println(isFocused);
+                        return isFocused;
                 }
         }
         
@@ -145,7 +146,7 @@ public class ButtonRow extends AbstractButtonSet {
         }
 
         for (int i = 0; i < buttons.length; i++) {
-            boolean drawAsSelected = (i == selected && isSelectionVisible && isSelectionEnabled && isFocused);
+            boolean drawAsSelected = (i == selected && isSelectionVisible && isSelectionEnabled);
             buttons[i].paint(g, x0 + i*w/buttons.length, y0, w/buttons.length, h, drawAsSelected, isFocused, forceInactive);
         }
     }

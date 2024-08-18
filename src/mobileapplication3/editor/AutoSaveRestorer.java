@@ -13,6 +13,12 @@ public abstract class AutoSaveRestorer extends AbstractPopupWindow {
 		super("Some unsaved data can be recovered", parent);
 		this.elements = elements;
 	}
+	
+	public void init() {
+		super.init();
+        actionButtons.setIsSelectionEnabled(true);
+        actionButtons.setIsSelectionVisible(true);
+	}
 
 	protected Button[] getActionButtons() {
 		return new Button[] {

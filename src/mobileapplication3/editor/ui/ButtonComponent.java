@@ -52,13 +52,17 @@ public class ButtonComponent extends AbstractButtonSet {
     }
 
     public boolean handleKeyPressed(int keyCode, int count) {
-        if (isFocused && RootContainer.getGameActionn(keyCode) == Canvas.FIRE) {
+        if (RootContainer.getGameActionn(keyCode) == Canvas.FIRE) {
             buttons[0].invokePressed(true, true);
             return true;
         } else {
-        	return false;
+        	return isFocused;
         }
     }
+    
+    public boolean handleKeyRepeated(int keyCode, int pressedCount) {
+		return false;
+	}
     
     public IUIComponent setBgColor(int color) {
     	buttons[0].setBgColor(color);

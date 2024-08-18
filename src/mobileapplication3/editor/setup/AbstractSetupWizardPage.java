@@ -22,12 +22,19 @@ public abstract class AbstractSetupWizardPage extends Page {
         buttons = actionButtons;
         if (buttons == null) {
             try {
-                throw new Exception("buttons is null");
+                throw new IllegalArgumentException("buttons is null");
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
         this.feedback = feedback;
+    }
+    
+    public void init() {
+    	super.init();
+        actionButtons.setIsSelectionEnabled(true);
+        actionButtons.setIsSelectionVisible(true);
+        actionButtons.setFocused(false);
     }
 
     protected Button[] getActionButtons() {

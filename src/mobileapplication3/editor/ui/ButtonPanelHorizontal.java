@@ -155,7 +155,7 @@ public class ButtonPanelHorizontal extends AbstractButtonSet {
                         }
                         return buttons[selected].invokePressed(true, isFocused);
                     default:
-                        return false;
+                        return isFocused;
                 }
         }
         

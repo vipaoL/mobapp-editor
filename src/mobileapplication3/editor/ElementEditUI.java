@@ -2,10 +2,9 @@ package mobileapplication3.editor;
 
 import mobileapplication3.editor.ui.AbstractPopupWindow;
 import mobileapplication3.editor.ui.Button;
-import mobileapplication3.editor.ui.ButtonComponent;
+import mobileapplication3.editor.ui.ButtonCol;
 import mobileapplication3.editor.ui.IPopupFeedback;
 import mobileapplication3.editor.ui.IUIComponent;
-import mobileapplication3.editor.ui.List;
 import mobileapplication3.elements.Element;
 import mobileapplication3.elements.Element.PlacementStep;
 import mobileapplication3.elements.EndPoint;
@@ -13,8 +12,8 @@ import mobileapplication3.elements.EndPoint;
 public class ElementEditUI extends AbstractPopupWindow {
 	
 	private Element element;
-	private IUIComponent[] rows;
-	private List list;
+	private Button[] rows;
+	private ButtonCol list;
 	private StructureBuilder sb;
 
 	public ElementEditUI(Element element, StructureBuilder sb, IPopupFeedback parent) {
@@ -36,27 +35,25 @@ public class ElementEditUI extends AbstractPopupWindow {
 	protected IUIComponent initAndGetPageContent() {
 		PlacementStep[] editSteps = element.getPlacementSteps();
 		PlacementStep[] extraEditSteps = element.getExtraEditingSteps();
-		rows = new IUIComponent[editSteps.length + extraEditSteps.length + 3 /*clone, advanced edit and delete*/];
+		rows = new Button[editSteps.length + extraEditSteps.length + 3 /*clone, advanced edit and delete*/];
 		for (int i = 0; i < editSteps.length; i++) {
 			final int o = i;
-			Button editStepButton = new Button(editSteps[i].getName()) {
+			rows[o] = new Button(editSteps[i].getName()) {
 				public void buttonPressed() {
 					sb.edit(element, o);
 					close();
 				}
 			};
-			rows[o] = new ButtonComponent(editStepButton);
 		}
 		
 		for (int i = 0; i < extraEditSteps.length; i++) {
 			final int o = i + editSteps.length;
-			Button editStepButton = new Button(extraEditSteps[i].getName()) {
+			rows[o] = new Button(extraEditSteps[i].getName()) {
 				public void buttonPressed() {
 					sb.edit(element, o);
 					close();
 				}
 			}.setBgColor(0x201010);
-			rows[o] = new ButtonComponent(editStepButton);
 		}
 		
 		Button cloneButton = new Button("Clone") {
@@ -90,20 +87,19 @@ public class ElementEditUI extends AbstractPopupWindow {
 			deleteButton.setIsActive(false);
 		}
 		
-		rows[rows.length - 3] = new ButtonComponent(cloneButton);
-		rows[rows.length - 2] = new ButtonComponent(advancedEditButton);
-		rows[rows.length - 1] = new ButtonComponent(deleteButton);
+		rows[rows.length - 3] = (cloneButton);
+		rows[rows.length - 2] = (advancedEditButton);
+		rows[rows.length - 1] = (deleteButton);
 		
-		list = new List() {
+		list = (ButtonCol) new ButtonCol() {
 			public final void onSetBounds(int x0, int y0, int w, int h) {
-				setElementsPadding(getElemH()/16);
+				setButtonsBgPadding(getBtnH()/16);
 				super.onSetBounds(x0, y0, w, h);
 			}
 		}
-				.setElements(rows)
 				.enableScrolling(true, false)
-				.enableAnimations(false)
                 .trimHeight(true)
+                .setButtons(rows)
                 .setIsSelectionEnabled(true)
                 .setIsSelectionVisible(true);
 		return list;

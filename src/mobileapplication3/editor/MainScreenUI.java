@@ -118,7 +118,7 @@ public class MainScreenUI extends Container {
 	}
     
     private void setComponents() {
-    	setComponents(new IUIComponent[]{editorCanvas, bottomButtonPanel, startPointWarning, zoomPanel, placementButtonPanel, settingsButton, placedElementsList, pathPicker});
+    	setComponents(new IUIComponent[]{editorCanvas, startPointWarning, zoomPanel, placementButtonPanel, settingsButton, placedElementsList, bottomButtonPanel, pathPicker});
     }
     
     private SettingsUI getSettingsUIObject() {
@@ -138,6 +138,7 @@ public class MainScreenUI extends Container {
             public void buttonPressed() {
                 placedElementsList.setVisible(false);
                 placementButtonPanel.toggleIsVisible();
+                placementButtonPanel.setFocused(placementButtonPanel.getIsVisible());
             }
         };
         
@@ -205,6 +206,7 @@ public class MainScreenUI extends Container {
             public void buttonPressed() {
                 placementButtonPanel.setVisible(false);
                 placedElementsList.toggleIsVisible();
+                placedElementsList.setFocused(placedElementsList.getIsVisible());
             }
         };
         
@@ -223,9 +225,6 @@ public class MainScreenUI extends Container {
                         break;
                     case Canvas.KEY_NUM9:
                         btnSave.invokePressed(false, false);
-                        break;
-                    case Canvas.KEY_NUM0:
-                        // new file
                         break;
                     default:
                         return false;
@@ -479,11 +478,10 @@ public class MainScreenUI extends Container {
     	            switch (keyCode) {
     	                case Canvas.KEY_NUM7:
     	                    buttons[0].invokePressed(false, false);
-    	                    break;
+    	                    return true;
     	                default:
     	                    return false;
     	            }
-    	            return true;
     	        }
     		};
 		}

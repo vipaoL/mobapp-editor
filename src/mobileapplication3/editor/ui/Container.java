@@ -282,14 +282,14 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
             }
         }
         
-        for (int i = components.length - 1; i >= 0; i--) {
-            if (components[i] != null) {
-                if (components[i].canBeFocused()) {
-                    components[i].setFocused(true);
-                    break;
-                }
-            }
-        }
+//        for (int i = components.length - 1; i >= 0; i--) {
+//            if (components[i] != null) {
+//                if (components[i].canBeFocused()) {
+//                    components[i].setFocused(true);
+//                    break;
+//                }
+//            }
+//        }
     }
     
     public IUIComponent setVisible(boolean b) {
@@ -468,7 +468,9 @@ public abstract class Container implements IContainer, IUIComponent, IPopupFeedb
                     continue;
                 }
                 if (uiComponents[i].keyPressed(keyCode, count)) {
-                    repaint();
+                	if (isVisible) {
+                		repaint();
+                	}
                     return true;
                 }
             }

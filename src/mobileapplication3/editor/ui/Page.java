@@ -16,11 +16,11 @@ public abstract class Page extends Container {
     protected IUIComponent pageContent = null;
     protected ButtonRow actionButtons = null;
     protected int margin;
-    private boolean isInited = false;
+    protected boolean isInited = false;
 
     public Page(String title) {
         this.title = new TextComponent(title);
-        this.actionButtons = (ButtonRow) new ButtonRow();
+        actionButtons = (ButtonRow) new ButtonRow();
                 //.setButtonsBgColor(0x3333aa)
                 //.setSelectedColor(0x9999ff);
     }
@@ -31,11 +31,10 @@ public abstract class Page extends Container {
             pageContent = initAndGetPageContent();
             actionButtons.setButtons(getActionButtons());
             actionButtons.bindToSoftButtons(0, actionButtons.getButtonCount() - 1);
-            actionButtons.setIsSelectionEnabled(true);
-            actionButtons.setIsSelectionVisible(RootContainer.displayKbHints);
+            actionButtons.setFocused(false);
             // TODO call onSetBounds if it was called before and failed because initPage had't done
         }
-    	setComponents(new IUIComponent[]{title, actionButtons, pageContent});
+    	setComponents(new IUIComponent[]{title, pageContent, actionButtons});
     }
 
     public boolean keyPressed(int keyCode, int count) {
@@ -56,7 +55,7 @@ public abstract class Page extends Container {
         title
                 .setSize(w, TextComponent.HEIGHT_AUTO)
                 .setPos(x0, y0, TOP | LEFT);
-        actionButtons.setIsSelectionVisible(true)
+        actionButtons
                 .setButtonsBgPadding(margin/4)
                 .setSize(w, AbstractButtonSet.H_AUTO)
                 .setPos(x0 + w/2, y0 + h, BOTTOM | HCENTER);

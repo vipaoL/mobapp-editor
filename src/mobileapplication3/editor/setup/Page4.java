@@ -52,11 +52,11 @@ public class Page4 extends AbstractSetupWizardPage {
     public void init() {
     	super.init();
     	actionButtons.setSelected(actionButtons.getButtonCount() - 1);
+    	actionButtons.buttons[1].setIsActive(false);
     }
     
     public void initOnFirstShow() {
-        fillList();
-        
+    	fillList();
         list.enableScrolling(true, true)
                 .setIsSelectionVisible(true)
                 .setButtonsBgPadding(margin/4);
@@ -76,7 +76,10 @@ public class Page4 extends AbstractSetupWizardPage {
                 }
                 list.setButtons(listButtons);
                 list.setSelected(list.buttons.length - 1);
-                onSetBounds(x0, y0, w, h);
+                if (w != 0 && h != 0) {
+	                onSetBounds(x0, y0, w, h/2);
+	                onSetBounds(x0, y0, w, h);
+                }
                 feedback.needRepaint();
             }
         })).start();

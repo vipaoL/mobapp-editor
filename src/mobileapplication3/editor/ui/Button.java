@@ -148,7 +148,7 @@ public abstract class Button {
     }
     
     protected void drawSelectionMark(Graphics g, int x0, int y0, int w, int h, boolean isSelected, boolean isFocused, boolean forceInactive) {
-    	if (isFocused && isSelected) {
+    	if (isSelected) {
             g.setColor(getCurrentFontColor(forceInactive));
             int markY0 = h / 3;
             int markY1 = h - markY0;

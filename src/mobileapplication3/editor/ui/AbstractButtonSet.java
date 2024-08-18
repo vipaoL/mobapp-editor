@@ -159,7 +159,7 @@ public abstract class AbstractButtonSet extends UIComponent {
     
     public boolean handleKeyRepeated(int keyCode, int pressedCount) {
     	if (ignoreKeyRepeated) {
-    		return false;
+    		return isFocused;
     	}
     	
         return handleKeyPressed(keyCode, 1);

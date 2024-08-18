@@ -35,6 +35,7 @@ public class List extends UIComponent implements IContainer {
     private boolean startFromBottom;
     private boolean enableAnimations = true;
     private boolean isInited = false;
+    protected boolean ignoreKeyRepeated = true;
     
     public List() { }
 
@@ -43,6 +44,10 @@ public class List extends UIComponent implements IContainer {
     }
     
     public void init() {
+    	try {
+    		ignoreKeyRepeated = !getUISettings().getKeyRepeatedInListsEnabled();
+    	} catch (Exception ex) { }
+    	
     	isInited = true;
     	setElements(elements);
     }
@@ -479,6 +484,10 @@ public class List extends UIComponent implements IContainer {
 	}
     
     public boolean handleKeyRepeated(int keyCode, int pressedCount) {
+    	if (ignoreKeyRepeated) {
+    		return isFocused;
+    	}
+    	
         if (handleKeyPressedScrollOnly(keyCode, 1)) {
         	return true;
         } else {
