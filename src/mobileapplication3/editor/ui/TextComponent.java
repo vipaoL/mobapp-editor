@@ -173,23 +173,27 @@ public class TextComponent extends UIComponent {
                     while (isHorizontalScrollingEnabled) {
                         try {
                             long start = System.currentTimeMillis();
-                            if (!reverse) {
-                                if (horizontalScrollOffset < textW2 - w / 3) {
-                                    horizontalScrollOffset += textW2 / 128;
-                                } else {
-                                    Thread.sleep(500);
-                                    reverse = true;
-                                }
+                            if (textW2*2 > w) {
+	                            if (!reverse) {
+	                                if (horizontalScrollOffset < textW2 - w / 3) {
+	                                    horizontalScrollOffset += textW2 / 128;
+	                                } else {
+	                                    Thread.sleep(500);
+	                                    reverse = true;
+	                                }
+	                            } else {
+	                                if (horizontalScrollOffset > -textW2 + w / 3) {
+	                                    horizontalScrollOffset -= textW2 / 16;
+	                                } else {
+	                                    Thread.sleep(500);
+	                                    reverse = false;
+	                                }
+	                            }
+	                            if (horizontalScrollOffset != prevScrollOffset) {
+	                            	repaint();
+	                            }
                             } else {
-                                if (horizontalScrollOffset > -textW2 + w / 3) {
-                                    horizontalScrollOffset -= textW2 / 16;
-                                } else {
-                                    Thread.sleep(500);
-                                    reverse = false;
-                                }
-                            }
-                            if (horizontalScrollOffset != prevScrollOffset) {
-                            	repaint();
+                            	horizontalScrollOffset = 0;
                             }
                             prevScrollOffset = horizontalScrollOffset;
                             Thread.sleep(Math.max(0, 20 - (System.currentTimeMillis() - start)));
