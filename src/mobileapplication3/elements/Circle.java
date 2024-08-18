@@ -339,7 +339,7 @@ public class Circle extends AbstractCurve {
     
     public short[] getEndPoint() {
         if (Mathh.isPointOnArc(0, startAngle, arcAngle)) {
-        	return new short[]{(short) (x + r), y};
+        	return new short[]{(short) (x + r * kx/100), y};
     	} else {
     		return EndPoint.compareAsEndPoints(getPointOnCircleByAngle(startAngle), getPointOnCircleByAngle(startAngle + arcAngle));
     	}
