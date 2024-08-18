@@ -52,7 +52,11 @@ public class Page4 extends AbstractSetupWizardPage {
     public void init() {
     	super.init();
     	actionButtons.setSelected(actionButtons.getButtonCount() - 1);
-    	actionButtons.buttons[1].setIsActive(false);
+    	actionButtons.buttons[1] = new Button("Finish") {
+			public void buttonPressed() {
+				saveFolderChoise(listButtons[list.getSelected()].getTitle());
+			}
+		};
     }
     
     public void initOnFirstShow() {
