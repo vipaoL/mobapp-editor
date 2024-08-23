@@ -5,9 +5,7 @@
  */
 package mobileapplication3.editor.setup;
 
-import mobileapplication3.utils.EditorSettings;
 import mobileapplication3.editor.platform.FileUtils;
-import mobileapplication3.editor.platform.Main;
 import mobileapplication3.editor.platform.Paths;
 import mobileapplication3.editor.ui.AbstractPopupWindow;
 import mobileapplication3.editor.ui.Button;
@@ -17,6 +15,7 @@ import mobileapplication3.editor.ui.IUIComponent;
 import mobileapplication3.editor.ui.UIComponent;
 import mobileapplication3.editor.ui.platform.Graphics;
 import mobileapplication3.editor.ui.platform.Platform;
+import mobileapplication3.utils.EditorSettings;
 
 /**
  *
