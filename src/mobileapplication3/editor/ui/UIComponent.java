@@ -319,6 +319,9 @@ public abstract class UIComponent implements IUIComponent {
         return false;
     }
     
+    public void onShow() { }
+    public void onHide() { }
+    
     protected abstract boolean handlePointerReleased(int x, int y);
     protected abstract boolean handleKeyPressed(int keyCode, int count);
     protected abstract void onPaint(Graphics g, int x0, int y0, int w, int h, boolean forceInactive);
