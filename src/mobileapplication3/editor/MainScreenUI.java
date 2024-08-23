@@ -52,16 +52,17 @@ public class MainScreenUI extends Container {
     private boolean isAutoSaveEnabled = true;
     
     public MainScreenUI() {
+    	elementsBuffer = new StructureBuilder(new StructureBuilder.Feedback() {
+            public void onUpdate() {
+                initListPanel();
+                saveToRMS();
+            }
+        });
+    	initEditorCanvas();
+	}
+    
+    public void init() {
     	try {
-            elementsBuffer = new StructureBuilder(new StructureBuilder.Feedback() {
-                public void onUpdate() {
-                    initListPanel();
-                    saveToRMS();
-                }
-            });
-
-	        initEditorCanvas();
-	        
             initBottomPanel();
             
             initStartPointWarning();
@@ -80,9 +81,6 @@ public class MainScreenUI extends Container {
             ex.printStackTrace();
             Main.setCurrent(new Alert(ex.toString()));
         }
-    }
-    
-    public void init() {
     	isAutoSaveEnabled = EditorSettings.getAutoSaveEnabled(true);
     	setComponents();
     }
