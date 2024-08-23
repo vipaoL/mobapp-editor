@@ -3,10 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mobileapplication3.editor.ui;
+package mobileapplication3.editor.ui.platform;
 
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Graphics;
+
+import mobileapplication3.editor.ui.IContainer;
+import mobileapplication3.editor.ui.IUIComponent;
+import mobileapplication3.editor.ui.UISettings;
 
 /**
  *
