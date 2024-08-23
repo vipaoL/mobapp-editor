@@ -6,19 +6,19 @@
 package mobileapplication3.editor;
 
 import mobileapplication3.utils.Utils;
-import mobileapplication3.utils.FileUtils;
+import mobileapplication3.editor.platform.FileUtils;
 import mobileapplication3.editor.ui.Button;
 import mobileapplication3.editor.ui.ButtonRow;
 import mobileapplication3.editor.ui.ButtonCol;
 import java.io.IOException;
 import java.util.Calendar;
-import javax.microedition.lcdui.Font;
-import javax.microedition.lcdui.Graphics;
-import javax.microedition.lcdui.Image;
 import mobileapplication3.editor.ui.Container;
 import mobileapplication3.editor.ui.IUIComponent;
 import mobileapplication3.editor.ui.RootContainer;
 import mobileapplication3.editor.ui.TextComponent;
+import mobileapplication3.editor.ui.platform.Font;
+import mobileapplication3.editor.ui.platform.Graphics;
+import mobileapplication3.editor.ui.platform.Image;
 
 /**
  *
@@ -227,7 +227,7 @@ public class PathPicker extends Container {
     protected void onSetBounds(int x0, int y0, int w, int h) {
         title
                 .setSize(w, TextComponent.HEIGHT_AUTO)
-                .setPos(x0 + w/2, y0 + Font.getDefaultFont().getHeight(), Graphics.HCENTER | Graphics.TOP);
+                .setPos(x0 + w/2, y0 + Font.getDefaultFontHeight(), Graphics.HCENTER | Graphics.TOP);
         actionButtonPanel
                 .setSize(w, btnH)
                 .setPos(x0, y0 + h, ButtonRow.BOTTOM | ButtonRow.LEFT);
@@ -235,7 +235,7 @@ public class PathPicker extends Container {
                 .setSizes(w, h - btnH*3/2 - btnH*3/2, btnH, false)
                 .setPos(x0, y0 + h - btnH*3/2, ButtonCol.LEFT | ButtonCol.BOTTOM);
         question
-                .setSize(w, Font.getDefaultFont().getHeight())
+                .setSize(w, Font.getDefaultFontHeight())
                 .setPos(x0 + w/2, y0 + h - btnH*5/4, TextComponent.HCENTER | TextComponent.VCENTER);
     }
 

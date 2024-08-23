@@ -5,13 +5,8 @@
  */
 package mobileapplication3.editor;
 
-import javax.microedition.lcdui.Alert;
-import javax.microedition.lcdui.AlertType;
-import javax.microedition.lcdui.Canvas;
-import javax.microedition.lcdui.Font;
-import javax.microedition.lcdui.Graphics;
-import javax.microedition.rms.RecordStoreException;
-
+import mobileapplication3.editor.platform.FileUtils;
+import mobileapplication3.editor.platform.RecordStores;
 import mobileapplication3.editor.ui.AbstractButtonSet;
 import mobileapplication3.editor.ui.Button;
 import mobileapplication3.editor.ui.ButtonCol;
@@ -20,13 +15,15 @@ import mobileapplication3.editor.ui.ButtonPanelHorizontal;
 import mobileapplication3.editor.ui.ButtonRow;
 import mobileapplication3.editor.ui.Container;
 import mobileapplication3.editor.ui.IUIComponent;
+import mobileapplication3.editor.ui.Keys;
 import mobileapplication3.editor.ui.RootContainer;
 import mobileapplication3.editor.ui.TextComponent;
+import mobileapplication3.editor.ui.platform.Font;
+import mobileapplication3.editor.ui.platform.Graphics;
+import mobileapplication3.editor.ui.platform.Platform;
 import mobileapplication3.elements.Element;
 import mobileapplication3.elements.StartPoint;
 import mobileapplication3.utils.EditorSettings;
-import mobileapplication3.utils.FileUtils;
-import mobileapplication3.utils.RecordStores;
 
 /**
  *
@@ -36,7 +33,7 @@ public class MainScreenUI extends Container {
     
 	private final static String RECORD_STORE_AUTOSAVE = "AutoSave";
     private final static int BTNS_IN_ROW = 4;
-    public final static int FONT_H = Font.getDefaultFont().getHeight();
+    public final static int FONT_H = Font.getDefaultFontHeight();
     public final static int BTN_H = FONT_H*2;
 
     private Button btnLoad, btnSave, btnPlace, btnList, zoomIn, zoomOut;;
@@ -79,7 +76,7 @@ public class MainScreenUI extends Container {
             
         } catch(Exception ex) {
             ex.printStackTrace();
-            Main.setCurrent(new Alert(ex.toString()));
+            Platform.showError(ex);
         }
     	isAutoSaveEnabled = EditorSettings.getAutoSaveEnabled(true);
     	setComponents();
@@ -112,9 +109,9 @@ public class MainScreenUI extends Container {
 				public void run() {
 					try {
 						RecordStores.WriteShortArray(elementsBuffer.asShortArray(), RECORD_STORE_AUTOSAVE);
-					} catch (RecordStoreException ex) {
+					} catch (Exception ex) {
 						ex.printStackTrace();
-						Main.setCurrent(new Alert(ex.toString()));
+						Platform.showError(ex);
 					}
 				}
 			}).start();
@@ -187,7 +184,7 @@ public class MainScreenUI extends Container {
                                     RecordStores.deleteStore(RECORD_STORE_AUTOSAVE);
                                 } catch (Exception ex) {
                                     ex.printStackTrace();
-                                    Main.setCurrent(new Alert(ex.toString(), ex.toString(), null, AlertType.ERROR));
+                                    Platform.showError(ex);
                                 }
                                 repaint();
                             }
@@ -228,10 +225,10 @@ public class MainScreenUI extends Container {
                     case -7:
                         btnList.invokePressed(false, false);
                         break;
-                    case Canvas.KEY_NUM8:
+                    case Keys.KEY_NUM8:
                         btnLoad.invokePressed(false, false);
                         break;
-                    case Canvas.KEY_NUM9:
+                    case Keys.KEY_NUM9:
                         btnSave.invokePressed(false, false);
                         break;
                     default:
@@ -264,10 +261,10 @@ public class MainScreenUI extends Container {
         zoomPanel = (ButtonRow) new ButtonRow(zoomPanelButtons){
             public boolean handleKeyPressed(int keyCode, int count) {
                 switch (keyCode) {
-                    case Canvas.KEY_STAR:
+                    case Keys.KEY_STAR:
                         zoomIn.invokePressed(false, false);
                         break;
-                    case Canvas.KEY_POUND:
+                    case Keys.KEY_POUND:
                         zoomOut.invokePressed(false, false);
                         break;
                     default:
@@ -338,7 +335,7 @@ public class MainScreenUI extends Container {
         }) {
             public boolean handleKeyPressed(int keyCode, int count) {
                 switch (keyCode) {
-                    case Canvas.KEY_NUM0:
+                    case Keys.KEY_NUM0:
                         buttons[0].invokePressed(false, false);
                         return true;
                     default:
@@ -485,7 +482,7 @@ public class MainScreenUI extends Container {
     		this.button = new ButtonComponent(button) {
     			public boolean handleKeyPressed(int keyCode, int count) {
     	            switch (keyCode) {
-    	                case Canvas.KEY_NUM7:
+    	                case Keys.KEY_NUM7:
     	                    buttons[0].invokePressed(false, false);
     	                    return true;
     	                default:
@@ -505,11 +502,11 @@ public class MainScreenUI extends Container {
 		}
 		
 		public int getOptimalW(int freeSpace) {
-			return Math.min(freeSpace, Font.getDefaultFont().stringWidth(message.getText()) / 2);
+			return Math.min(freeSpace, Font.defaultFontStringWidth(message.getText()) / 2);
 		}
 		
 		public int getOptimalH(int freeSpace) {
-			return Math.min(freeSpace, Font.getDefaultFont().getHeight() * 10);
+			return Math.min(freeSpace, FONT_H * 10);
 		}
     }
 }

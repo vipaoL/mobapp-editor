@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mobileapplication3.editor;
+package mobileapplication3.editor.platform;
 
 import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.Display;
@@ -11,6 +11,7 @@ import javax.microedition.lcdui.Displayable;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
+import mobileapplication3.editor.MainScreenUI;
 import mobileapplication3.editor.setup.SetupWizard;
 import mobileapplication3.editor.ui.RootContainer;
 import mobileapplication3.editor.ui.UISettings;

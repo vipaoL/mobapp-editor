@@ -5,10 +5,8 @@
  */
 package mobileapplication3.editor.ui;
 
-import javax.microedition.lcdui.Canvas;
-import javax.microedition.lcdui.Font;
-import javax.microedition.lcdui.Graphics;
-
+import mobileapplication3.editor.ui.platform.Font;
+import mobileapplication3.editor.ui.platform.Graphics;
 import mobileapplication3.utils.Utils;
 
 /**
@@ -52,7 +50,7 @@ public class ButtonComponent extends AbstractButtonSet {
     }
 
     public boolean handleKeyPressed(int keyCode, int count) {
-        if (RootContainer.getGameActionn(keyCode) == Canvas.FIRE) {
+        if (RootContainer.getGameActionn(keyCode) == Keys.FIRE) {
             buttons[0].invokePressed(true, true);
             return true;
         } else {

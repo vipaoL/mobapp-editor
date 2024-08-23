@@ -1,6 +1,6 @@
 package mobileapplication3.editor.ui;
 
-import javax.microedition.lcdui.Graphics;
+import mobileapplication3.editor.ui.platform.Graphics;
 
 public abstract class Switch extends Button {
 	

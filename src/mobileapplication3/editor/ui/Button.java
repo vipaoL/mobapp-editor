@@ -5,8 +5,8 @@
  */
 package mobileapplication3.editor.ui;
 
-import javax.microedition.lcdui.Font;
-import javax.microedition.lcdui.Graphics;
+import mobileapplication3.editor.ui.platform.Font;
+import mobileapplication3.editor.ui.platform.Graphics;
 import mobileapplication3.utils.Utils;
 
 /**
@@ -30,7 +30,7 @@ public abstract class Button {
     private Font prevGetLineBoundsFont;
     
     public Button(String title) {
-        setFont(Font.getDefaultFont());
+        setFont(Font.getDefaultFontSize());
         this.bgPadding = 0;
         this.selectedBgColor = 0x002255;
         this.fontColorInactive = IUIComponent.FONT_COLOR_INACTIVE;
@@ -56,13 +56,13 @@ public abstract class Button {
         return false;
     }
     
-    protected void setFont(Font font, Graphics g) {
-    	setFont(font);
+    protected void setFont(int size, Graphics g) {
+    	setFont(size);
     	g.setFont(font);
 	}
     
-    public void setFont(Font font) {
-		this.font = font;
+    public void setFont(int size) {
+		font = new Font(size);
 	}
     
     public Button setIsActive(boolean b) {
@@ -179,18 +179,18 @@ public abstract class Button {
     
     protected void drawText(Graphics g, int x0, int y0, int w, int h, boolean isSelected, boolean isFocused, boolean forceInactive) {
     	Font prevFont = g.getFont();
-        setFont(Font.getDefaultFont());
+        setFont(Font.getDefaultFontSize());
         
         int[][] lineBounds = getLineBounds(text, font, w, bgPadding);
         if (h / lineBounds.length < font.getHeight()) {
-        	setFont(Font.getFont(font.getFace(), font.getStyle(), Font.SIZE_MEDIUM));
+        	setFont(Font.SIZE_MEDIUM);
         	lineBounds = getLineBounds(text, font, w, bgPadding);
         	if (h / lineBounds.length < font.getHeight()) {
-            	setFont(Font.getFont(font.getFace(), font.getStyle(), Font.SIZE_SMALL));
+            	setFont(Font.SIZE_SMALL);
             	lineBounds = getLineBounds(text, font, w, bgPadding);
             }
         }
-        setFont(font, g);
+        setFont(font.getSize(), g);
 
         g.setColor(getCurrentFontColor(forceInactive));
         
@@ -246,7 +246,7 @@ public abstract class Button {
         
         prevW = w;
         
-        lineBounds = Utils.getLineBounds(text, font, w, padding);
+        lineBounds = font.getLineBounds(text, w, padding);
         prevGetLineBoundsFont = font;
         return lineBounds;
     }

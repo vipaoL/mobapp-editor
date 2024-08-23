@@ -5,10 +5,11 @@
  */
 package mobileapplication3.editor;
 
+import mobileapplication3.editor.platform.Main;
+import mobileapplication3.editor.ui.Keys;
 import mobileapplication3.editor.ui.RootContainer;
 import mobileapplication3.editor.ui.UIComponent;
-import javax.microedition.lcdui.Canvas;
-import javax.microedition.lcdui.Graphics;
+import mobileapplication3.editor.ui.platform.Graphics;
 import mobileapplication3.elements.Element;
 import mobileapplication3.utils.Mathh;
 
@@ -145,19 +146,19 @@ public class EditorCanvas extends UIComponent {
         
         int minStep = count * count;
         switch (RootContainer.getGameActionn(keyCode)) {
-            case Canvas.UP:
+            case Keys.UP:
                 cursorY -= Math.max(minStep, zoomOut / 1000);
                 break;
-            case Canvas.DOWN:
+            case Keys.DOWN:
                 cursorY += Math.max(minStep, zoomOut / 1000);
                 break;
-            case Canvas.LEFT:
+            case Keys.LEFT:
                 cursorX -= Math.max(minStep, zoomOut / 1000);
                 break;
-            case Canvas.RIGHT:
+            case Keys.RIGHT:
                 cursorX += Math.max(minStep, zoomOut / 1000);
                 break;
-            case Canvas.FIRE:
+            case Keys.FIRE:
                 structurePlacer.handleNextPoint((short) cursorX, (short) cursorY, false);
                 break;
             default:
@@ -193,19 +194,19 @@ public class EditorCanvas extends UIComponent {
         int a = keyRepeats;
         int step = (minStep + a) * pressedCount;
         switch (RootContainer.getGameActionn(keyCode)) {
-            case Canvas.UP:
+            case Keys.UP:
                 cursorY -= step;
                 break;
-            case Canvas.DOWN:
+            case Keys.DOWN:
                 cursorY += step;
                 break;
-            case Canvas.LEFT:
+            case Keys.LEFT:
                 cursorX -= step;
                 break;
-            case Canvas.RIGHT:
+            case Keys.RIGHT:
                 cursorX += step;
                 break;
-            case Canvas.FIRE:
+            case Keys.FIRE:
                 break;
             default:
                 switch (keyCode) {

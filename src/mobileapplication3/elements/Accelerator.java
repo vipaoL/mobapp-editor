@@ -1,7 +1,6 @@
 package mobileapplication3.elements;
 
-import javax.microedition.lcdui.Graphics;
-
+import mobileapplication3.editor.ui.platform.Graphics;
 import mobileapplication3.utils.Mathh;
 import mobileapplication3.utils.Utils;
 

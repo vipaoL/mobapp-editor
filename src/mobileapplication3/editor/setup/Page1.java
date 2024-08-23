@@ -7,12 +7,11 @@ package mobileapplication3.editor.setup;
 
 import java.io.IOException;
 
-import javax.microedition.lcdui.Image;
-
 import mobileapplication3.editor.ui.Button;
 import mobileapplication3.editor.ui.IUIComponent;
 import mobileapplication3.editor.ui.ImageComponent;
 import mobileapplication3.editor.ui.TextComponent;
+import mobileapplication3.editor.ui.platform.Image;
 
 /**
  *

@@ -5,19 +5,18 @@
  */
 package mobileapplication3.editor.setup;
 
-import javax.microedition.lcdui.Alert;
-import javax.microedition.lcdui.AlertType;
-import javax.microedition.lcdui.Graphics;
-import mobileapplication3.editor.Main;
-import mobileapplication3.utils.Paths;
 import mobileapplication3.utils.EditorSettings;
+import mobileapplication3.editor.platform.FileUtils;
+import mobileapplication3.editor.platform.Main;
+import mobileapplication3.editor.platform.Paths;
 import mobileapplication3.editor.ui.AbstractPopupWindow;
 import mobileapplication3.editor.ui.Button;
 import mobileapplication3.editor.ui.ButtonCol;
 import mobileapplication3.editor.ui.IPopupFeedback;
 import mobileapplication3.editor.ui.IUIComponent;
 import mobileapplication3.editor.ui.UIComponent;
-import mobileapplication3.utils.FileUtils;
+import mobileapplication3.editor.ui.platform.Graphics;
+import mobileapplication3.editor.ui.platform.Platform;
 
 /**
  *
@@ -97,7 +96,7 @@ public class Page4 extends AbstractSetupWizardPage {
                     FileUtils.createFolder(path);
                 } catch (Exception ex) {
                     closePopup();
-                    Main.setCurrent(new Alert("Error!", "Can't create folder: " + ex.toString(), null, AlertType.ERROR));
+                    Platform.showError("Can't create folder: " + ex.toString());
                     ex.printStackTrace();
                 }
                 
@@ -107,7 +106,7 @@ public class Page4 extends AbstractSetupWizardPage {
                     feedback.nextPage();
                 } catch (Exception ex) {
                     closePopup();
-                    Main.setCurrent(new Alert("Error!", "Can't create file in this folder: " + ex, null, AlertType.ERROR));
+                    Platform.showError("Can't create file in this folder: " + ex);
                     ex.printStackTrace();
                 }
             }
@@ -172,7 +171,6 @@ public class Page4 extends AbstractSetupWizardPage {
                 }
 
                 public void onPaint(Graphics g, int x0, int y0, int w, int h, boolean forceInactive) {
-                    System.out.println("drawing");
                     g.setColor(0xffffff);
                     int side = Math.min(w, h);
                     g.drawArc(x0 + (w - side)/2, y0 + (h - side)/2, side, side, animOffset % 360, (animOffset + 250) % 360);

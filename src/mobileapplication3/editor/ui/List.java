@@ -1,8 +1,7 @@
 package mobileapplication3.editor.ui;
 
-import javax.microedition.lcdui.Canvas;
-import javax.microedition.lcdui.Font;
-import javax.microedition.lcdui.Graphics;
+import mobileapplication3.editor.ui.platform.Font;
+import mobileapplication3.editor.ui.platform.Graphics;
 
 /**
  *
@@ -259,14 +258,14 @@ public class List extends UIComponent implements IContainer {
 	   switch (keyCode) {
        default:
            switch (RootContainer.getGameActionn(keyCode)) {
-               case Canvas.UP:
+               case Keys.UP:
                    if (selected > 0) {
                        setSelected(selected-1);
                    } else {
                    	setSelected(elements.length - 1);
                    }
                    break;
-               case Canvas.DOWN:
+               case Keys.DOWN:
                    if (selected < elements.length - 1) {
                    	setSelected(selected+1);
                    } else {

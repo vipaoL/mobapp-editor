@@ -1,8 +1,5 @@
 package mobileapplication3.editor;
 
-import javax.microedition.lcdui.Canvas;
-import javax.microedition.lcdui.Graphics;
-
 import mobileapplication3.editor.ui.AbstractPopupWindow;
 import mobileapplication3.editor.ui.Button;
 import mobileapplication3.editor.ui.ButtonComponent;
@@ -10,9 +7,11 @@ import mobileapplication3.editor.ui.ButtonRow;
 import mobileapplication3.editor.ui.Container;
 import mobileapplication3.editor.ui.IPopupFeedback;
 import mobileapplication3.editor.ui.IUIComponent;
+import mobileapplication3.editor.ui.Keys;
 import mobileapplication3.editor.ui.List;
 import mobileapplication3.editor.ui.RootContainer;
 import mobileapplication3.editor.ui.TextComponent;
+import mobileapplication3.editor.ui.platform.Graphics;
 import mobileapplication3.elements.Element;
 import mobileapplication3.elements.Element.Argument;
 import mobileapplication3.utils.Mathh;
@@ -227,10 +226,10 @@ public class AdvancedElementEditUI extends AbstractPopupWindow {
 	        }
 			
 			switch (RootContainer.getGameActionn(keyCode)) {
-	            case Canvas.RIGHT:
+	            case Keys.RIGHT:
 	            	setValue(value + count * count);
 	                return true;
-	            case Canvas.LEFT:
+	            case Keys.LEFT:
 	            	setValue(value - count * count);
 	                return true;
 	            default:
@@ -244,10 +243,10 @@ public class AdvancedElementEditUI extends AbstractPopupWindow {
 	        }
 			
 			switch (RootContainer.getGameActionn(keyCode)) {
-	            case Canvas.RIGHT:
+	            case Keys.RIGHT:
 	            	setValue(value + pressedCount * pressedCount);
 	                return true;
-	            case Canvas.LEFT:
+	            case Keys.LEFT:
 	            	setValue(value - pressedCount * pressedCount);
 	                return true;
 	            default:

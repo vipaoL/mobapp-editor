@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mobileapplication3.utils;
+package mobileapplication3.editor.platform;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;

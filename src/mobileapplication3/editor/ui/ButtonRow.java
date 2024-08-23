@@ -5,10 +5,8 @@
  */
 package mobileapplication3.editor.ui;
 
-import javax.microedition.lcdui.Canvas;
-import javax.microedition.lcdui.Font;
-import javax.microedition.lcdui.Graphics;
-
+import mobileapplication3.editor.ui.platform.Font;
+import mobileapplication3.editor.ui.platform.Graphics;
 import mobileapplication3.utils.Utils;
 
 /**
@@ -99,21 +97,21 @@ public class ButtonRow extends AbstractButtonSet {
             		return false;
             	}
                 switch (RootContainer.getGameActionn(keyCode)) {
-                    case Canvas.LEFT:
+                    case Keys.LEFT:
                     	if (selected > 0) {
                             setSelected(selected-1);
                         } else {
                         	setSelected(buttons.length - 1);
                         }
                         break;
-                    case Canvas.RIGHT:
+                    case Keys.RIGHT:
                     	if (selected < buttons.length - 1) {
                         	setSelected(selected+1);
                         } else {
                         	setSelected(0);
                         }
                         break;
-                    case Canvas.FIRE:
+                    case Keys.FIRE:
                         return buttons[selected].invokePressed(true, isFocused);
                     default:
                         return isFocused;

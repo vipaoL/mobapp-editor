@@ -5,6 +5,8 @@
  */
 package mobileapplication3.utils;
 
+import mobileapplication3.editor.platform.Settings;
+
 /**
  *
  * @author vipaol

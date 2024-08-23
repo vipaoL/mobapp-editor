@@ -5,10 +5,8 @@
  */
 package mobileapplication3.utils;
 
-import java.util.Vector;
-import javax.microedition.lcdui.Font;
-import javax.microedition.lcdui.Graphics;
 import mobileapplication3.editor.EditorCanvas;
+import mobileapplication3.editor.ui.platform.Graphics;
 
 /**
  *
@@ -124,6 +122,7 @@ public class Utils {
         return sb.toString();
     }
     
+    // TODO move to Graphics
     public static void drawArrow(Graphics g, int x1, int y1, int x2, int y2, int thickness, int zoomOut) {
         int dx = x2 - x1;
         int dy = y2 - y1;
@@ -189,78 +188,8 @@ public class Utils {
             g.drawLine(x1, y1, x2, y2);
         }
     }
-    
-    public static int[][] getLineBounds(String text, Font font, int w, int padding) {
-        Vector lineBoundsVector = new Vector(text.length() / 5);
-        int charOffset = 0;
-        if (font.stringWidth(text) <= w - padding * 2 && text.indexOf('\n') == -1) {
-            lineBoundsVector.addElement(new int[]{0, text.length()});
-        } else {
-            while (charOffset < text.length()) {
-                int maxSymsInCurrLine = 1;
-                boolean maxLineLengthReached = false;
-                boolean lineBreakSymFound = false;
-                for (int lineLength = 1; lineLength <= text.length() - charOffset; lineLength++) {
-                    if (font.substringWidth(text, charOffset, lineLength) > w - padding * 2) {
-                        maxLineLengthReached = true;
-                        break;
-                    }
-                    
-                    maxSymsInCurrLine = lineLength;
-                    
-                    if (charOffset + lineLength < text.length()) {
-                        if (text.charAt(charOffset+lineLength) == '\n') {
-                            lineBoundsVector.addElement(new int[]{charOffset, lineLength});
-                            charOffset = charOffset + lineLength + 1;
-                            lineBreakSymFound = true;
-                            break;
-                        }
-                    }
-                }
-                
-                if (lineBreakSymFound) {
-                    continue;
-                }
-                
 
-                boolean spaceFound = false;
-
-                int maxRightBorder = charOffset + maxSymsInCurrLine;
-                
-                if (maxRightBorder >= text.length()) {
-                    lineBoundsVector.addElement(new int[]{charOffset, maxSymsInCurrLine});
-                    break;
-                }
-                
-                if (!maxLineLengthReached) {
-                    lineBoundsVector.addElement(new int[]{charOffset, maxSymsInCurrLine}); //
-                    charOffset = maxRightBorder;
-                } else {
-                    for (int i = maxRightBorder; i > charOffset; i--) {
-                        if (text.charAt(i) == ' ') {
-                            lineBoundsVector.addElement(new int[]{charOffset, i - charOffset});
-                            charOffset = i + 1;
-                            spaceFound = true;
-                            break;
-                        }
-                    }
-
-                    if (!spaceFound) {
-                        lineBoundsVector.addElement(new int[]{charOffset, maxRightBorder - charOffset});
-                        charOffset = maxRightBorder;
-                    }
-                }
-            }
-        }
-        
-        int[][] lineBounds = new int[lineBoundsVector.size()][];
-        for (int i = 0; i < lineBoundsVector.size(); i++) {
-            lineBounds[i] = (int[]) lineBoundsVector.elementAt(i);
-        }
-        return lineBounds;
-    }
-
-    static int count(String s, char c) {
+    public static int count(String s, char c) {
         int ret = 0;
         for (int i = 0; i < s.length(); i++) {
             if (s.charAt(i) == c) {

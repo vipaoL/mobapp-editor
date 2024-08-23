@@ -5,7 +5,7 @@
  */
 package mobileapplication3.elements;
 
-import javax.microedition.lcdui.Graphics;
+import mobileapplication3.editor.ui.platform.Graphics;
 
 /**
  *

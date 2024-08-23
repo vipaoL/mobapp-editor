@@ -3,12 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mobileapplication3.utils;
+package mobileapplication3.editor.platform;
 
-import javax.microedition.lcdui.Alert;
-import javax.microedition.lcdui.AlertType;
-
-import mobileapplication3.editor.Main;
+import mobileapplication3.editor.ui.platform.Platform;
+import mobileapplication3.utils.Utils;
 
 /**
  *
@@ -35,7 +33,7 @@ public class Settings {
         try {
         	RecordStores.writeStringToStore(getCurrentSettingsAsStr(), recordStoreName);
         } catch (Exception ex) {
-            Main.setCurrent(new Alert("Error!", "Can't save settings to RMS: " + ex.toString(), null, AlertType.ERROR));
+        	Platform.showError("Can't save settings to RMS: " + ex.toString());
         }
     }
     

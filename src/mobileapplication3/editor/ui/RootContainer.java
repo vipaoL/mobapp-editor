@@ -60,7 +60,7 @@ public class RootContainer extends Canvas implements IContainer {
     		g.fillRect(0, 0, w, h);
     	}
         if (rootUIComponent != null) {
-            rootUIComponent.paint(g);
+            rootUIComponent.paint(new mobileapplication3.editor.ui.platform.Graphics(g));
         }
     }
     

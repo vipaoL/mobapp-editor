@@ -5,10 +5,8 @@
  */
 package mobileapplication3.editor.ui;
 
-import javax.microedition.lcdui.Canvas;
-import javax.microedition.lcdui.Font;
-import javax.microedition.lcdui.Graphics;
-
+import mobileapplication3.editor.ui.platform.Font;
+import mobileapplication3.editor.ui.platform.Graphics;
 import mobileapplication3.utils.Mathh;
 
 /**
@@ -123,33 +121,33 @@ public class ButtonPanelHorizontal extends AbstractButtonSet {
         switch (keyCode) {
             default:
                 switch (RootContainer.getGameActionn(keyCode)) {
-                    case Canvas.LEFT:
+                    case Keys.LEFT:
                         if (selected > 0) {
                             selected--;
                         } else {
                             selected = buttons.length - 1;
                         }
                         break;
-                    case Canvas.RIGHT:
+                    case Keys.RIGHT:
                         if (selected < buttons.length - 1) {
                             selected++;
                         } else {
                             selected = 0;
                         }
                         break;
-                    case Canvas.UP:
+                    case Keys.UP:
                         selected -= btnsInRow;
                         if (selected < 0) {
                             selected += buttons.length;
                         }
                         break;
-                    case Canvas.DOWN:
+                    case Keys.DOWN:
                         selected += btnsInRow;
                         if (selected > buttons.length - 1) {
                             selected += buttons.length;
                         }
                         break;
-                    case Canvas.FIRE:
+                    case Keys.FIRE:
                         if (isSelectionEnabled) {
                             isSelectionVisible = true;
                         }

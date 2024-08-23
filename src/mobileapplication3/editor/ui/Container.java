@@ -7,8 +7,8 @@ package mobileapplication3.editor.ui;
 
 import java.util.Random;
 
-import javax.microedition.lcdui.Graphics;
-import javax.microedition.lcdui.Image;
+import mobileapplication3.editor.ui.platform.Graphics;
+import mobileapplication3.editor.ui.platform.Image;
 
 /**
  *

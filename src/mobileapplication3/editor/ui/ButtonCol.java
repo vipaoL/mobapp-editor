@@ -5,10 +5,8 @@
  */
 package mobileapplication3.editor.ui;
 
-import javax.microedition.lcdui.Canvas;
-import javax.microedition.lcdui.Font;
-import javax.microedition.lcdui.Graphics;
-
+import mobileapplication3.editor.ui.platform.Font;
+import mobileapplication3.editor.ui.platform.Graphics;
 import mobileapplication3.utils.Utils;
 
 /**
@@ -229,21 +227,21 @@ public class ButtonCol extends AbstractButtonSet {
         switch (keyCode) {
             default:
                 switch (RootContainer.getGameActionn(keyCode)) {
-                    case Canvas.UP:
+                    case Keys.UP:
                         if (selected > 0) {
                             setSelected(selected-1);
                         } else {
                         	setSelected(buttons.length - 1);
                         }
                         break;
-                    case Canvas.DOWN:
+                    case Keys.DOWN:
                         if (selected < buttons.length - 1) {
                         	setSelected(selected+1);
                         } else {
                         	setSelected(0);
                         }
                         break;
-                    case Canvas.FIRE:
+                    case Keys.FIRE:
                         if (isSelectionEnabled) {
                             isSelectionVisible = true;
                         }
@@ -305,14 +303,18 @@ public class ButtonCol extends AbstractButtonSet {
         }
 
         for (int i = 0; i < buttons.length; i++) {
-            Font prevFont = g.getFont();
+        	int prevFontFace = g.getFontFace();
+			int prevFontStyle = g.getFontStyle();
+			int prevFontSize = g.getFontSize();
+			int prevFontHeight = g.getFontHeight();
+			
             int btnH = this.btnH;
             int btnX = x0;
             int btnY = y0 - scrollOffset + i*btnH;
             int btnBottomY = y0 + h;
             int btnW = w;
             
-            if (btnY + btnH - prevFont.getHeight() < y0) {
+            if (btnY + btnH - prevFontHeight < y0) {
                 continue;
             }
             
@@ -336,7 +338,7 @@ public class ButtonCol extends AbstractButtonSet {
             
             boolean drawAsSelected = (i == selected && isSelectionVisible && isFocused);
             buttons[i].paint(g, btnX, btnY, btnW, btnH, drawAsSelected, isFocused, forceInactive);
-            g.setFont(prevFont);
+            g.setFont(prevFontFace, prevFontStyle, prevFontSize);
         }
         
         if (isSelectionEnabled && h < getTotalBtnsH()) {

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mobileapplication3.utils;
+package mobileapplication3.editor.platform;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -18,6 +18,7 @@ import javax.microedition.io.file.FileConnection;
 import javax.microedition.io.file.FileSystemRegistry;
 
 import mobileapplication3.elements.Element;
+import mobileapplication3.utils.Utils;
 
 /**
  *

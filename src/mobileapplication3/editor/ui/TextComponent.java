@@ -5,9 +5,8 @@
  */
 package mobileapplication3.editor.ui;
 
-import javax.microedition.lcdui.Font;
-import javax.microedition.lcdui.Graphics;
-import mobileapplication3.utils.Utils;
+import mobileapplication3.editor.ui.platform.Font;
+import mobileapplication3.editor.ui.platform.Graphics;
 
 /**
  *
@@ -30,7 +29,7 @@ public class TextComponent extends UIComponent {
     int textAlignment = HCENTER | VCENTER;
     
     public TextComponent() {
-    	setFont(Font.getDefaultFont());
+    	setFont(Font.getDefaultFontSize());
     	//setFont(Font.getFont(font.getFace(), font.getStyle(), Font.SIZE_LARGE));
     	prevGetLineBoundsFont = font;
         padding = font.getHeight()/6;
@@ -53,18 +52,18 @@ public class TextComponent extends UIComponent {
         }
         
         Font prevFont = g.getFont();
+        setFont(Font.getDefaultFontSize());
         
         int[][] lineBounds = getLineBounds(text, font, w, padding);
         if (h / lineBounds.length < font.getHeight()) {
-        	setFont(Font.getFont(font.getFace(), font.getStyle(), Font.SIZE_MEDIUM));
+        	setFont(Font.SIZE_MEDIUM);
         	lineBounds = getLineBounds(text, font, w, padding);
         	if (h / lineBounds.length < font.getHeight()) {
-            	setFont(Font.getFont(font.getFace(), font.getStyle(), Font.SIZE_SMALL));
+            	setFont(Font.SIZE_SMALL);
             	lineBounds = getLineBounds(text, font, w, padding);
             }
         }
-        
-        setFont(font, g);
+        setFont(font.getSize(), g);
         
         int step = font.getHeight() * 3 / 2;
         if (step * lineBounds.length > h - padding * 2) {
@@ -109,7 +108,7 @@ public class TextComponent extends UIComponent {
         
         prevW = w;
         
-        lineBounds = Utils.getLineBounds(text, font, w, padding);
+        lineBounds = font.getLineBounds(text, w, padding);
         prevGetLineBoundsFont = font;
         return lineBounds;
     }
@@ -140,13 +139,13 @@ public class TextComponent extends UIComponent {
         return this;
     }
     
-    protected void setFont(Font font, Graphics g) {
-    	setFont(font);
+    protected void setFont(int size, Graphics g) {
+    	setFont(size);
     	g.setFont(font);
 	}
     
-    public void setFont(Font font) {
-		this.font = font;
+    public void setFont(int size) {
+		font = new Font(size);
 	}
     
     public TextComponent setTextAlignment(int a) {
