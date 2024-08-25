@@ -5,7 +5,7 @@ MIDlet-Icon: /icon.png
 MicroEdition-Configuration: CLDC-1.1
 Nokia-MIDlet-Category: Game
 MIDlet-Name: mobapp editor
-MIDlet-1: Mobapp Editor,/icon.png,mobileapplication3.editor.platform.Main
+MIDlet-1: Mobapp Editor,/icon.png,mobileapplication3.EditorMIDlet
 MicroEdition-Profile: MIDP-2.0
 MIDlet-Jar-URL: mobapp-editor.jar
 MIDlet-Permissions: javax.microedition.io.Connector.file.read, javax.microedition.io.Connector.file.write

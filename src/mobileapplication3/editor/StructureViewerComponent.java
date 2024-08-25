@@ -1,10 +1,10 @@
 package mobileapplication3.editor;
 
-import mobileapplication3.editor.ui.UIComponent;
-import mobileapplication3.editor.ui.platform.Graphics;
-import mobileapplication3.elements.Element;
-import mobileapplication3.elements.StartPoint;
-import mobileapplication3.utils.Mathh;
+import mobileapplication3.editor.elements.Element;
+import mobileapplication3.editor.elements.StartPoint;
+import mobileapplication3.platform.Mathh;
+import mobileapplication3.platform.ui.Graphics;
+import mobileapplication3.ui.UIComponent;
 
 public class StructureViewerComponent extends UIComponent { // TODO: merge with EditorCanvas
 	

@@ -5,14 +5,13 @@
  */
 package mobileapplication3.editor;
 
-import mobileapplication3.utils.EditorSettings;
 import mobileapplication3.editor.setup.SetupWizard;
-import mobileapplication3.editor.ui.AbstractPopupWindow;
-import mobileapplication3.editor.ui.Button;
-import mobileapplication3.editor.ui.ButtonCol;
-import mobileapplication3.editor.ui.IPopupFeedback;
-import mobileapplication3.editor.ui.IUIComponent;
-import mobileapplication3.editor.ui.Switch;
+import mobileapplication3.ui.AbstractPopupWindow;
+import mobileapplication3.ui.Button;
+import mobileapplication3.ui.ButtonCol;
+import mobileapplication3.ui.IPopupFeedback;
+import mobileapplication3.ui.IUIComponent;
+import mobileapplication3.ui.Switch;
 
 /**
  *

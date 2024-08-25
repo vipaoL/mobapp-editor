@@ -5,8 +5,8 @@
  */
 package mobileapplication3.editor.setup;
 
-import mobileapplication3.editor.ui.Button;
-import mobileapplication3.editor.ui.Page;
+import mobileapplication3.ui.Button;
+import mobileapplication3.ui.Page;
 
 /**
  *

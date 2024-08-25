@@ -5,25 +5,22 @@
  */
 package mobileapplication3.editor;
 
-import mobileapplication3.editor.platform.FileUtils;
-import mobileapplication3.editor.platform.RecordStores;
-import mobileapplication3.editor.ui.AbstractButtonSet;
-import mobileapplication3.editor.ui.Button;
-import mobileapplication3.editor.ui.ButtonCol;
-import mobileapplication3.editor.ui.ButtonComponent;
-import mobileapplication3.editor.ui.ButtonPanelHorizontal;
-import mobileapplication3.editor.ui.ButtonRow;
-import mobileapplication3.editor.ui.Container;
-import mobileapplication3.editor.ui.IUIComponent;
-import mobileapplication3.editor.ui.Keys;
-import mobileapplication3.editor.ui.TextComponent;
-import mobileapplication3.editor.ui.platform.Font;
-import mobileapplication3.editor.ui.platform.Graphics;
-import mobileapplication3.editor.ui.platform.Platform;
-import mobileapplication3.editor.ui.platform.RootContainer;
-import mobileapplication3.elements.Element;
-import mobileapplication3.elements.StartPoint;
-import mobileapplication3.utils.EditorSettings;
+import mobileapplication3.editor.elements.Element;
+import mobileapplication3.editor.elements.StartPoint;
+import mobileapplication3.platform.ui.Font;
+import mobileapplication3.platform.ui.Graphics;
+import mobileapplication3.platform.ui.Platform;
+import mobileapplication3.platform.ui.RootContainer;
+import mobileapplication3.ui.AbstractButtonSet;
+import mobileapplication3.ui.Button;
+import mobileapplication3.ui.ButtonCol;
+import mobileapplication3.ui.ButtonComponent;
+import mobileapplication3.ui.ButtonPanelHorizontal;
+import mobileapplication3.ui.ButtonRow;
+import mobileapplication3.ui.Container;
+import mobileapplication3.ui.IUIComponent;
+import mobileapplication3.ui.Keys;
+import mobileapplication3.ui.TextComponent;
 
 /**
  *
@@ -31,7 +28,6 @@ import mobileapplication3.utils.EditorSettings;
  */
 public class MainScreenUI extends Container {
     
-	private final static String RECORD_STORE_AUTOSAVE = "AutoSave";
     private final static int BTNS_IN_ROW = 4;
     public final static int FONT_H = Font.getDefaultFontHeight();
     public final static int BTN_H = FONT_H*2;
@@ -86,21 +82,23 @@ public class MainScreenUI extends Container {
     	if (!isAutoSaveEnabled) {
     		return;
     	}
-    	
-    	final Element[] elements = FileUtils.readMGStruct(RecordStores.openDataInputStream(RECORD_STORE_AUTOSAVE));
-    	if (elements != null && elements.length > 2) {
-    		showPopup(new AutoSaveRestorer(this, elements) {
-    			public void onRestore() {
-    				elementsBuffer.setElements(elements);
-    				close();
-    			};
-    			
-    			public void onDelete() {
-    				RecordStores.deleteStore(RECORD_STORE_AUTOSAVE);
-    				close();
-    			};
-    		});
-    	}
+
+        try {
+        	final Element[] elements = AutoSave.autoSaveRead();
+            if (elements != null && elements.length > 2) {
+                showPopup(new AutoSave(this, elements) {
+        			public void onRestore() {
+        				elementsBuffer.setElements(elements);
+        				close();
+        			};
+        			
+        			public void onDelete() {
+                        AutoSave.deleteAutoSave();
+        				close();
+        			};
+        		});
+        	}
+        } catch (Exception ignored) { }
     }
     
     private void saveToRMS() {
@@ -108,7 +106,7 @@ public class MainScreenUI extends Container {
     		new Thread(new Runnable() {
 				public void run() {
 					try {
-						RecordStores.WriteShortArray(elementsBuffer.asShortArray(), RECORD_STORE_AUTOSAVE);
+						AutoSave.autoSaveWrite(elementsBuffer);
 					} catch (Exception ex) {
 						ex.printStackTrace();
 						Platform.showError(ex);
@@ -181,7 +179,7 @@ public class MainScreenUI extends Container {
                                     elementsBuffer.saveToFile(path);
                                     System.out.println("Saved!");
                                     setIsPathPickerVisible(false);
-                                    RecordStores.deleteStore(RECORD_STORE_AUTOSAVE);
+                                    AutoSave.deleteAutoSave();
                                 } catch (Exception ex) {
                                     ex.printStackTrace();
                                     Platform.showError(ex);
@@ -240,8 +238,7 @@ public class MainScreenUI extends Container {
     }
     
     private void initStartPointWarning() {
-    	startPointWarning = new StartPointWarning();
-        startPointWarning.setVisible(false);
+    	startPointWarning = (StartPointWarning) new StartPointWarning().setVisible(false);
     }
     
     private void initZoomPanel() {

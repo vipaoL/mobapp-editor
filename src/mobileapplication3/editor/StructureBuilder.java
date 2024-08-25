@@ -8,10 +8,10 @@ package mobileapplication3.editor;
 import java.io.IOException;
 import java.util.Vector;
 
-import mobileapplication3.editor.platform.FileUtils;
-import mobileapplication3.elements.Element;
-import mobileapplication3.elements.Element.PlacementStep;
-import mobileapplication3.elements.EndPoint;
+import mobileapplication3.editor.elements.Element;
+import mobileapplication3.editor.elements.EndPoint;
+import mobileapplication3.editor.elements.Element.PlacementStep;
+import mobileapplication3.platform.FileUtils;
 
 /**
  *

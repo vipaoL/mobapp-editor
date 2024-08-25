@@ -5,10 +5,10 @@
  */
 package mobileapplication3.editor.setup;
 
-import mobileapplication3.editor.ui.Button;
-import mobileapplication3.editor.ui.Container;
-import mobileapplication3.editor.ui.IUIComponent;
-import mobileapplication3.utils.EditorSettings;
+import mobileapplication3.editor.EditorSettings;
+import mobileapplication3.ui.Button;
+import mobileapplication3.ui.Container;
+import mobileapplication3.ui.IUIComponent;
 
 /**
  *

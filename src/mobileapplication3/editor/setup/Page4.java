@@ -5,17 +5,17 @@
  */
 package mobileapplication3.editor.setup;
 
-import mobileapplication3.editor.platform.FileUtils;
-import mobileapplication3.editor.platform.Paths;
-import mobileapplication3.editor.ui.AbstractPopupWindow;
-import mobileapplication3.editor.ui.Button;
-import mobileapplication3.editor.ui.ButtonCol;
-import mobileapplication3.editor.ui.IPopupFeedback;
-import mobileapplication3.editor.ui.IUIComponent;
-import mobileapplication3.editor.ui.UIComponent;
-import mobileapplication3.editor.ui.platform.Graphics;
-import mobileapplication3.editor.ui.platform.Platform;
-import mobileapplication3.utils.EditorSettings;
+import mobileapplication3.editor.EditorSettings;
+import mobileapplication3.platform.FileUtils;
+import mobileapplication3.platform.Paths;
+import mobileapplication3.platform.ui.Graphics;
+import mobileapplication3.platform.ui.Platform;
+import mobileapplication3.ui.AbstractPopupWindow;
+import mobileapplication3.ui.Button;
+import mobileapplication3.ui.ButtonCol;
+import mobileapplication3.ui.IPopupFeedback;
+import mobileapplication3.ui.IUIComponent;
+import mobileapplication3.ui.UIComponent;
 
 /**
  *

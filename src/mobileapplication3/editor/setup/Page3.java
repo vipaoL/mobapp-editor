@@ -6,9 +6,9 @@
 
 package mobileapplication3.editor.setup;
 
-import mobileapplication3.editor.ui.Button;
-import mobileapplication3.editor.ui.IUIComponent;
-import mobileapplication3.editor.ui.TextComponent;
+import mobileapplication3.ui.Button;
+import mobileapplication3.ui.IUIComponent;
+import mobileapplication3.ui.TextComponent;
 
 /**
  *

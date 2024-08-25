@@ -5,13 +5,13 @@
  */
 package mobileapplication3.editor;
 
-import mobileapplication3.editor.platform.Main;
-import mobileapplication3.editor.ui.Keys;
-import mobileapplication3.editor.ui.UIComponent;
-import mobileapplication3.editor.ui.platform.Graphics;
-import mobileapplication3.editor.ui.platform.RootContainer;
-import mobileapplication3.elements.Element;
-import mobileapplication3.utils.Mathh;
+import mobileapplication3.editor.elements.Element;
+import mobileapplication3.platform.Mathh;
+import mobileapplication3.platform.ui.Graphics;
+import mobileapplication3.platform.ui.Platform;
+import mobileapplication3.platform.ui.RootContainer;
+import mobileapplication3.ui.Keys;
+import mobileapplication3.ui.UIComponent;
 
 /**
  *
@@ -338,7 +338,7 @@ public class EditorCanvas extends UIComponent {
         
         void onCursorMove() {
             if (zoomOut < 500 && (lastCursorX != cursorX || lastCursorY != cursorY)) {
-                Main.vibrate(1);
+                Platform.vibrate(1);
             }
 
             recalcOffset();

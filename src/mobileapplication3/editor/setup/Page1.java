@@ -7,11 +7,11 @@ package mobileapplication3.editor.setup;
 
 import java.io.IOException;
 
-import mobileapplication3.editor.ui.Button;
-import mobileapplication3.editor.ui.IUIComponent;
-import mobileapplication3.editor.ui.ImageComponent;
-import mobileapplication3.editor.ui.TextComponent;
-import mobileapplication3.editor.ui.platform.Image;
+import mobileapplication3.platform.ui.Image;
+import mobileapplication3.ui.Button;
+import mobileapplication3.ui.IUIComponent;
+import mobileapplication3.ui.ImageComponent;
+import mobileapplication3.ui.TextComponent;
 
 /**
  *
