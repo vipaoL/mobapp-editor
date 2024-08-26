@@ -13,7 +13,7 @@ import javax.microedition.midlet.MIDletStateChangeException;
 import mobileapplication3.editor.EditorSettings;
 import mobileapplication3.editor.MainScreenUI;
 import mobileapplication3.editor.setup.SetupWizard;
-import mobileapplication3.platform.ui.Platform;
+import mobileapplication3.platform.Platform;
 import mobileapplication3.platform.ui.RootContainer;
 import mobileapplication3.ui.UISettings;
 
