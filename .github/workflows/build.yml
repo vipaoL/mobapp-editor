@@ -26,3 +26,8 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build
+    - name: Upload apk
+      uses: actions/upload-artifact@v4
+      with:
+        name: mobapp-editor-android
+        path: ${{ github.workspace }}/app/release/app-debug.apk
