@@ -7,13 +7,13 @@ package mobileapplication3;
 
 import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.Display;
-import javax.microedition.lcdui.Displayable;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
 import mobileapplication3.editor.EditorSettings;
 import mobileapplication3.editor.MainScreenUI;
 import mobileapplication3.editor.setup.SetupWizard;
+import mobileapplication3.platform.ui.Platform;
 import mobileapplication3.platform.ui.RootContainer;
 import mobileapplication3.ui.UISettings;
 
@@ -31,6 +31,7 @@ public class EditorMIDlet extends MIDlet {
             return;
         }
         isStarted = true;
+        Platform.init(this);
         display = Display.getDisplay(this);
         try {
         	final UISettings uiSettings = new UISettings() {
@@ -51,56 +52,22 @@ public class EditorMIDlet extends MIDlet {
 				}
 			};
             if (EditorSettings.isSetupWizardCompleted()) {
-                setCurrent(new RootContainer(new MainScreenUI(), uiSettings));
+                Platform.setCurrent(new RootContainer(new MainScreenUI(), uiSettings));
             } else {
-                setCurrent(new RootContainer(new SetupWizard(new SetupWizard.FinishSetup() {
+                Platform.setCurrent(new RootContainer(new SetupWizard(new SetupWizard.FinishSetup() {
                     public void onFinish() {
-                        setCurrent(new RootContainer(new MainScreenUI(), uiSettings));
+                        Platform.setCurrent(new RootContainer(new MainScreenUI(), uiSettings));
                     }
                 }), uiSettings));
             }
         } catch(Exception ex) {
             ex.printStackTrace();
-            setCurrent(new Alert(ex.toString()));
+            Platform.setCurrent(new Alert(ex.toString()));
         }
     }
 
     protected void pauseApp() { }
 
     protected void destroyApp(boolean unconditional) throws MIDletStateChangeException { }
-    
-    public static void setCurrent(Displayable d) {
-        if (d instanceof Alert) {
-            try {
-            	display.setCurrent((Alert) d, display.getCurrent());
-            } catch (Exception ex) {
-				display.setCurrent(d);
-			}
-        } else {
-        	display.setCurrent(d);
-        }
-    }
-    
-    public static void vibrate(int duration) {
-        display.vibrate(duration);
-    }
-    
-//    public static void showTextBox(TextBox textBox) {
-//    	TextBoxCommandListener cl = new TextBoxCommandListener();
-//    	textBox.setCommandListener(new TextBoxCommandListener());
-//    }
-//    
-//    public class TextBoxCommandListener implements CommandListener {
-//
-//		public void commandAction(Command command, Displayable displayable) {
-//			switch (command.getCommandType()) {
-//				case Command.OK:
-//				case Command.CANCEL:
-//					
-//					break;
-//			}
-//		}
-//    	
-//    }
     
 }
