@@ -1,7 +1,5 @@
-Structure editor for [mobapp-game](https://github.com/vipaoL/mobap-game)
-
-![screenshot](https://github.com/user-attachments/assets/1acea31d-11a8-4459-85d2-48280e605d13)
-![screenshot](https://github.com/user-attachments/assets/12304be1-d2cb-4399-b91f-f3d1ff131fd8)
-![screenshot](https://github.com/user-attachments/assets/a3b4167d-f1b5-44c7-91ee-025742088833)
-![screenshot](https://github.com/user-attachments/assets/e0409f43-69f0-4a9e-a2c9-2b6ffdefceb8)
-![screenshot](https://github.com/user-attachments/assets/3ed3393d-f8df-4fbd-ae80-a7d19a26716d)
+Structure editor for [mobapp-game](https://github.com/vipaoL/mobap-game). This is an android port of the [structure editor originally developed for j2me](https://github.com/vipaoL/mobapp-game-editor-j2me)
+![screenshot](https://github.com/user-attachments/assets/02428a93-a30e-4a77-b5d1-bcc1f8ec7f07)
+![screenshot](https://github.com/user-attachments/assets/ee4ea017-f24a-4df7-86ab-ed97f0d8f23a)
+![screenshot](https://github.com/user-attachments/assets/ce41808f-3578-47f6-8c18-3af2b8c3f0fb)
+![screenshot](https://github.com/user-attachments/assets/3dbe9d28-a925-4b11-b3f1-dc37f7dd3746)

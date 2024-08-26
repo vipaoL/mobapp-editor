@@ -1,10 +1,10 @@
 [submodule "lib/mobapp-editor"]
-	path = lib/mobapp-editor-base
+	path = app/src/main/lib/mobapp-editor-base
 	url = https://github.com/vipaoL/mobapp-editor-base.git
 [submodule "lib/mobapp-platform-j2me"]
-	path = lib/mobapp-platform-j2me
+	path = app/src/main/lib/mobapp-platform
 	url = https://github.com/vipaoL/mobapp-platform.git
-	branch = j2me
+	branch = android
 [submodule "lib/mobapp-ui"]
-	path = lib/mobapp-ui
+	path = app/src/main/lib/mobapp-ui
 	url = https://github.com/vipaoL/mobapp-ui.git

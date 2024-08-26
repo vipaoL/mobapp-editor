@@ -1,0 +1,36 @@
+plugins {
+    alias(libs.plugins.android.application)
+}
+
+android {
+    namespace 'com.vipaol.mobapp.android'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'com.vipaol.mobapp.editor.android'
+        minSdk 16
+        targetSdk 34
+        versionCode 1
+        versionName '1.2.0'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/lib/mobapp-platform/src'
+        main.java.srcDirs += 'src/main/lib/mobapp-editor-base/src'
+        main.java.srcDirs += 'src/main/lib/mobapp-ui/src'
+    }
+}
+
+dependencies {
+}
