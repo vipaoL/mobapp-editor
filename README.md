@@ -1,3 +1,5 @@
+# The editor was merged with the game
+
 Structure editor for [mobapp-game](https://github.com/vipaoL/mobap-game)
 
 ![screenshot](https://github.com/user-attachments/assets/1acea31d-11a8-4459-85d2-48280e605d13)
